@@ -20,7 +20,7 @@ use yii\behaviors\TimestampBehavior;
 class ProductLink extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * @return string
      */
     public static function tableName()
     {
@@ -28,7 +28,7 @@ class ProductLink extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @return array
      */
     public function rules()
     {
@@ -41,7 +41,7 @@ class ProductLink extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @return array
      */
     public function attributeLabels()
     {
@@ -55,6 +55,9 @@ class ProductLink extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [

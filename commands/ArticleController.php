@@ -21,27 +21,45 @@ use Goutte\Client;
  */
 class ArticleController extends Controller
 {
+    private $links = [
+        'http://www.letu.ru/makiyazh/dlya-litsa/osnova-dlya-makiyazha?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-litsa/tonalnye-sredstva?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-litsa/korrektiruyushchie-sredstva?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-litsa/pudra?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-litsa/rumyana?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-litsa/matiruyushchie-sredstva?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-glaz/tush?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-glaz/teni?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-glaz/konturnye-karandashi-i-podvodka?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-glaz/osnova-dlya-makiyazha?q_docSortOrder=descending&viewAll=true',
+        'http://www.letu.ru/makiyazh/dlya-glaz/dlya-brovei?q_docSortOrder=descending&viewAll=true',
+    ];
     public function actionIndex()
     {
-        $client = new Client();
-        $crawler = $client->request('GET', 'http://www.letu.ru/parfyumeriya?q_docSortOrder=descending&viewAll=true');
+        foreach ($this->links as $link) {
+            $client = new Client();
+            $crawler = $client->request('GET', $link);
 
-        $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
-            $links = new ProductLink();
-            $href = $node->attr('href');
-            $r = preg_split('/.+\//i', $href);
-            $ids = str_replace('?navAction=push','',$r[1]);
-            $ids = preg_replace('/;.+/i', '', $ids);
+            $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
+                $href = $node->attr('href');
+                $r = preg_split('/.+\//i', $href);
+                $ids = str_replace('?navAction=push','',$r[1]);
+                $ids = preg_replace('/;.+/i', '', $ids);
 
-            $urlPos = strpos($href, "?");
-            $url = substr($href, 0, $urlPos);
-            $url = substr($url, 0, strpos($href, ";"));
+                //$links = ProductLink::find(['product_id'=>$ids])->one();
+                // if(!$links) {
+                $links = new ProductLink();
+                // }
+                $urlPos = strpos($href, "?");
+                $url = substr($href, 0, $urlPos);
+                $url = substr($url, 0, strpos($href, ";"));
 
-            $links->product_id = $ids;
-            $links->link = $url;
-            $links->validate();
-            $links->save();
-        });
+                $links->product_id = $ids;
+                $links->link = $url;
+                $links->validate();
+                $links->save();
+            });
+        }
 
         return 0;
     }

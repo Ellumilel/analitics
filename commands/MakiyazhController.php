@@ -8,6 +8,7 @@
 namespace app\commands;
 
 
+use app\models\Price;
 use app\models\ProductLink;
 use yii\console\Controller;
 use Goutte\Client;
@@ -23,26 +24,53 @@ class MakiyazhController extends Controller
 {
     public function actionIndex()
     {
-        $client = new Client();
-        $crawler = $client->request('GET', 'http://www.letu.ru/makiyazh?q_docSortOrder=descending&viewAll=true');
+        $products = ProductLink::find()->all();
+        foreach($products as $product) {
+            $client = new Client();
+            $crawler = $client->request('GET', 'http://www.letu.ru'.$product->link);
 
-        $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
-            $links = new ProductLink();
-            $href = $node->attr('href');
-            $r = preg_split('/.+\//i', $href);
-            $ids = str_replace('?navAction=push','',$r[1]);
-            $ids = preg_replace('/;.+/i', '', $ids);
+            $new_price = $crawler->filter('td.price p.new_price')->each(function ($node) {
+                return $node->text();
+            });
+            $old_price = $crawler->filter('td.price p.old_price')->each(function ($node) {
+                return $node->text();
+            });
+            $article = $crawler->filter('table.atg_store_productSummary td.item p.article')->each(function ($node) {
+                return $node->text();
+            });
+            $description = $crawler->filter('table.atg_store_productSummary td.item p.description')->each(function ($node) {
+                return $node->text();
+            });
+            $title = $crawler->filter('table.atg_store_productSummary td.item h2')->each(function ($node) {
+                return $node->text();
+            });
+            $brand = $crawler->filter('div#brandInfo img')->each(function ($node) {
+                return $node->attr('alt');
+            });
+            foreach($article as $key => $one) {
+                $price = new Price();
 
-            $urlPos = strpos($href, "?");
-            $url = substr($href, 0, $urlPos);
-            $url = substr($url, 0, strpos($href, ";"));
+                $price->article = trim($one);
+                $price->article = str_replace('Артикул ', '', $price->article);
+                $price->article = preg_replace ("/[^a-zA-Z0-9]/","",$price->article);
 
-            $links->product_id = $ids;
-            $links->link = $url;
-            $links->validate();
-            $links->save();
-        });
+                $price->description = trim($description[$key]);
 
+                $price->title = trim($title[$key]);
+                $price->brand = trim(reset($brand));
+
+                $price->new_price = trim($new_price[$key]);
+                $price->new_price = str_replace(' ', '', $price->new_price);
+                $price->new_price = str_replace('*', '', $price->new_price);
+                $price->new_price = str_replace('\r', '', $price->new_price);
+                $price->new_price = str_replace('\n', '', $price->new_price);
+                $price->old_price = trim($old_price[$key]);
+                $price->old_price = str_replace(' ', '', $price->old_price);
+                $price->link = 'http://www.letu.ru'.$product->link;
+                $price->save();
+            }
+            //$price->new_price = $new_price;
+        }
         return 0;
     }
 }
