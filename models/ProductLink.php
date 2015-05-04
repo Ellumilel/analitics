@@ -3,14 +3,18 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "product_link".
  *
  * @property integer $id
+ * @property integer $product_id
  * @property string $link
- * @property string $added_at
- * @property string $update_at
+ * @property string $created_at
+ * @property string $updated_at
  * @property string $deleted_at
  */
 class ProductLink extends \yii\db\ActiveRecord
@@ -29,9 +33,10 @@ class ProductLink extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link'], 'required'],
+            [['product_id', 'link'], 'required'],
+            [['product_id'], 'integer'],
             [['link'], 'string'],
-            [['added_at', 'update_at', 'deleted_at'], 'safe']
+            [['created_at', 'updated_at', 'deleted_at'], 'safe']
         ];
     }
 
@@ -42,10 +47,25 @@ class ProductLink extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'product_id' => 'Product ID',
             'link' => 'Link',
-            'added_at' => 'Added At',
-            'update_at' => 'Update At',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 }
