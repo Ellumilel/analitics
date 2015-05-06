@@ -16,7 +16,7 @@ use Goutte\Client;
  *
  * @package app\commands
  */
-class LetualController extends Controller
+class LetualLinkController extends Controller
 {
     /** @var string */
     private $url = 'http://www.letu.ru';

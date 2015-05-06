@@ -47,6 +47,31 @@ class LetualCategory
                 'Для лица',
                 'Матирующие средства',
             ],
+            'http://www.letu.ru/makiyazh/dlya-glaz/tush?viewAll=true' => [
+                'Макияж',
+                'Для глаз',
+                'Тушь',
+            ],
+            'http://www.letu.ru/makiyazh/dlya-glaz/teni?viewAll=true' => [
+                'Макияж',
+                'Для глаз',
+                'Тени',
+            ],
+            'http://www.letu.ru/makiyazh/dlya-glaz/konturnye-karandashi-i-podvodka?viewAll=true' => [
+                'Макияж',
+                'Для глаз',
+                'Контурные карандаши и подводка',
+            ],
+            'http://www.letu.ru/makiyazh/dlya-glaz/osnova-dlya-makiyazha?viewAll=true' => [
+                'Макияж',
+                'Для глаз',
+                'Основа для макияжа',
+            ],
+            'http://www.letu.ru/makiyazh/dlya-glaz/dlya-brovei?viewAll=true' => [
+                'Макияж',
+                'Для глаз',
+                'Для бровей',
+            ],
         ];
     }
 

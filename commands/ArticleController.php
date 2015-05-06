@@ -45,19 +45,6 @@ class ArticleController extends Controller
                 $r = preg_split('/.+\//i', $href);
                 $ids = str_replace('?navAction=push','',$r[1]);
                 $ids = preg_replace('/;.+/i', '', $ids);
-
-                //$links = ProductLink::find(['product_id'=>$ids])->one();
-                // if(!$links) {
-                $links = new ProductLink();
-                // }
-                $urlPos = strpos($href, "?");
-                $url = substr($href, 0, $urlPos);
-                $url = substr($url, 0, strpos($href, ";"));
-
-                $links->product_id = $ids;
-                $links->link = $url;
-                $links->validate();
-                $links->save();
             });
         }
 
