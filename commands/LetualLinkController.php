@@ -5,7 +5,6 @@ namespace app\commands;
 
 use app\commands\entity\LetualCategory;
 use app\models\LetualLink;
-use app\models\ProductLink;
 use yii\console\Controller;
 use Goutte\Client;
 
@@ -26,21 +25,31 @@ class LetualLinkController extends Controller
      */
     public function actionIndex()
     {
+        /** @var $entity LetualCategory*/
         $entity = new LetualCategory();
 
         foreach ($entity->getLinks() as $link) {
             $client = new Client();
             $crawler = $client->request('GET', $link);
 
-            $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
+            $urls = $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
                 $href = $node->attr('href');
                 $url = $this->url.substr($href, 0, strpos($href, ";"));
 
-                $linkModel = new LetualLink();
-                $linkModel->link = $url;
-                $linkModel->validate();
-                $linkModel->save();
+                return $url;
             });
+            foreach ($urls as $key => $url) {
+                $linkModel = LetualLink::findOne(['link'=>$url]);
+                if (!$linkModel) {
+                    $linkModel = new LetualLink();
+                }
+                $linkModel->link = $url;
+
+                $linkModel->group = $entity->getGroup($link);
+                $linkModel->category = $entity->getCategory($link);
+                $linkModel->sub_category = $entity->getSubCategory($link);
+                $linkModel->save();
+            }
         }
 
         return 0;

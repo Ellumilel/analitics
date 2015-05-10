@@ -11,6 +11,9 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property string $link
+ * @property string $group
+ * @property string $category
+ * @property string $sub_category
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -33,7 +36,8 @@ class LetualLink extends \yii\db\ActiveRecord
         return [
             [['link'], 'required'],
             [['link'], 'string'],
-            [['created_at', 'updated_at', 'deleted_at'], 'safe']
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['group', 'category', 'sub_category'], 'string', 'max' => 500]
         ];
     }
 
@@ -45,6 +49,9 @@ class LetualLink extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'link' => 'Ссылка',
+            'group' => 'Group',
+            'category' => 'Category',
+            'sub_category' => 'Sub Category',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
             'deleted_at' => 'Дата удаления',
