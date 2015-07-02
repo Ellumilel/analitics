@@ -17,60 +17,120 @@ class LetualCategory
     {
         //TODO продумать механизм получение и записи категорий через базу
         $this->link = [
-            'http://www.letu.ru/makiyazh/dlya-litsa/osnova-dlya-makiyazha?viewAll=true' => [
-                'Макияж',
-                'Для лица',
-                'Основа для макияжа',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-litsom/sredstva-dlya-ochishcheniya-kozhi?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за лицом',
+                'Средства для очищения кожи',
             ],
-            'http://www.letu.ru/makiyazh/dlya-litsa/tonalnye-sredstva?viewAll=true' => [
-                'Макияж',
-                'Для лица',
-                'Тональные средства',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-litsom/sredstva-dlya-uvlazhneniya-kozhi?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за лицом',
+                'Средства для увлажнения кожи',
             ],
-            'http://www.letu.ru/makiyazh/dlya-litsa/korrektiruyushchie-sredstva?viewAll=true' => [
-                'Макияж',
-                'Для лица',
-                'Корректирующие средства',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-litsom/pitatelnye-sredstva?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за лицом',
+                'Питательные средства',
             ],
-            'http://www.letu.ru/makiyazh/dlya-litsa/pudra?viewAll=true' => [
-                'Макияж',
-                'Для лица',
-                'Пудра',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-litsom/sredstva-protiv-stareniya?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за лицом',
+                'Средства против старения',
             ],
-            'http://www.letu.ru/makiyazh/dlya-litsa/rumyana?viewAll=true' => [
-                'Макияж',
-                'Для лица',
-                'Румяна',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-litsom/sredstva-dlya-kontura-glaz?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за лицом',
+                'Средства для контура глаз',
             ],
-            'http://www.letu.ru/makiyazh/dlya-litsa/matiruyushchie-sredstva?viewAll=true' => [
-                'Макияж',
-                'Для лица',
-                'Матирующие средства',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-litsom/sredstva-dlya-zagara?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за лицом',
+                'Средства для загара',
             ],
-            'http://www.letu.ru/makiyazh/dlya-glaz/tush?viewAll=true' => [
-                'Макияж',
-                'Для глаз',
-                'Тушь',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/sredstva-dlya-ochishcheniya-kozhi?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Средства для очищения кожи',
             ],
-            'http://www.letu.ru/makiyazh/dlya-glaz/teni?viewAll=true' => [
-                'Макияж',
-                'Для глаз',
-                'Тени',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/sredstva-dlya-uvlazhneniya-kozhi?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Средства для увлажнения кожи',
             ],
-            'http://www.letu.ru/makiyazh/dlya-glaz/konturnye-karandashi-i-podvodka?viewAll=true' => [
-                'Макияж',
-                'Для глаз',
-                'Контурные карандаши и подводка',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/pitatelnye-sredstva?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Питательные средства',
             ],
-            'http://www.letu.ru/makiyazh/dlya-glaz/osnova-dlya-makiyazha?viewAll=true' => [
-                'Макияж',
-                'Для глаз',
-                'Основа для макияжа',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/antitsellyulitnye-sredstva?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Антицеллюлитные средства',
             ],
-            'http://www.letu.ru/makiyazh/dlya-glaz/dlya-brovei?viewAll=true' => [
-                'Макияж',
-                'Для глаз',
-                'Для бровей',
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/sredstva-protiv-stareniya?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Средства против старения',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/sredstva-dlya-zagara?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Средства для загара',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/dezodoranty-antiperspiranty?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Дезодоранты-антиперспиранты',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/uhod-za-telom/sredstva-dlya-britya?viewAll=true' => [
+                'Уход за кожей',
+                'Уход за телом',
+                'Средства для бритья',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-muzhchin/do-i-posle-britya?viewAll=true' => [
+                'Уход за кожей',
+                'Для мужчин',
+                'До и после бритья',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-muzhchin/dlya-vannoi-i-dusha?viewAll=true' => [
+                'Уход за кожей',
+                'Для мужчин',
+                'Для ванной и душа',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-muzhchin/spetsialnye-sredstva?viewAll=true' => [
+                'Уход за кожей',
+                'Для мужчин',
+                'Специальные средства',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-muzhchin/dezodoranty-antiperspiranty?viewAll=true' => [
+                'Уход за кожей',
+                'Для мужчин',
+                'Дезодоранты-антиперспиранты',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-volos/shampuni-i-konditsionery?viewAll=true' => [
+                'Уход за кожей',
+                'Для волос',
+                'Шампуни и кондиционеры',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-volos/dlya-ukladki?viewAll=true' => [
+                'Уход за кожей',
+                'Для волос',
+                'Для укладки',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-volos/spetsialnye-sredstva?viewAll=true' => [
+                'Уход за кожей',
+                'Для волос',
+                'Специальные средства',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/dlya-volos/kraska-dlya-volos?viewAll=true' => [
+                'Уход за кожей',
+                'Для волос',
+                'Краска для волос',
+            ],
+            'http://www.letu.ru/uhod-za-kozhei/gigiena?viewAll=true' => [
+                'Уход за кожей',
+                'Гигиена',
+                '',
             ],
         ];
     }
