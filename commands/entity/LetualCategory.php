@@ -151,7 +151,7 @@ class LetualCategory
     public function getGroup($link)
     {
         $result = '';
-        if(array_key_exists($link,$this->link)) {
+        if(array_key_exists($link, $this->link)) {
             $result = $this->link[$link][0];
         }
 
@@ -166,7 +166,7 @@ class LetualCategory
     public function getCategory($link)
     {
         $result = '';
-        if(array_key_exists($link,$this->link)) {
+        if(array_key_exists($link, $this->link)) {
             $result = $this->link[$link][1];
         }
 
@@ -181,7 +181,7 @@ class LetualCategory
     public function getSubCategory($link)
     {
         $result = '';
-        if(array_key_exists($link,$this->link)) {
+        if(array_key_exists($link, $this->link)) {
             $result = $this->link[$link][2];
         }
 

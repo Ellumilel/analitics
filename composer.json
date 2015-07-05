@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "fabpot/goutte": "~2.0",
-        "twbs/bootstrap": "~3.3"
+        "twbs/bootstrap": "~3.3",
+        "kartik-v/yii2-nav-x": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
