@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
+use kartik\nav\NavX;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
@@ -33,10 +34,42 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
+            echo NavX::widget([
+                'options' => ['class' => 'navbar-nav'],
+                'items' => [
+                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Выгрузки', 'items' => [
+                            ['label' => 'Letual категории', 'url' => ['/letual-category/index']],
+                        ],
+                    ],
+
+                    ['label' => 'Летуаль', 'url' => ['/letual-product/index']],
+                    ['label' => 'РивГош', 'url' => ['/site/about']],
+                    ['label' => 'Аналитика', 'url' => ['/site/about']],
+                    //['label' => 'Contact', 'url' => ['/site/contact']],
+                    Yii::$app->user->isGuest ?
+                        ['label' => 'Login', 'url' => ['/site/login']] :
+                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']],
+                ],
+                'activateParents' => true,
+                'encodeLabels' => false
+            ]);
+            NavBar::end();
+            /*
+            NavBar::begin([
+                'brandLabel' => 'Site Grabber',
+                'brandUrl' => Yii::$app->homeUrl,
+                'options' => [
+                    'class' => 'navbar-inverse navbar-fixed-top',
+                ],
+            ]);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Letual категории', 'url' => ['/letual-category/index']],
                     ['label' => 'Летуаль', 'url' => ['/letual-product/index']],
                     ['label' => 'РивГош', 'url' => ['/site/about']],
                     ['label' => 'Аналитика', 'url' => ['/site/about']],
@@ -48,7 +81,7 @@ AppAsset::register($this);
                             'linkOptions' => ['data-method' => 'post']],
                 ],
             ]);
-            NavBar::end();
+            NavBar::end();*/
         ?>
 
         <div class="container">
