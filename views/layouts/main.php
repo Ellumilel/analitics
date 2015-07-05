@@ -40,6 +40,8 @@ AppAsset::register($this);
                     ['label' => 'Home', 'url' => ['/site/index']],
                     ['label' => 'Выгрузки', 'items' => [
                             ['label' => 'Letual категории', 'url' => ['/letual-category/index']],
+                            ['label' => 'Rivegauche категории', 'url' => ['/rivegauche-category/index']],
+                            ['label' => 'Iledebeaute категории', 'url' => ['/iledebeaute-category/index']],
                         ],
                     ],
 

@@ -7,7 +7,7 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "letual_link".
+ * This is the model class for table "iledebeaute_link".
  *
  * @property integer $id
  * @property string $link
@@ -18,14 +18,14 @@ use yii\db\Expression;
  * @property string $updated_at
  * @property string $deleted_at
  */
-class LetualLink extends \yii\db\ActiveRecord
+class IledebeauteLink extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'letual_link';
+        return 'iledebeaute_link';
     }
 
     /**

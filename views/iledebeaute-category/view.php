@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\LetualCategory */
+/* @var $model app\models\IledebeauteCategory */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Letual Categories', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Iledebeaute Categories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="letual-category-view">
+<div class="iledebeaute-category-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
