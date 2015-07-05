@@ -54,67 +54,6 @@ class LetualCategory extends \yii\db\ActiveRecord
      */
     public function getLinks()
     {
-        $return= [];
-
-        $rows = $this::find()->all();
-        foreach ($rows as $row) {
-            $return[$row['link']] = [
-                $row['group'],
-                $row['category'],
-                $row['sub_category'],
-            ];
-        }
-
-        return $return;
-    }
-    /**
-     * @param string $link
-     *
-     * @return string
-     */
-    public function getGroup($link)
-    {
-        $result = '';
-        $entityLinks = $this->getLinks();
-
-        if(array_key_exists($link, $entityLinks)) {
-            $result = $entityLinks[$link][0];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $link
-     *
-     * @return string
-     */
-    public function getCategory($link)
-    {
-        $result = '';
-        $entityLinks = $this->getLinks();
-
-        if(array_key_exists($link, $entityLinks)) {
-            $result = $entityLinks[$link][1];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $link
-     *
-     * @return string
-     */
-    public function getSubCategory($link)
-    {
-        $result = '';
-        $entityLinks = $this->getLinks();
-
-        if(array_key_exists($link, $entityLinks)) {
-            $result = $entityLinks[$link][2];
-        }
-
-        return $result;
+        return $this::find()->all();
     }
 }
