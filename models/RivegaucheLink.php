@@ -3,12 +3,19 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
+ * @author Denis Tikhonov <ozy@mailserver.ru>
+ *
  * This is the model class for table "rivegauche_link".
  *
  * @property integer $id
  * @property string $link
+ * @property string $group
+ * @property string $category
+ * @property string $sub_category
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -16,7 +23,7 @@ use Yii;
 class RivegaucheLink extends \yii\db\ActiveRecord
 {
     /**
-     * @return string
+     * @inheritdoc
      */
     public static function tableName()
     {
@@ -24,28 +31,49 @@ class RivegaucheLink extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function rules()
     {
         return [
             [['link'], 'required'],
-            [['link'], 'string'],
-            [['created_at', 'updated_at', 'deleted_at'], 'safe']
+            [['link', 'sub_category'], 'string'],
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['group', 'category', 'sub_category'], 'string', 'max' => 255]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'link' => 'Ссылка',
+            'group' => 'Группа',
+            'category' => 'Категория',
+            'sub_category' => 'Подкатегория',
+            'created_at' => 'Дата создания',
+            'updated_at' => 'Дата обновления',
+            'deleted_at' => 'Дата удаления',
         ];
     }
 
     /**
      * @return array
      */
-    public function attributeLabels()
+    public function behaviors()
     {
         return [
-            'id' => 'ID',
-            'link' => 'Link',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted_at' => 'Deleted At',
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 }
