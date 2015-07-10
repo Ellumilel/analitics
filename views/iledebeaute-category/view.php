@@ -35,5 +35,4 @@ $this->params['breadcrumbs'][] = $this->title;
             'sub_category',
         ],
     ]) ?>
-
 </div>

@@ -20,7 +20,9 @@
         "yiisoft/yii2-swiftmailer": "*",
         "fabpot/goutte": "~2.0",
         "twbs/bootstrap": "~3.3",
-        "kartik-v/yii2-nav-x": "*"
+        "kartik-v/yii2-nav-x": "*",
+        "PHPOffice/PHPExcel":"1.8.1",
+        "perminder-klair/yii2-dropzone": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

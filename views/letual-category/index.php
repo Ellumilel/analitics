@@ -24,13 +24,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
-            'link:ntext',
+            //'id',
+            //'link:ntext',
             'group',
             'category',
             'sub_category',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update} {delete}',
+            ],
         ],
     ]); ?>
 
+    <? echo \kato\DropZone::widget([ 'options' => [
+        'url' => \Yii::$app->getUrlManager()->createUrl(['site/upload'])
+        ],
+    ]);  ?>
 </div>
