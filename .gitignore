@@ -21,6 +21,7 @@ composer.phar
 
 # Mac DS_Store Files
 .DS_Store
+.htaccess
 
 # phpunit itself is not needed
 phpunit.phar

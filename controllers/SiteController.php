@@ -49,6 +49,24 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionUpload()
+    {
+        $fileName = 'file';
+        $uploadPath = './files';
+
+        if (isset($_FILES[$fileName])) {
+            $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+            if ($file->saveAs($uploadPath . '/' . "upload." . $file->extension)) {
+                //Now save file data to database
+
+                echo \yii\helpers\Json::encode($file);
+            }
+        }
+
+        return false;
+    }
+
     public function actionIndex()
     {
         return $this->render('index');
