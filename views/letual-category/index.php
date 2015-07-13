@@ -35,9 +35,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
-    <? echo \kato\DropZone::widget([ 'options' => [
-        'url' => \Yii::$app->getUrlManager()->createUrl(['site/upload'])
-        ],
-    ]);  ?>
 </div>

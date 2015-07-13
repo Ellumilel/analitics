@@ -42,7 +42,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['article'], 'string', 'max' => 255],
+            [['article'], 'string', 'max' => 100],
             [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line'], 'string', 'max' => 500]
         ];
     }

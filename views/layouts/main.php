@@ -48,6 +48,10 @@ AppAsset::register($this);
                     ['label' => 'Летуаль', 'url' => ['/letual-product/index']],
                     ['label' => 'РивГош', 'url' => ['/site/about']],
                     ['label' => 'Аналитика', 'url' => ['/site/about']],
+                    ['label' => 'Загрузка', 'items' => [
+                            ['label' => 'Информ. продукт', 'url' => ['/upload/inform']],
+                        ],
+                    ],
                     //['label' => 'Contact', 'url' => ['/site/contact']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
