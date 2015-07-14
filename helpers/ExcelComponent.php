@@ -50,13 +50,13 @@ class ExcelComponent
                     if (!PodruzkaProduct::findOne(['article' => $value])) {
                         $product = new PodruzkaProduct();
                         $product->article = $objWorksheet->getCellByColumnAndRow(0, $i)->getValue();
-                        $product->group = $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
-                        $product->category =  $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
-                        $product->sub_category =  $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
-                        $product->detail =  $objWorksheet->getCellByColumnAndRow(5, $i)->getValue();
-                        $product->brand =  $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
-                        $product->sub_brand =  $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
-                        $product->line =  $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
+                        $product->group = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
+                        $product->category = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
+                        $product->sub_category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
+                        $product->detail = (string) $objWorksheet->getCellByColumnAndRow(5, $i)->getValue();
+                        $product->brand = (string) $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
+                        $product->sub_brand = (string) $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
+                        $product->line = (string) $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
 
                         $product->save();
                     }
