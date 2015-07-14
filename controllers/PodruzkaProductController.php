@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\RivegaucheCategory;
-use app\models\RivegaucheCategorySearch;
+use app\models\PodruzkaProduct;
+use app\models\PodruzkaProductSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * RivegaucheCategoryController implements the CRUD actions for RivegaucheCategory model.
+ * PodruzkaProductController implements the CRUD actions for PodruzkaProduct model.
  */
-class RivegaucheCategoryController extends Controller
+class PodruzkaProductController extends Controller
 {
     public function behaviors()
     {
@@ -44,12 +44,12 @@ class RivegaucheCategoryController extends Controller
     }
 
     /**
-     * Lists all RivegaucheCategory models.
+     * Lists all PodruzkaProduct models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new RivegaucheCategorySearch();
+        $searchModel = new PodruzkaProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -59,7 +59,7 @@ class RivegaucheCategoryController extends Controller
     }
 
     /**
-     * Displays a single RivegaucheCategory model.
+     * Displays a single PodruzkaProduct model.
      * @param integer $id
      * @return mixed
      */
@@ -71,17 +71,16 @@ class RivegaucheCategoryController extends Controller
     }
 
     /**
-     * Creates a new RivegaucheCategory model.
+     * Creates a new PodruzkaProduct model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new RivegaucheCategory();
+        $model = new PodruzkaProduct();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -90,7 +89,7 @@ class RivegaucheCategoryController extends Controller
     }
 
     /**
-     * Updates an existing RivegaucheCategory model.
+     * Updates an existing PodruzkaProduct model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -109,7 +108,7 @@ class RivegaucheCategoryController extends Controller
     }
 
     /**
-     * Deletes an existing RivegaucheCategory model.
+     * Deletes an existing PodruzkaProduct model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -122,15 +121,15 @@ class RivegaucheCategoryController extends Controller
     }
 
     /**
-     * Finds the RivegaucheCategory model based on its primary key value.
+     * Finds the PodruzkaProduct model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return RivegaucheCategory the loaded model
+     * @return PodruzkaProduct the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = RivegaucheCategory::findOne($id)) !== null) {
+        if (($model = PodruzkaProduct::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

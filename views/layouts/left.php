@@ -37,9 +37,10 @@ use yii\helpers\Html;
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
                     '<li class="header">Menu Yii2</li>',
-                    ['label' => '<i class="fa fa-file-code-o"></i><span>Gii</span>', 'url' => ['/gii']],
-                    ['label' => '<i class="fa fa-file-code-o"></i><span>Gii2</span>', 'url' => ['/gii']],
-                    ['label' => '<i class="fa fa-dashboard"></i><span>Debug</span>', 'url' => ['/debug']],
+                    ['label' => '<i class="fa fa-file-code-o"></i><span>Информационный продукт</span>', 'url' => ['/podruzka-product/index']],
+                   //['label' => '<i class="fa fa-file-code-o"></i><span>Gii</span>', 'url' => ['/gii']],
+                    //['label' => '<i class="fa fa-file-code-o"></i><span>Gii2</span>', 'url' => ['/gii']],
+                   // ['label' => '<i class="fa fa-dashboard"></i><span>Debug</span>', 'url' => ['/debug']],
                     [
                         'label' => '<i class="glyphicon glyphicon-lock"></i><span>Sing in</span>', //for basic
                         'url' => ['/site/login'],
@@ -50,7 +51,7 @@ use yii\helpers\Html;
         );
         ?>
 
-        <ul class="sidebar-menu">
+        <!--ul class="sidebar-menu">
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-share"></i> <span>Same tools</span>
@@ -78,7 +79,7 @@ use yii\helpers\Html;
                     </li>
                 </ul>
             </li>
-        </ul>
+        </ul-->
 
     </section>
 
