@@ -7,25 +7,31 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "letual_link".
+ * This is the model class for table "podruzka_product".
  *
  * @property integer $id
- * @property string $link
+ * @property string $article
  * @property string $group
  * @property string $category
  * @property string $sub_category
+ * @property string $detail
+ * @property string $brand
+ * @property string $sub_brand
+ * @property string $line
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ *
+ * @property PodruzkaPrice[] $podruzkaPrices
  */
-class LetualLink extends \yii\db\ActiveRecord
+class PodruzkaProduct extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'letual_link';
+        return 'podruzka_product';
     }
 
     /**
@@ -34,10 +40,10 @@ class LetualLink extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link'], 'required'],
-            [['link'], 'string'],
+            [['article'], 'required'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['group', 'category', 'sub_category'], 'string', 'max' => 500]
+            [['article'], 'string', 'max' => 100],
+            [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line'], 'string', 'max' => 500]
         ];
     }
 
@@ -48,14 +54,26 @@ class LetualLink extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'link' => 'Ссылка',
-            'group' => 'Группа',
-            'category' => 'Категория',
-            'sub_category' => 'Подкатегория',
-            'created_at' => 'Дата создания',
-            'updated_at' => 'Дата обновления',
-            'deleted_at' => 'Дата удаления',
+            'article' => 'Article',
+            'group' => 'Group',
+            'category' => 'Category',
+            'sub_category' => 'Sub Category',
+            'detail' => 'Detail',
+            'brand' => 'Brand',
+            'sub_brand' => 'Sub Brand',
+            'line' => 'Line',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'deleted_at' => 'Deleted At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPodruzkaPrices()
+    {
+        return $this->hasMany(PodruzkaPrice::className(), ['article' => 'article']);
     }
 
     /**

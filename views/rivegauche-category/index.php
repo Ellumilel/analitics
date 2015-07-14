@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\LetualCategorySearch */
+/* @var $searchModel app\models\RivegaucheCategorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Letual категории';
+$this->title = 'Rivegauche категории';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="letual-category-index">
+<div class="rivegauche-category-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -24,15 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            //'id',
-            //'link:ntext',
+            'id',
+            'link:ntext',
             'group',
             'category',
             'sub_category',
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-            ],
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
 </div>

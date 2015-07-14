@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\LetualCategory;
-use app\models\LetualCategorySearch;
+use app\models\RivegaucheCategory;
+use app\models\RivegaucheCategorySearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LetualCategoryController implements the CRUD actions for LetualCategory model.
+ * RivegaucheCategoryController implements the CRUD actions for RivegaucheCategory model.
  */
-class LetualCategoryController extends Controller
+class RivegaucheCategoryController extends Controller
 {
     public function behaviors()
     {
@@ -44,12 +44,12 @@ class LetualCategoryController extends Controller
     }
 
     /**
-     * Lists all LetualCategory models.
+     * Lists all RivegaucheCategory models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LetualCategorySearch();
+        $searchModel = new RivegaucheCategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -59,7 +59,7 @@ class LetualCategoryController extends Controller
     }
 
     /**
-     * Displays a single LetualCategory model.
+     * Displays a single RivegaucheCategory model.
      * @param integer $id
      * @return mixed
      */
@@ -71,13 +71,13 @@ class LetualCategoryController extends Controller
     }
 
     /**
-     * Creates a new LetualCategory model.
+     * Creates a new RivegaucheCategory model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new LetualCategory();
+        $model = new RivegaucheCategory();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -89,7 +89,7 @@ class LetualCategoryController extends Controller
     }
 
     /**
-     * Updates an existing LetualCategory model.
+     * Updates an existing RivegaucheCategory model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -108,7 +108,7 @@ class LetualCategoryController extends Controller
     }
 
     /**
-     * Deletes an existing LetualCategory model.
+     * Deletes an existing RivegaucheCategory model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -121,15 +121,15 @@ class LetualCategoryController extends Controller
     }
 
     /**
-     * Finds the LetualCategory model based on its primary key value.
+     * Finds the RivegaucheCategory model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return LetualCategory the loaded model
+     * @return RivegaucheCategory the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = LetualCategory::findOne($id)) !== null) {
+        if (($model = RivegaucheCategory::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

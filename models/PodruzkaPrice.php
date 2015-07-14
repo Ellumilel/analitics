@@ -7,25 +7,26 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "letual_link".
+ * This is the model class for table "podruzka_price".
  *
  * @property integer $id
- * @property string $link
- * @property string $group
- * @property string $category
- * @property string $sub_category
+ * @property string $article
+ * @property string $price
+ * @property string $ma_price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ *
+ * @property PodruzkaProduct $article0
  */
-class LetualLink extends \yii\db\ActiveRecord
+class PodruzkaPrice extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'letual_link';
+        return 'podruzka_price';
     }
 
     /**
@@ -34,10 +35,9 @@ class LetualLink extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link'], 'required'],
-            [['link'], 'string'],
+            [['article', 'price', 'ma_price'], 'required'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['group', 'category', 'sub_category'], 'string', 'max' => 500]
+            [['article', 'price', 'ma_price'], 'string', 'max' => 100]
         ];
     }
 
@@ -48,14 +48,21 @@ class LetualLink extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'link' => 'Ссылка',
-            'group' => 'Группа',
-            'category' => 'Категория',
-            'sub_category' => 'Подкатегория',
-            'created_at' => 'Дата создания',
-            'updated_at' => 'Дата обновления',
-            'deleted_at' => 'Дата удаления',
+            'article' => 'Article',
+            'price' => 'Price',
+            'ma_price' => 'Ma Price',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'deleted_at' => 'Deleted At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getArticle0()
+    {
+        return $this->hasOne(PodruzkaProduct::className(), ['article' => 'article']);
     }
 
     /**

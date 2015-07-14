@@ -20,7 +20,11 @@
         "yiisoft/yii2-swiftmailer": "*",
         "fabpot/goutte": "~2.0",
         "twbs/bootstrap": "~3.3",
-        "kartik-v/yii2-nav-x": "*"
+        "kartik-v/yii2-nav-x": "*",
+        "PHPOffice/PHPExcel":"1.8.1",
+        "fxp/composer-asset-plugin":"~1.0.0",
+        "perminder-klair/yii2-dropzone": "dev-master",
+        "dmstr/yii2-adminlte-asset": "2.*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

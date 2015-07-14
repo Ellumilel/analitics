@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "letual_category".
+ * This is the model class for table "iledebeaute_category".
  *
  * @property integer $id
  * @property string $link
@@ -13,14 +13,14 @@ use Yii;
  * @property string $category
  * @property string $sub_category
  */
-class LetualCategory extends \yii\db\ActiveRecord
+class IledebeauteCategory extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'letual_category';
+        return 'iledebeaute_category';
     }
 
     /**

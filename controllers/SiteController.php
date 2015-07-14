@@ -18,14 +18,19 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
+                        'actions' => ['login'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout', 'index'],
                         'roles' => ['@'],
                     ],
                 ],
+
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -47,6 +52,24 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+    public function actionUpload()
+    {
+        $fileName = 'file';
+        $uploadPath = './files';
+
+        if (isset($_FILES[$fileName])) {
+            $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+            if ($file->saveAs($uploadPath . '/' . "upload." . $file->extension)) {
+                //Now save file data to database
+
+                echo \yii\helpers\Json::encode($file);
+            }
+        }
+
+        return false;
     }
 
     public function actionIndex()
