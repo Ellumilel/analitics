@@ -94,6 +94,3 @@ a.desc:after {
     min-height: 212px;
     height: 212px;
 }
-.login-page, .register-page {
-    background: #FFFFFF !important;
-}
