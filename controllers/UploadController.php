@@ -14,8 +14,13 @@ class UploadController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                //'only' => ['inform'],
                 'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login'],
+                        'roles' => ['?'],
+                    ],
                     [
                         'actions' => ['inform'],
                         'allow' => true,
