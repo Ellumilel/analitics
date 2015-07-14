@@ -21,7 +21,7 @@ $fieldOptions2 = [
 
 <div class="login-box">
     <div class="login-logo">
-        <a href="#"><img src="../../web/image/main_logo.jpg"></a>
+        <a href="#"><?= Html::img('@web/images/main_logo.jpeg') ?></a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
