@@ -26,7 +26,7 @@ class SiteController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'upload'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -57,14 +57,12 @@ class SiteController extends Controller
     public function actionUpload()
     {
         $fileName = 'file';
-        $uploadPath = './files';
+        $uploadPath = \Yii::$app->basePath . '/web/files';
 
         if (isset($_FILES[$fileName])) {
+
             $file = \yii\web\UploadedFile::getInstanceByName($fileName);
-
             if ($file->saveAs($uploadPath . '/' . "upload." . $file->extension)) {
-                //Now save file data to database
-
                 echo \yii\helpers\Json::encode($file);
             }
         }
