@@ -1,6 +1,5 @@
 <?php
 use yii\bootstrap\Nav;
-use yii\helpers\Html;
 
 ?>
 <aside class="main-sidebar">
@@ -10,7 +9,7 @@ use yii\helpers\Html;
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <?= Html::img('@web/images/snimok_57.jpeg', ['alt'=>'Администратор', 'class'=>'img-circle']) ?>
+                <img src="../../web/image/snimok_57.jpg" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
                 <p>Администратор</p>
