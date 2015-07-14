@@ -9,7 +9,7 @@ use yii\bootstrap\NavBar;
 
 <header class="main-header">
 
-    <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">' . Yii::$app->name . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
+    <?= Html::a('<span class="logo-mini">А</span><span class="logo-lg">' . Yii::$app->name . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
 
     <nav class="navbar navbar-static-top" role="navigation">
 
@@ -23,11 +23,11 @@ use yii\bootstrap\NavBar;
 
                 <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/inform");  ?>">Загрузка информ.продукта</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Категории <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Управление категориями <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/letual-category/index");  ?>">Letual категории</a></li>
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/rivegauche-category/index");  ?>">Кivegauche категории</a></li>
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/iledebeaute-category/index");  ?>">Iledebeaute категории</a></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/letual-category/index");  ?>">Летуаль</a></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/rivegauche-category/index");  ?>">РивГош</a></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/iledebeaute-category/index");  ?>">ИльДеБоте</a></li>
                         <li class="divider"></li>
                         <li><a href="#">One more separated link</a></li>
                     </ul>
