@@ -18,6 +18,8 @@ use yii\db\Expression;
  * @property string $brand
  * @property string $sub_brand
  * @property string $line
+ * @property string $price
+ * @property string $ma_price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -42,7 +44,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['article'], 'string', 'max' => 100],
+            [['article', 'price', 'ma_price'], 'string', 'max' => 100],
             [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line'], 'string', 'max' => 500]
         ];
     }
@@ -62,6 +64,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             'brand' => 'Бренд',
             'sub_brand' => 'Подбренд',
             'line' => 'Линейка',
+            'price' => 'Цена',
+            'ma_price' => 'МА цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -72,6 +76,14 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getPodruzkaPrices()
+    {
+        return $this->hasMany(PodruzkaPrice::className(), ['article' => 'article']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPodruzkaLastPrices()
     {
         return $this->hasMany(PodruzkaPrice::className(), ['article' => 'article']);
     }

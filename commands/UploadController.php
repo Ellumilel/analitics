@@ -32,12 +32,10 @@ class UploadController extends Controller
                 $model = new Upload();
                 $model->status = 0;
                 $model->task = 'Инф.продукт';
-                //$model->save();
-
+                $model->save();
+                //Вызываем компонент парсинга excel
                 $component = new ExcelComponent();
                 $component->uploadInformProduct();
-                //Вызываем компонент парсинга excel
-
             }
         }
 

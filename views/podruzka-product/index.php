@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
              'brand',
              'sub_brand',
              'line',
+             'price',
+             'ma_price',
             // 'created_at',
             // 'updated_at',
             // 'deleted_at',
