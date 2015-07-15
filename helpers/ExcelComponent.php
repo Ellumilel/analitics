@@ -49,7 +49,11 @@ class ExcelComponent
                 if (!empty($value)) {
                     if (!PodruzkaProduct::findOne(['article' => $value])) {
                         $product = new PodruzkaProduct();
-                        $product->article = $objWorksheet->getCellByColumnAndRow(0, $i)->getValue();
+                        $product->article = trim(
+                            htmlspecialchars(
+                                $objWorksheet->getCellByColumnAndRow(0, $i)->getValue()
+                            )
+                        );
                         $product->group = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
                         $product->category = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
                         $product->sub_category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
@@ -57,6 +61,8 @@ class ExcelComponent
                         $product->brand = (string) $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
                         $product->sub_brand = (string) $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
                         $product->line = (string) $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
+                        $product->price = (string) $objWorksheet->getCellByColumnAndRow(9, $i)->getValue();
+                        $product->ma_price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
 
                         $product->save();
                     }
@@ -71,57 +77,21 @@ class ExcelComponent
                     //TODO ?
                 }
 
-                //print_r([$i,$value, $value1, $value2, $value3]);die;
                 if (empty($value))  //проверяем значение на пустоту
                 {
                     $empty_value++;
                 }
+
                 if ($empty_value == 1) //после 1 пустого значения, завершаем обработку файла, думая, что это конец
                 {
                     $exit = true;
                     continue;
                 }
-                /*Манипуляции с данными каким Вам угодно способом, в PHPExcel их превеликое множество*/
             }
             $objPHPExcel->disconnectWorksheets();   //чистим
             unset($objPHPExcel);    //память
             $startRow += $chunkSize;    //переходим на следующий шаг цикла, увеличивая строку, с которой будем читать файл
         }
-        /*
-        for ($startRow = 1; $startRow <= 15000; $startRow += $chunkSize) {
-            $chunkFilter->setRows($startRow, $chunkSize);
-
-            $objPHPExcel = $objReader->load($filename);
-            $sheetDataFull = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-
-            foreach ($sheetDataFull as $sheetData) {
-                echo $sheetData['A'].": added";
-                $product = new PodruzkaProduct();
-                $product->article = $sheetData['A'];
-                $product->group = $sheetData['C'];
-                $product->category = $sheetData['D'];
-                $product->sub_category = $sheetData['E'];
-                $product->detail = $sheetData['F'];
-                $product->brand = $sheetData['G'];
-                $product->sub_brand = $sheetData['H'];
-                $product->line = $sheetData['I'];
-                $product->save();
-
-                $productPrice = new PodruzkaPrice();
-                $productPrice->article = $sheetData['A'];
-                $productPrice->price = $sheetData['J'];
-                $productPrice->ma_price = $sheetData['K'];
-                $productPrice->save();
-
-                if (empty($sheetData['A'])) {
-                    break;
-                }
-            }
-
-            if (empty($sheetDataFull)) {
-                break;
-            }
-        }*/
     }
 }
 
