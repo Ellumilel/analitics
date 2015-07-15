@@ -20,7 +20,7 @@ class ExcelComponent
         // проверяем существует есть ли файл
         $filename = './web/files/upload.xlsx';
 
-        $chunkSize = 2000;  //размер считываемых строк за раз
+        $chunkSize = 1000;  //размер считываемых строк за раз
         $startRow = 2;  //начинаем читать со строки 2, в PHPExcel первая строка имеет индекс 1, и как правило это строка заголовков
         $exit = false;  //флаг выхода
         $empty_value = 0;   //счетчик пустых знаений
@@ -92,6 +92,8 @@ class ExcelComponent
             unset($objPHPExcel);    //память
             $startRow += $chunkSize;    //переходим на следующий шаг цикла, увеличивая строку, с которой будем читать файл
         }
+
+        unlink($filename);
     }
 }
 
