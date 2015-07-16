@@ -81,11 +81,59 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public function getPodruzkaLastPrices()
+    public function getListBrand()
     {
-        return $this->hasMany(PodruzkaPrice::className(), ['article' => 'article']);
+        return $this::find()->distinct()->select('brand')->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListSubBrand()
+    {
+        return $this::find()->distinct()->select('sub_brand')->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListLine()
+    {
+        return $this::find()->distinct()->select('line')->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListDetail()
+    {
+        return $this::find()->distinct()->select('detail')->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListSubCategory()
+    {
+        return $this::find()->distinct()->select('sub_category')->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListCategory()
+    {
+        return $this::find()->distinct()->select('category')->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListGroup()
+    {
+        return $this::find()->distinct()->select('group')->all();
     }
 
     /**
