@@ -57,28 +57,28 @@ class PodruzkaProductController extends Controller
 
         if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
             $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
-        }
 
-        if($params['group']) {
-            $condition['group'] = $params['group'];
-        }
-        if($params['category']) {
-            $condition['category'] = $params['category'];
-        }
-        if($params['sub_category']) {
-            $condition['sub_category'] = $params['sub_category'];
-        }
-        if($params['detail']) {
-            $condition['detail'] = $params['detail'];
-        }
-        if($params['brand']) {
-            $condition['brand'] = $params['brand'];
-        }
-        if($params['sub_brand']) {
-            $condition['sub_brand'] = $params['sub_brand'];
-        }
-        if($params['line']) {
-            $condition['line'] = $params['line'];
+            if($params['group']) {
+                $condition['group'] = $params['group'];
+            }
+            if($params['category']) {
+                $condition['category'] = $params['category'];
+            }
+            if($params['sub_category']) {
+                $condition['sub_category'] = $params['sub_category'];
+            }
+            if($params['detail']) {
+                $condition['detail'] = $params['detail'];
+            }
+            if($params['brand']) {
+                $condition['brand'] = $params['brand'];
+            }
+            if($params['sub_brand']) {
+                $condition['sub_brand'] = $params['sub_brand'];
+            }
+            if($params['line']) {
+                $condition['line'] = $params['line'];
+            }
         }
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
