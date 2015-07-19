@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use yii\grid\GridView;
 use app\models\PodruzkaProduct;
@@ -15,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -26,31 +27,31 @@ $this->params['breadcrumbs'][] = $this->title;
             'article',
             [
                 'attribute'=>'group',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup(), 'group', 'group'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition), 'group', 'group'),
             ],
             [
                 'attribute'=>'category',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListCategory(), 'category', 'category'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition), 'category', 'category'),
             ],
             [
                 'attribute'=>'sub_category',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubCategory(), 'sub_category', 'sub_category'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubCategory($condition), 'sub_category', 'sub_category'),
             ],
             [
                 'attribute'=>'detail',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListDetail(), 'detail', 'detail'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListDetail($condition), 'detail', 'detail'),
             ],
             [
                 'attribute'=>'brand',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListBrand(), 'brand', 'brand'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition), 'brand', 'brand'),
             ],
             [
                 'attribute'=>'sub_brand',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubBrand(), 'sub_brand', 'sub_brand'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubBrand($condition), 'sub_brand', 'sub_brand'),
             ],
             [
                 'attribute'=>'line',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListLine(), 'line', 'line'),
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListLine($condition), 'line', 'line'),
             ],
              'price',
              'ma_price',
@@ -61,5 +62,5 @@ $this->params['breadcrumbs'][] = $this->title;
             //['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-
+    <?php Pjax::end(); ?>
 </div>

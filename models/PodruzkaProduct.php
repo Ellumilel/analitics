@@ -83,57 +83,57 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListBrand()
+    public function getListBrand($condition)
     {
-        return $this::find()->distinct()->select('brand')->all();
+        return $this::find()->distinct()->select('brand')->where($condition)->all();
     }
 
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListSubBrand()
+    public function getListSubBrand($condition)
     {
-        return $this::find()->distinct()->select('sub_brand')->all();
+        return $this::find()->distinct()->select('sub_brand')->where($condition)->all();
     }
 
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListLine()
+    public function getListLine($condition)
     {
-        return $this::find()->distinct()->select('line')->all();
+        return $this::find()->distinct()->select('line')->where($condition)->all();
     }
 
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListDetail()
+    public function getListDetail($condition)
     {
-        return $this::find()->distinct()->select('detail')->all();
+        return $this::find()->distinct()->select('detail')->where($condition)->all();
     }
 
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListSubCategory()
+    public function getListSubCategory($condition)
     {
-        return $this::find()->distinct()->select('sub_category')->all();
+        return $this::find()->distinct()->select('sub_category')->where($condition)->all();
     }
 
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListCategory()
+    public function getListCategory($condition)
     {
-        return $this::find()->distinct()->select('category')->all();
+        return $this::find()->distinct()->select('category')->where($condition)->all();
     }
 
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListGroup()
+    public function getListGroup($condition)
     {
-        return $this::find()->distinct()->select('group')->all();
+        return $this::find()->distinct()->select('group')->where($condition)->all();
     }
 
     /**

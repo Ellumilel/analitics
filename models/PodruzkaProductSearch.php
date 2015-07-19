@@ -19,7 +19,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
     {
         return [
             [['id'], 'integer'],
-            [['article', 'group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['article', 'group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'price', 'ma_price', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -69,7 +69,9 @@ class PodruzkaProductSearch extends PodruzkaProduct
             ->andFilterWhere(['like', 'detail', $this->detail])
             ->andFilterWhere(['like', 'brand', $this->brand])
             ->andFilterWhere(['like', 'sub_brand', $this->sub_brand])
-            ->andFilterWhere(['like', 'line', $this->line]);
+            ->andFilterWhere(['like', 'line', $this->line])
+            ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'ma_price', $this->ma_price]);
 
         return $dataProvider;
     }
