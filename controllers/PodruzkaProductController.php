@@ -52,7 +52,12 @@ class PodruzkaProductController extends Controller
         $searchModel = new PodruzkaProductSearch();
 
         $condition = [];
-        $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
+
+        $params = [];
+
+        if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
+            $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
+        }
 
         if($params['group']) {
             $condition['group'] = $params['group'];
