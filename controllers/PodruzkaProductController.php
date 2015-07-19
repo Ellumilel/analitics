@@ -50,7 +50,7 @@ class PodruzkaProductController extends Controller
     public function actionIndex()
     {
         $searchModel = new PodruzkaProductSearch();
-        //print_r(Yii::$app->request->queryParams);die;
+
         $condition = [];
         $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
 
