@@ -36,6 +36,9 @@ class UploadController extends Controller
                 //Вызываем компонент парсинга excel
                 $component = new ExcelComponent();
                 $component->uploadInformProduct();
+
+                $model->status = 1;
+                $model->save();
             }
         }
 

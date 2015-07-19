@@ -35,6 +35,12 @@ if (Yii::$app->controller->action->id === 'login') {
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
+        <?
+        $this->registerJs('$(document).on("pjax:timeout", function(event) {
+          // Prevent default timeout redirection behavior
+          event.preventDefault()
+        });');
+        ?>
     </head>
     <body class="<?= \dmstr\helpers\AdminLteHelper::skinClass() ?>">
     <?php $this->beginBody() ?>

@@ -88,6 +88,7 @@ class ExcelComponent
                     continue;
                 }
             }
+
             $objPHPExcel->disconnectWorksheets();   //чистим
             unset($objPHPExcel);    //память
             $startRow += $chunkSize;    //переходим на следующий шаг цикла, увеличивая строку, с которой будем читать файл
