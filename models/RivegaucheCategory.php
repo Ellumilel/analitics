@@ -31,7 +31,7 @@ class RivegaucheCategory extends \yii\db\ActiveRecord
         return [
             [['link'], 'required'],
             [['link'], 'string'],
-            [['group', 'category', 'sub_category'], 'string', 'max' => 255]
+            [['group', 'category', 'sub_category'], 'string', 'max' => 255],
         ];
     }
 
@@ -50,10 +50,13 @@ class RivegaucheCategory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return array
+     * @param $offset
+     * @param $limit
+     *
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public function getLinks()
+    public function getLinks($offset, $limit)
     {
-        return $this::find()->all();
+        return $this::find()->offset($offset)->limit($limit)->all();
     }
 }
