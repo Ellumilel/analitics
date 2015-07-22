@@ -27,32 +27,48 @@ class LetualLinkController extends Controller
     {
         /** @var $entity LetualCategory*/
         $entity = new LetualCategory();
+        $offset = 0;
 
-        foreach ($entity->getLinks() as $link) {
+        do {
+            $links = $entity->getLinks($offset, 5);
+            if (!empty($links)) {
+                foreach ($links as $link) {
 
-            $client = new Client();
-            $crawler = $client->request('GET', $link['link']);
-            //print_r($crawler);die;
-            $urls = $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
-                $href = $node->attr('href');
-                $url = $this->url.substr($href, 0, strpos($href, ";"));
+                    $client = new Client();
+                    $crawler = $client->request('GET', $link['link']);
+                    //print_r($crawler);die;
+                    $urls = $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
+                        $href = $node->attr('href');
+                        $url = $this->url . substr($href, 0, strpos($href, ";"));
 
-                return $url;
-            });
-            foreach ($urls as $key => $url) {
-                $linkModel = LetualLink::findOne(['link' => $url]);
-                if (!$linkModel) {
-                    $linkModel = new LetualLink();
+                        return $url;
+                    });
+
+                    foreach ($urls as $key => $url) {
+                        $linkModel = LetualLink::findOne(['link' => $url]);
+                        if (!$linkModel) {
+                            $linkModel = new LetualLink();
+                        }
+                        $linkModel->link = $url;
+
+                        $linkModel->group = $link['group'];
+                        $linkModel->category = $link['category'];
+                        $linkModel->sub_category = $link['sub_category'];
+                        $linkModel->save();
+                    }
                 }
-                $linkModel->link = $url;
 
-                $linkModel->group = $link['group'];
-                $linkModel->category = $link['category'];
-                $linkModel->sub_category = $link['sub_category'];
-                $linkModel->save();
+                $z = 1;
+                $offset += 5;
+                unset($links);
+                unset($linkModel);
+                unset($urls);
+                unset($client);
+
+            } else {
+                $z = 0;
             }
-        }
-
+        } while ($z > 0);
         return 0;
     }
 }
