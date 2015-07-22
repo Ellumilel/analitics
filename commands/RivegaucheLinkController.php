@@ -27,7 +27,7 @@ class RivegaucheLinkController extends Controller
     {
         /** @var $entity RivegaucheCategory */
         $entity = new RivegaucheCategory();
-        $offset = 0; // начало отсчета
+        $offset = 0;
 
         do {
             $links = $entity->getLinks($offset, 5);
@@ -45,7 +45,7 @@ class RivegaucheLinkController extends Controller
                             return $url;
                         });
 
-                        $i = (empty($urls)) ? 0 : 1; // выход из цикла
+                        $i = (empty($urls)) ? 0 : 1;
 
                         foreach ($urls as $key => $url) {
                             $linkModel = RivegaucheLink::findOne(['link' => $url]);

@@ -27,7 +27,7 @@ class IledebeauteLinkController extends Controller
     {
         /** @var $entity IledebeauteCategory */
         $entity = new IledebeauteCategory();
-        $offset = 0; // íà÷àëî îòñ÷åòà
+        $offset = 0; // Ğ½Ğ°Ñ‡Ğ°Ğ»Ğ¾ Ğ¾Ñ‚ÑÑ‡ĞµÑ‚Ğ°
 
         do {
             $links = $entity->getLinks($offset, 5);
@@ -46,7 +46,7 @@ class IledebeauteLinkController extends Controller
                             return $url;
                         });
 
-                        $i = (empty($urls)) ? 0 : 1; // âûõîä èç öèêëà
+                        $i = (empty($urls)) ? 0 : 1; // Ğ²Ñ‹Ñ…Ğ¾Ğ´ Ğ¸Ğ· Ñ†Ğ¸ĞºĞ»Ğ°
 
                         foreach ($urls as $key => $url) {
                             $linkModel = IledebeauteLink::findOne(['link' => $url]);
