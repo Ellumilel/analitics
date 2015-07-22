@@ -50,10 +50,13 @@ class LetualCategory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return array
+     * @param $offset
+     * @param $limit
+     *
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public function getLinks()
+    public function getLinks($offset, $limit)
     {
-        return $this::find()->all();
+        return $this::find()->offset($offset)->limit($limit)->all();
     }
 }
