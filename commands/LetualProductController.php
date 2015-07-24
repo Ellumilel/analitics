@@ -164,7 +164,6 @@ class LetualProductController extends Controller
 
                         $product->save();
                         if (!empty($letualPrice)) {
-
                             $letualPrice->save();
                         }
                     }

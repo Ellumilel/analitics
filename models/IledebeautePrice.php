@@ -7,25 +7,26 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "iledebeaute_link".
+ * This is the model class for table "iledebeaute_price".
  *
  * @property integer $id
- * @property string $link
- * @property string $group
- * @property string $category
- * @property string $sub_category
+ * @property string $article
+ * @property string $new_price
+ * @property string $old_price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ *
+ * @property IledebeauteProduct $article0
  */
-class IledebeauteLink extends \yii\db\ActiveRecord
+class IledebeautePrice extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'iledebeaute_link';
+        return 'iledebeaute_price';
     }
 
     /**
@@ -34,10 +35,10 @@ class IledebeauteLink extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link'], 'required'],
-            [['link'], 'string'],
+            [['article'], 'required'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['group', 'category', 'sub_category'], 'string', 'max' => 500]
+            [['article'], 'string', 'max' => 100],
+            [['new_price', 'old_price'], 'string', 'max' => 500]
         ];
     }
 
@@ -48,14 +49,21 @@ class IledebeauteLink extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'link' => 'Ссылка',
-            'group' => 'Группа',
-            'category' => 'Категория',
-            'sub_category' => 'Подкатегория',
-            'created_at' => 'Дата создания',
-            'updated_at' => 'Дата обновления',
-            'deleted_at' => 'Дата удаления',
+            'article' => 'Article',
+            'new_price' => 'New Price',
+            'old_price' => 'Old Price',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'deleted_at' => 'Deleted At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getArticle0()
+    {
+        return $this->hasOne(IledebeauteProduct::className(), ['article' => 'article']);
     }
 
     /**
@@ -73,16 +81,5 @@ class IledebeauteLink extends \yii\db\ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
         ];
-    }
-
-    /**
-     * @param $offset
-     * @param $limit
-     *
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getLinks($offset, $limit)
-    {
-        return $this::find()->offset($offset)->limit($limit)->all();
     }
 }
