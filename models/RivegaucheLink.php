@@ -61,6 +61,17 @@ class RivegaucheLink extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $offset
+     * @param $limit
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getLinks($offset, $limit)
+    {
+        return $this::find()->offset($offset)->limit($limit)->all();
+    }
+
+    /**
      * @return array
      */
     public function behaviors()

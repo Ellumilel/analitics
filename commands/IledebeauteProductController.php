@@ -37,7 +37,6 @@ class IledebeauteProductController extends Controller
 
             if (!empty($links)) {
                 foreach ($links as $link) {
-
                     $client = new Client();
                     $crawler = $client->request('GET', $link['link']);
 
@@ -252,11 +251,7 @@ class IledebeauteProductController extends Controller
                     unset($node);
                     unset($subNode);
                     unset($head);
-
-
-                   // $result[] = reset($body);
                 }
-
 
                 $z = 1;
                 $offset += 20;
