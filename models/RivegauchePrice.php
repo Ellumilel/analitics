@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "rivegauche_price".
@@ -48,10 +50,10 @@ class RivegauchePrice extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'article' => 'Article',
-            'gold_price' => 'Gold Price',
-            'blue_price' => 'Blue Price',
-            'price' => 'Price',
+            'article' => 'Артикул',
+            'gold_price' => 'Цена по золотой карте',
+            'blue_price' => 'Цена по стандартной карте',
+            'price' => 'Полная цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -64,5 +66,22 @@ class RivegauchePrice extends \yii\db\ActiveRecord
     public function getArticle0()
     {
         return $this->hasOne(RivegaucheProduct::className(), ['article' => 'article']);
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 }
