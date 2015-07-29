@@ -25,78 +25,92 @@ class LetualProductController extends Controller
      */
     public function actionIndex()
     {
-        $links = LetualLink::find()->all();
-        foreach ($links as $link) {
-            $client = new Client();
-            $crawler = $client->request('GET', $link->link);
+        $entity = new LetualLink();
+        $offset = 0;
+        do {
+            $links = $entity->getLinks($offset, 20);
+            if (!empty($links)) {
+                foreach ($links as $link) {
+                    $client = new Client();
+                    $crawler = $client->request('GET', $link->link);
 
-            $result = $crawler->filter('table.atg_store_productSummary tr')->each(function ($node) {
-                $title = $node->filter('td.item h2')->each(function ($subNode) {
-                    return $subNode->text();
-                });
+                    $result = $crawler->filter('table.atg_store_productSummary tr')->each(function ($node) {
+                        $title = $node->filter('td.item h2')->each(function ($subNode) {
+                            return $subNode->text();
+                        });
 
-                $article = $node->filter('td.item p.article')->each(function ($subNode) {
-                    return $subNode->text();
-                });
+                        $article = $node->filter('td.item p.article')->each(function ($subNode) {
+                            return $subNode->text();
+                        });
 
-                $description = $node->filter('td.item p.description')->each(function ($subNode) {
-                    return $subNode->text();
-                });
+                        $description = $node->filter('td.item p.description')->each(function ($subNode) {
+                            return $subNode->text();
+                        });
 
-                $price = $node->filter('td.price')->each(function ($subNode) {
-                    $oldPrice = $subNode->filter('p.old_price')->each(function ($subsNode) {
-                        return $subsNode->text();
+                        $price = $node->filter('td.price')->each(function ($subNode) {
+                            $oldPrice = $subNode->filter('p.old_price')->each(function ($subsNode) {
+                                return $subsNode->text();
+                            });
+                            $newPrice = $subNode->filter('p.new_price')->each(function ($subsNode) {
+                                return $subsNode->text();
+                            });
+
+                            $newPrice = trim(reset($newPrice));
+                            $newPrice = str_replace(' ', '', $newPrice);
+                            $newPrice = str_replace('*', '', $newPrice);
+                            $newPrice = str_replace('\r', '', $newPrice);
+                            $newPrice = str_replace('\n', '', $newPrice);
+
+                            $oldPrice = trim(reset($oldPrice));
+                            $oldPrice = str_replace(' ', '', $oldPrice);
+
+                            return [
+                                'oldPrice' => $oldPrice,
+                                'newPrice' => $newPrice,
+                            ];
+                        });
+
+                        $article = trim(reset($article));
+                        $article = str_replace('Артикул ', '', $article);
+                        $article = preg_replace("/[^a-zA-Z0-9]/", "", $article);
+
+                        return [
+                            'title' => reset($title),
+                            'article' => $article,
+                            'description' => reset($description),
+                            'price' => reset($price),
+                        ];
                     });
-                    $newPrice = $subNode->filter('p.new_price')->each(function ($subsNode) {
-                        return $subsNode->text();
+
+                    $brand = $crawler->filter('#brandImage')->each(function ($node) {
+                        return $node->attr('alt');
                     });
 
-                    $newPrice = trim(reset($newPrice));
-                    $newPrice = str_replace(' ', '', $newPrice);
-                    $newPrice = str_replace('*', '', $newPrice);
-                    $newPrice = str_replace('\r', '', $newPrice);
-                    $newPrice = str_replace('\n', '', $newPrice);
+                    $image = $crawler->filter('div.atg_store_productImage img')->each(function ($node) {
+                        return $this->url.$node->attr('src');
+                    });
 
-                    $oldPrice = trim(reset($oldPrice));
-                    $oldPrice = str_replace(' ', '', $oldPrice);
+                    $result = $this->checkArray($result);
 
-                    return [
-                        'oldPrice' => $oldPrice,
-                        'newPrice' => $newPrice,
-                    ];
-                });
+                    $result['brand'] = reset($brand);
+                    $result['image'] = reset($image);
+                    $result['link'] = $link->link;
+                    $result['group'] = $link->group;
+                    $result['category'] = $link->category;
+                    $result['sub_category'] = $link->sub_category;
 
-                $article = trim(reset($article));
-                $article = str_replace('Артикул ', '', $article);
-                $article = preg_replace ("/[^a-zA-Z0-9]/","", $article);
+                    $this->saveResult($result);
+                }
 
-                return [
-                    'title' => reset($title),
-                    'article' => $article,
-                    'description' => reset($description),
-                    'price' => reset($price),
-                ];
-            });
+                $z = 1;
+                $offset += 20;
+                unset($links);
+                unset($client);
+            } else {
+                $z = 0;
+            }
+        } while ($z > 0);
 
-            $brand = $crawler->filter('#brandImage')->each(function ($node) {
-                return $node->attr('alt');
-            });
-
-            $image = $crawler->filter('div.atg_store_productImage img')->each(function ($node) {
-                return $this->url.$node->attr('src');
-            });
-
-            $result = $this->checkArray($result);
-
-            $result['brand'] = reset($brand);
-            $result['image'] = reset($image);
-            $result['link'] = $link->link;
-            $result['group'] = $link->group;
-            $result['category'] = $link->category;
-            $result['sub_category'] = $link->sub_category;
-
-            $this->saveResult($result);
-        }
         return 0;
     }
 

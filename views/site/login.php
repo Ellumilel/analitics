@@ -6,7 +6,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \common\models\LoginForm */
 
-$this->title = 'Sign In';
+$this->title = 'Вход';
 
 $fieldOptions1 = [
     'options' => ['class' => 'form-group has-feedback'],
@@ -32,12 +32,12 @@ $fieldOptions2 = [
         <?= $form
             ->field($model, 'username', $fieldOptions1)
             ->label(false)
-            ->textInput(['placeholder' => $model->getAttributeLabel('username')]) ?>
+            ->textInput(['placeholder' => 'Логин']) ?>
 
         <?= $form
             ->field($model, 'password', $fieldOptions2)
             ->label(false)
-            ->passwordInput(['placeholder' => $model->getAttributeLabel('password')]) ?>
+            ->passwordInput(['placeholder' => 'Пароль']) ?>
 
         <div class="row">
             <!-- /.col -->
