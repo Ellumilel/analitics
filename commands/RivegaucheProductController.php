@@ -225,6 +225,8 @@ class RivegaucheProductController extends Controller
 
         if ($product->save()) {
             $rPrice->save();
+        } else {
+            \Yii::error($link, 'cron');
         }
     }
 
