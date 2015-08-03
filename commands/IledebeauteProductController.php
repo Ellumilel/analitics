@@ -182,7 +182,6 @@ class IledebeauteProductController extends Controller
                                         return $sub->text();
                                     }
                                 );
-
                                 if (empty(reset($oldPrice)) && empty(reset($newPrice))) {
                                     $newPrice = $sub->filter('span.def')->each(
                                         function ($sub) {
@@ -336,11 +335,45 @@ class IledebeauteProductController extends Controller
                             $description = str_replace('\n', '', $description);
                             $description = trim($description);
 
+                            $showcases_new = $sub->filter('td.b-showcase__item__tags span.new')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_sale = $sub->filter('td.b-showcase__item__tags span.sale')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_exclusive = $sub->filter('td.b-showcase__item__tags span.exclusive')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_limit = $sub->filter('td.b-showcase__item__tags span.limit')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_best = $sub->filter('td.b-showcase__item__tags span.best')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
                             return [
                                 'price' => reset($price),
                                 'article' => reset($article),
                                 'image' => reset($image),
                                 'description' => $description,
+                                'showcases_new' => !empty(reset($showcases_new)) ? 1 : 0,
+                                'showcases_sale' => !empty(reset($showcases_sale)) ? 1 : 0,
+                                'showcases_exclusive' => !empty(reset($showcases_exclusive)) ? 1 : 0,
+                                'showcases_limit' => !empty(reset($showcases_limit)) ? 1 : 0,
+                                'showcases_best' => !empty(reset($showcases_best)) ? 1 : 0,
                             ];
                         }
                     );
@@ -413,11 +446,46 @@ class IledebeauteProductController extends Controller
                             $description = str_replace('\n', '', $description);
                             $description = trim($description);
 
+                            $showcases_new = $sub->filter('td.b-showcase__item__tags span.new')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_sale = $sub->filter('td.b-showcase__item__tags span.sale')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_exclusive = $sub->filter('td.b-showcase__item__tags span.exclusive')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_limit = $sub->filter('td.b-showcase__item__tags span.limit')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
+                            $showcases_best = $sub->filter('td.b-showcase__item__tags span.best')->each(
+                                function ($sub) {
+                                    return $sub->text();
+                                }
+                            );
+
                             return [
                                 'price' => reset($price),
                                 'article' => reset($article),
                                 'image' => reset($image),
                                 'description' => $description,
+                                'showcases_new' => !empty(reset($showcases_new)) ? 1 : 0,
+                                'showcases_sale' => !empty(reset($showcases_sale)) ? 1 : 0,
+                                'showcases_exclusive' => !empty(reset($showcases_exclusive)) ? 1 : 0,
+                                'showcases_limit' => !empty(reset($showcases_limit)) ? 1 : 0,
+                                'showcases_best' => !empty(reset($showcases_best)) ? 1 : 0,
                             ];
                         }
                     );
