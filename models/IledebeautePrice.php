@@ -49,7 +49,7 @@ class IledebeautePrice extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'article' => 'Article',
+            'article' => 'Артикул',
             'new_price' => 'New Price',
             'old_price' => 'Old Price',
             'created_at' => 'Created At',

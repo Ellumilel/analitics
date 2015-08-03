@@ -5,9 +5,7 @@ namespace app\commands;
 use app\models\IledebeauteLink;
 use app\models\IledebeautePrice;
 use app\models\IledebeauteProduct;
-use app\models\LetualLink;
-use app\models\LetualPrice;
-use app\models\LetualProduct;
+use Symfony\Component\DomCrawler\Crawler;
 use yii\console\Controller;
 use Goutte\Client;
 
@@ -28,7 +26,7 @@ class IledebeauteProductController extends Controller
      */
     public function actionIndex()
     {
-        /** @var $entity IledebeauteLink*/
+        /** @var $entity IledebeauteLink */
         $entity = new IledebeauteLink();
         $offset = 0;
 
@@ -38,214 +36,20 @@ class IledebeauteProductController extends Controller
             if (!empty($links)) {
                 foreach ($links as $link) {
                     $client = new Client();
+                    /** @var Crawler $crawler */
                     $crawler = $client->request('GET', $link['link']);
+                    $head = $this->getHead($crawler);
+                    $body = $this->getBody($crawler, $head['brand']);
 
                     //TODO Обработка
-                    $head = $crawler->filter('div.b-product__bigColumn p.title')->each(function ($node) {
-                        $brand = $node->filter('a.title__brand')->each(function ($subNode) {
-                            return $subNode->text();
-                        });
-
-                        $title = $node->text();
-                        $title = str_replace('\r', '', $title);
-                        $title = str_replace('\n', '', $title);
-                        $title = str_replace($brand, '', $title);
-                        $title = trim($title);
-                        $title = str_replace(' ', '', $title);
-
-                        return [
-                            'brand' => reset($brand),
-                            'title' => $title,
-                        ];
-                    });
-
-                    if(empty(reset($head))) {
-                        $head = $crawler->filter('div.b-product__item__promo__content')->each(function ($node) {
-                            $title = $node->filter('div.b-product__item__promo__title h1')->each(function ($subNode) {
-                                return $subNode->text();
-                            });
-
-                            $brand = $node->filter('div.b-product__item__promo__logo a')->each(function ($subNode) {
-                                return $subNode->attr('href');
-                            });
-
-                            $title = reset($title);
-                            $title = str_replace('\r', '', $title);
-                            $title = str_replace('\n', '', $title);
-                            $title = trim($title);
-                            $title = str_replace(' ', '', $title);
-                            $title = str_replace('</span>', '', $title);
-                            $title = str_replace('<span>', '', $title);
-
-                            return [
-                                'brand' => reset($brand),
-                                'title' => $title,
-                            ];
-                        });
+                    if (empty($head) || empty($body)) {
+                       //todo логирование
+                    } else {
+                        $result = $head + $body;
                     }
 
-                    $body = $crawler->filter('table.b-showcase')->each(function ($node) {
-                        $items = $node->filter('tr.b-showcase__item')->each(function ($sub) {
-                            $price = $sub->filter('td.b-showcase__item__price')->each(function ($sub) {
-                                $oldPrice = $sub->filter('span.old')->each(function ($sub) {
-                                    return $sub->text();
-                                });
-                                $newPrice = $sub->filter('span.new')->each(function ($sub) {
-                                    return $sub->text();
-                                });
-
-                                if(empty(reset($oldPrice)) && empty(reset($newPrice))) {
-                                    $newPrice = $sub->filter('span.def')->each(function ($sub) {
-                                        return $sub->text();
-                                    });
-                                }
-
-                                $newPrice = trim(reset($newPrice));
-                                $newPrice = str_replace(' ', '', $newPrice);
-                                $newPrice = str_replace('*', '', $newPrice);
-                                $newPrice = str_replace('\r', '', $newPrice);
-                                $newPrice = str_replace('\n', '', $newPrice);
-
-                                $oldPrice = trim(reset($oldPrice));
-                                $oldPrice = str_replace(' ', '', $oldPrice);
-                                return [
-                                    'oldPrice' => (empty($oldPrice)) ? $newPrice : $oldPrice,
-                                    'newPrice' => $newPrice,
-                                ];
-                            });
-
-                            $article = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__brand')->each(function ($sub) {
-                                return $sub->text();
-                            });
-                            $image = $sub->filter('td.b-showcase__item__img img')->each(function ($sub) {
-                                return 'http::'.$sub->attr('src');
-                            });
-                            $description = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__link')->each(function ($sub) {
-                                return $sub->text();
-                            });
-
-                            if(!empty(reset($description))) {
-                                $description = trim(reset($description));
-                                $description = str_replace(' ', '', $description);
-                                $description = str_replace('*', '', $description);
-                                $description = str_replace('\r', '', $description);
-                                $description = str_replace('\n', '', $description);
-                                $description = trim($description);
-                            }
-
-                            if(empty(reset($article)) && empty(reset($price))) {
-                                return [];
-                            }
-
-                            return [
-                                'price' => reset($price),
-                                'article' => reset($article),
-                                'image' => reset($image),
-                                'description' => $description,
-                            ];
-                        });
-                        return $items;
-                    });
-
-                    if(empty(reset($body))) {
-                        $body = $crawler->filter('tr.b-cart__showcase__item')->each(function ($sub) {
-                            $price = $sub->filter('td.b-cart__showcase__item__price')->each(function ($sub) {
-                                $oldPrice = $sub->filter('span.old')->each(function ($sub) {
-                                    return $sub->text();
-                                });
-
-                                $newPrice = $sub->filter('span.new')->each(function ($sub) {
-                                    return $sub->text();
-                                });
-
-                                if (empty(reset($oldPrice)) && empty(reset($newPrice))) {
-                                    $newPrice = $sub->filter('span.def')->each(function ($sub) {
-                                        return $sub->text();
-                                    });
-                                }
-
-                                $newPrice = trim(reset($newPrice));
-                                $newPrice = str_replace(' ', '', $newPrice);
-                                $newPrice = str_replace('*', '', $newPrice);
-                                $newPrice = str_replace('\r', '', $newPrice);
-                                $newPrice = str_replace('\n', '', $newPrice);
-
-                                $oldPrice = trim(reset($oldPrice));
-                                $oldPrice = str_replace(' ', '', $oldPrice);
-
-                                return [
-                                    'oldPrice' => (empty($oldPrice)) ? $newPrice : $oldPrice,
-                                    'newPrice' => $newPrice,
-                                ];
-                            });
-
-                            $article = $sub->filter('td p.b-cart__showcase__item__brand')->each(function (
-                                $sub
-                            ) {
-                                return $sub->text();
-                            });
-                            $image = $sub->filter('td.b-cart__showcase__item__img img')->each(function ($sub) {
-                                return $this->url.$sub->attr('src');
-                            });
-                            $description = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__link')->each(function (
-                                $sub
-                            ) {
-                                return $sub->text();
-                            });
-                            $description = trim(reset($description));
-                            $description = str_replace(' ', '', $description);
-                            $description = str_replace('*', '', $description);
-                            $description = str_replace('\r', '', $description);
-                            $description = str_replace('\n', '', $description);
-                            $description = trim($description);
-
-                            return [
-                                'price' => reset($price),
-                                'article' => reset($article),
-                                'image' => reset($image),
-                                'description' => $description,
-                            ];
-                        });
-                    }
-
-                    $result = [
-                        'head' => reset($head),
-                        'body' => reset($body),
-                    ];
-
-                    if(!empty($result)) {
-                        foreach ($result['body'] as $item) {
-                            if(!empty($item['article'])) {
-                                $product = IledebeauteProduct::findOne(['article' => $item['article']]);
-                                if (!$product) {
-                                    $product = new IledebeauteProduct();
-                                }
-
-                                $product->brand = $result['head']['brand'];
-                                $product->title = $result['head']['title'];
-                                $product->article = $item['article'];
-                                $product->category = $link['category'];
-                                $product->group = $link['group'];
-                                $product->link = $link['link'];
-                                $product->sub_category = $link['sub_category'];
-                                $product->image_link = $item['image'];
-                                $product->description = $item['description'];
-
-                                $iledebeautePrice = new IledebeautePrice();
-                                $iledebeautePrice->article = $item['article'];
-
-                                if (!empty($item['price']['newPrice'])) {
-                                    $iledebeautePrice->new_price = $item['price']['newPrice'];
-                                }
-                                if (!empty($item['price']['oldPrice'])) {
-                                    $iledebeautePrice->old_price = $item['price']['oldPrice'];
-                                }
-                                $product->save();
-                                if (!empty($iledebeautePrice)) {
-                                    $iledebeautePrice->save();
-                                }
-                            }
-                        }
+                    if (!empty($result)) {
+                        $this->saveResult($result, $link);
                     }
 
                     unset($node);
@@ -267,73 +71,467 @@ class IledebeauteProductController extends Controller
     }
 
     /**
-     * Очищает массив от пустых элементов
+     * Выбирает заголовки и бренд
      *
-     * @param array $result
+     * @param $crawler
      *
      * @return array
      */
-    private function checkArray($result)
+    private function getHead($crawler)
     {
-        $data = [];
-        foreach ($result as $key=>$res) {
-            if (empty($res['article'])) {
-                unset($result[$key]);
-            } else {
-                $data['elements'][] = $result[$key];
+        $head = $crawler->filter('div.b-product__bigColumn p.title')->each(
+            function ($node) {
+                $brand = $node->filter('a.title__brand')->each(
+                    function ($subNode) {
+                        return $subNode->text();
+                    }
+                );
+
+                $title = $node->text();
+                $title = str_replace('\r', '', $title);
+                $title = str_replace('\n', '', $title);
+                $title = str_replace($brand, '', $title);
+                $title = trim($title);
+                $title = str_replace(' ', '', $title);
+
+                return [
+                    'brand' => reset($brand),
+                    'title' => $title,
+                ];
             }
+        );
+
+        if (empty(reset($head))) {
+            $head = $crawler->filter('div.b-product__item__promo__content')->each(
+                function ($node) {
+                    $title = $node->filter('div.b-product__item__promo__title h1')->each(
+                        function ($subNode) {
+                            return $subNode->text();
+                        }
+                    );
+
+                    $brand = $node->filter('div.b-product__item__promo__logo a')->each(
+                        function ($subNode) {
+                            $brand = $subNode->attr('href');
+                            $brand = str_replace('/shop/brands/', '', $brand);
+                            $brand = str_replace('/', '', $brand);
+                            return $brand;
+                        }
+                    );
+                    $title = $this->clearTitle($title);
+                    return [
+                        'brand' => reset($brand),
+                        'title' => $title,
+                    ];
+                }
+            );
         }
 
-        return $data;
+        if (empty(reset($head))) {
+            $head = $crawler->filter('div.b-product__item__item')->each(
+                function ($node) {
+                    $title = $node->filter('div.b-product__item__item__title h1')->each(
+                        function ($subNode) {
+                            return $subNode->text();
+                        }
+                    );
+
+                    $brand = $node->filter('div.b-product__item__item__logo a')->each(
+                        function ($subNode) {
+                            $brand = $subNode->attr('href');
+                            $brand = str_replace('/shop/brands/', '', $brand);
+                            $brand = str_replace('/', '', $brand);
+                            return $brand;
+                        }
+                    );
+                    $title = $this->clearTitle($title);
+                    return [
+                        'brand' => reset($brand),
+                        'title' => $title,
+                    ];
+                }
+            );
+        }
+
+        return reset($head);
     }
 
-    private function saveResult($result)
+    /**
+     * Выбирает тело с основным набором параметров
+     *
+     * @param Crawler $crawler
+     * @param string $brand
+     *
+     * @return array
+     */
+    private function getBody(Crawler $crawler, $brand = '')
     {
-        foreach($result as $key=>$res) {
-            if($key == 'elements') {
-                foreach ($res as $data) {
-                    $product = LetualProduct::findOne(['article' => $data['article']]);
+        $body = $crawler->filter('table.b-showcase')->each(
+            function ($node) {
+                $items = $node->filter('tr.b-showcase__item')->each(
+                    function ($sub) {
+                        $price = $sub->filter('td.b-showcase__item__price')->each(
+                            function ($sub) {
+                                $oldPrice = $sub->filter('span.old')->each(
+                                    function ($sub) {
+                                        return $sub->text();
+                                    }
+                                );
+                                $newPrice = $sub->filter('span.new')->each(
+                                    function ($sub) {
+                                        return $sub->text();
+                                    }
+                                );
 
-                    if (!$product) {
-                        $product = new LetualProduct();
-                    }
+                                if (empty(reset($oldPrice)) && empty(reset($newPrice))) {
+                                    $newPrice = $sub->filter('span.def')->each(
+                                        function ($sub) {
+                                            return $sub->text();
+                                        }
+                                    );
+                                }
 
-                    $product->article = $data['article'];
-                    $product->title = $data['title'];
-                    $product->description = $data['description'];
+                                $newPrice = $this->clearPrice($newPrice);
+                                $oldPrice = $this->clearPrice($oldPrice);
 
-                    $letualPrice = new LetualPrice();
-                    $letualPrice->article = $data['article'];
+                                return [
+                                    'oldPrice' => (empty($oldPrice)) ? $newPrice : $oldPrice,
+                                    'newPrice' => $newPrice,
+                                ];
+                            }
+                        );
 
-                    if(!empty($data['price']['newPrice'])) {
-                        $letualPrice->new_price = $data['price']['newPrice'];
-                    }
-                    if(!empty($data['price']['oldPrice'])) {
-                        $letualPrice->old_price =$data['price']['oldPrice'];
-                    }
+                        $article = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__brand')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
+                        $image = $sub->filter('td.b-showcase__item__img img')->each(
+                            function ($sub) {
+                                return 'http:'.$sub->attr('src');
+                            }
+                        );
+                        $description = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__link')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
 
-                    if (!empty($product)) {
-                        $product->brand = $result['brand'];
-                        $product->image_link = $result['image'];
-                        $product->link = $result['link'];
-                        $product->group = $result['group'];
-                        $product->category = $result['category'];
-                        $product->sub_category = $result['sub_category'];
+                        $showcases_new = $sub->filter('td.b-showcase__item__tags span.new')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
 
-                        if(!empty($letualPrice->new_price)) {
-                            $product->new_price = $letualPrice->new_price;
+                        $showcases_sale = $sub->filter('td.b-showcase__item__tags span.sale')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
+
+                        $showcases_exclusive = $sub->filter('td.b-showcase__item__tags span.exclusive')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
+
+                        $showcases_limit = $sub->filter('td.b-showcase__item__tags span.limit')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
+
+                        $showcases_best = $sub->filter('td.b-showcase__item__tags span.best')->each(
+                            function ($sub) {
+                                return $sub->text();
+                            }
+                        );
+
+                        if (!empty(reset($description))) {
+                            $description = $this->clearDescription($description);
                         }
 
-                        if(!empty($letualPrice->old_price)) {
-                            $product->old_price = $letualPrice->old_price;
+                        if (empty(reset($article)) && empty(reset($price))) {
+                            return [];
                         }
 
-                        $product->save();
-                        if (!empty($letualPrice)) {
-
-                            $letualPrice->save();
-                        }
+                        return [
+                            'price' => reset($price),
+                            'article' => reset($article),
+                            'image' => reset($image),
+                            'description' => $description,
+                            'showcases_new' => !empty(reset($showcases_new)) ? 1 : 0,
+                            'showcases_sale' => !empty(reset($showcases_sale)) ? 1 : 0,
+                            'showcases_exclusive' => !empty(reset($showcases_exclusive)) ? 1 : 0,
+                            'showcases_limit' => !empty(reset($showcases_limit)) ? 1 : 0,
+                            'showcases_best' => !empty(reset($showcases_best)) ? 1 : 0,
+                        ];
                     }
+                );
+                $result['items'] = $items;
+                return $result;
+            }
+        );
+
+        if (empty(reset($body))) {
+            $body = $crawler->filter('table.b-showcase')->each(
+                function ($node) {
+                    $items = $node->filter('tr.b-cart__showcase__item')->each(
+                        function ($sub) {
+                            $price = $sub->filter('td.b-cart__showcase__item__price')->each(
+                                function ($sub) {
+                                    $oldPrice = $sub->filter('span.old')->each(
+                                        function ($sub) {
+                                            return $sub->text();
+                                        }
+                                    );
+
+                                    $newPrice = $sub->filter('span.new')->each(
+                                        function ($sub) {
+                                            return $sub->text();
+                                        }
+                                    );
+
+                                    if (empty(reset($oldPrice)) && empty(reset($newPrice))) {
+                                        $newPrice = $sub->filter('span.def')->each(
+                                            function ($sub) {
+                                                return $sub->text();
+                                            }
+                                        );
+                                    }
+
+                                    $newPrice = $this->clearPrice($newPrice);
+                                    $oldPrice = $this->clearPrice($oldPrice);
+
+                                    return [
+                                        'oldPrice' => (empty($oldPrice)) ? $newPrice : $oldPrice,
+                                        'newPrice' => $newPrice,
+                                    ];
+                                }
+                            );
+
+                            $article = $sub->filter('td p.b-cart__showcase__item__brand')->each(
+                                function (
+                                    $sub
+                                ) {
+                                    return $sub->text();
+                                }
+                            );
+                            $image = $sub->filter('td.b-cart__showcase__item__img img')->each(
+                                function ($sub) {
+                                    return 'http:'.$sub->attr('src');
+                                }
+                            );
+                            $description = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__link')->each(
+                                function (
+                                    $sub
+                                ) {
+                                    return $sub->text();
+                                }
+                            );
+                            $description = trim(reset($description));
+                            $description = str_replace(' ', '', $description);
+                            $description = str_replace('*', '', $description);
+                            $description = str_replace('\r', '', $description);
+                            $description = str_replace('\n', '', $description);
+                            $description = trim($description);
+
+                            return [
+                                'price' => reset($price),
+                                'article' => reset($article),
+                                'image' => reset($image),
+                                'description' => $description,
+                            ];
+                        }
+                    );
+                    $result['items'] = $items;
+                    return $result;
+                }
+            );
+        }
+
+        if (empty(reset($body))) {
+            $body = $crawler->filter('table.b-cart__showcase_'.$brand)->each(
+                function ($node) {
+                    $items = $node->filter('tr.b-cart__showcase__item')->each(
+                        function ($sub) {
+                            $price = $sub->filter('td.b-cart__showcase__item__price')->each(
+                                function ($sub) {
+                                    $oldPrice = $sub->filter('span.old')->each(
+                                        function ($sub) {
+                                            return $sub->text();
+                                        }
+                                    );
+
+                                    $newPrice = $sub->filter('span.new')->each(
+                                        function ($sub) {
+                                            return $sub->text();
+                                        }
+                                    );
+
+                                    if (empty(reset($oldPrice)) && empty(reset($newPrice))) {
+                                        $newPrice = $sub->filter('span.def')->each(
+                                            function ($sub) {
+                                                return $sub->text();
+                                            }
+                                        );
+                                    }
+
+                                    $newPrice = $this->clearPrice($newPrice);
+                                    $oldPrice = $this->clearPrice($oldPrice);
+
+                                    return [
+                                        'oldPrice' => (empty($oldPrice)) ? $newPrice : $oldPrice,
+                                        'newPrice' => $newPrice,
+                                    ];
+                                }
+                            );
+
+                            $article = $sub->filter('td p.b-cart__showcase__item__brand')->each(
+                                function (
+                                    $sub
+                                ) {
+                                    return $sub->text();
+                                }
+                            );
+                            $image = $sub->filter('td.b-cart__showcase__item__img img')->each(
+                                function ($sub) {
+                                    return 'http:'.$sub->attr('src');
+                                }
+                            );
+                            $description = $sub->filter('td.b-showcase__item__descr p.b-showcase__item__link')->each(
+                                function (
+                                    $sub
+                                ) {
+                                    return $sub->text();
+                                }
+                            );
+                            $description = trim(reset($description));
+                            $description = str_replace(' ', '', $description);
+                            $description = str_replace('*', '', $description);
+                            $description = str_replace('\r', '', $description);
+                            $description = str_replace('\n', '', $description);
+                            $description = trim($description);
+
+                            return [
+                                'price' => reset($price),
+                                'article' => reset($article),
+                                'image' => reset($image),
+                                'description' => $description,
+                            ];
+                        }
+                    );
+                    $result['items'] = $items;
+                    return $result;
+                }
+            );
+        }
+        return reset($body);
+    }
+
+    /**
+     * Чистит цену
+     *
+     * @param array $title
+     *
+     * @return string
+     */
+    private function clearTitle($title)
+    {
+        $title = reset($title);
+        $title = str_replace('\r', '', $title);
+        $title = str_replace('\n', '', $title);
+        $title = trim($title);
+        $title = str_replace(' ', '', $title);
+        $title = str_replace('</span>', '', $title);
+        $title = str_replace('<span>', '', $title);
+
+        return (string)$title;
+    }
+
+    /**
+     * Чистит цену
+     *
+     * @param $price
+     *
+     * @return int
+     */
+    private function clearPrice($price)
+    {
+        $price = reset($price);
+        $price = str_replace(' руб.', '', $price);
+        $price = str_replace(' ', '', $price);
+        $price = trim($price);
+        $price = str_replace(' ', '', $price);
+        $price = str_replace('*', '', $price);
+        $price = str_replace('\r', '', $price);
+        $price = str_replace('\n', '', $price);
+        $price = nl2br($price);
+        $price = str_replace('<br />', '', $price);
+        $price = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $price);
+        $price = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $price);
+        return (int)$price;
+    }
+
+    /**
+     * Чистит цену
+     *
+     * @param $description
+     *
+     * @return string
+     */
+    private function clearDescription($description)
+    {
+        $description = reset($description);
+        $description = trim($description);
+        //$description = str_replace(' ', '', $description);
+        $description = str_replace('*', '', $description);
+        $description = str_replace('\r', '', $description);
+        $description = str_replace('\n', '', $description);
+        $description = nl2br($description);
+        $description = str_replace('<br />', '', $description);
+        //$description = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $description);
+        $description = str_replace(array("\r\n", "\r", "\n", "\t"), '', $description);
+        return (string)$description;
+    }
+
+    private function saveResult($result, $link)
+    {
+        foreach ($result['items'] as $item) {
+            if (!empty($item['article'])) {
+
+                $product = IledebeauteProduct::findOne(['article' => $item['article']]);
+                if (!$product) {
+                    $product = new IledebeauteProduct();
+                }
+
+                $product->brand = ucwords($result['brand']);
+                $product->title = $result['title'];
+                $product->article = $item['article'];
+                $product->showcases_new = $item['showcases_new'];
+                $product->showcases_sale = $item['showcases_sale'];
+                $product->showcases_exclusive = $item['showcases_exclusive'];
+                $product->showcases_limit = $item['showcases_limit'];
+                $product->showcases_best = $item['showcases_best'];
+                $product->category = $link['category'];
+                $product->group = $link['group'];
+                $product->link = $link['link'];
+                $product->sub_category = $link['sub_category'];
+                $product->image_link = $item['image'];
+                $product->description = $item['description'];
+
+                $price = new IledebeautePrice();
+                $price->article = $item['article'];
+
+                if (!empty($item['price']['newPrice'])) {
+                    $price->new_price = (string)$item['price']['newPrice'];
+                }
+                if (!empty($item['price']['oldPrice'])) {
+                    $price->old_price = (string)$item['price']['oldPrice'];
+                }
+
+                if (!empty($price) && $product->save()) {
+                    $price->save();
                 }
             }
         }
