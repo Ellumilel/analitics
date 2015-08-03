@@ -62,7 +62,7 @@ class IledebeauteProduct extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'article' => 'Article',
+            'article' => 'Артикул',
             'link' => 'Link',
             'group' => 'Group',
             'category' => 'Category',
