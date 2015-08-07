@@ -205,6 +205,15 @@ class LetualProductController extends Controller
             case 'Dolce&Gabbana':
                 $brand = 'DOLCE & GABBANA';
                 break;
+            case "L`OREAL PARIS":
+                $brand = 'LOREAL';
+                break;
+            case "YES TO...":
+                $brand = 'YES TO';
+                break;
+            case "DSQUARED2":
+                $brand = 'DSQUARED';
+                break;
         }
 
         $brand = strtoupper($brand);
