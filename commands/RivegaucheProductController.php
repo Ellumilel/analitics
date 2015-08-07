@@ -263,6 +263,12 @@ class RivegaucheProductController extends Controller
      */
     private function clearBrand($brand)
     {
+        switch ($brand) {
+            case "L'OREAL":
+                $brand = 'LOREAL';
+                break;
+        }
+
         $brand = strtoupper($brand);
         return $brand;
     }
