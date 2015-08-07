@@ -194,7 +194,7 @@ class RivegaucheProductController extends Controller
             $product = new RivegaucheProduct();
         }
 
-        $product->brand = $result['brand'];
+        $product->brand = $this->clearBrand($result['brand']);
         $product->title = $result['title'];
         $product->article = $article;
         $product->category = $link['category'];
@@ -252,5 +252,18 @@ class RivegaucheProductController extends Controller
         $price = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $price);
         $price = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $price);
         return (int)$price;
+    }
+
+    /**
+     * В рамках получения брендов пытаемся устранить косяки с заполнением
+     *
+     * @param string $brand
+     *
+     * @return string
+     */
+    private function clearBrand($brand)
+    {
+        $brand = strtoupper($brand);
+        return $brand;
     }
 }

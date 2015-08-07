@@ -24,9 +24,12 @@ class SphinxController extends Controller
     {
         $query = new Query;
         $rows = $query->from('iproduct')
-            ->match(new Expression(':match', ['match' => '@(content) ' . \Yii::$app->sphinx->escapeMatchValue("киви")]))
+            ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue("киви")]))
             ->all();
-
+        $rows = $query->from('iproduct')
+            ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue("LADY REBEL ROCK DELUXE")]))
+            ->all();
+        print_r($rows);die;
         return $rows;
     }
 }
