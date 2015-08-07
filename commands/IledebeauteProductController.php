@@ -563,6 +563,31 @@ class IledebeauteProductController extends Controller
         return (string)$description;
     }
 
+    /**
+     * В рамках получения брендов пытаемся устранить косяки с заполнением
+     *
+     * @param string $brand
+     *
+     * @return string
+     */
+    private function clearBrand($brand)
+    {
+        switch ($brand) {
+            case 'D&G':
+                $brand = 'DOLCE & GABBANA';
+                break;
+            case 'Dolce&Gabbana Make Up':
+                $brand = 'DOLCE & GABBANA';
+                break;
+            case 'Dolce&Gabbana':
+                $brand = 'DOLCE & GABBANA';
+                break;
+        }
+
+        $brand = strtoupper($brand);
+        return $brand;
+    }
+
     private function saveResult($result, $link)
     {
         foreach ($result['items'] as $item) {
@@ -573,7 +598,7 @@ class IledebeauteProductController extends Controller
                     $product = new IledebeauteProduct();
                 }
 
-                $product->brand = ucwords($result['brand']);
+                $product->brand = $this->clearBrand($result['brand']);
                 $product->title = $result['title'];
                 $product->article = $item['article'];
                 $product->showcases_new = $item['showcases_new'];

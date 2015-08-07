@@ -161,7 +161,7 @@ class LetualProductController extends Controller
                     }
 
                     if (!empty($product)) {
-                        $product->brand = $result['brand'];
+                        $product->brand = $this->clearBrand($result['brand']);
                         $product->image_link = $result['image'];
                         $product->link = $result['link'];
                         $product->group = $result['group'];
@@ -184,5 +184,30 @@ class LetualProductController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * В рамках получения брендов пытаемся устранить косяки с заполнением
+     *
+     * @param string $brand
+     *
+     * @return string
+     */
+    private function clearBrand($brand)
+    {
+        switch ($brand) {
+            case 'DOLCE&GABBANA':
+                $brand = 'DOLCE & GABBANA';
+                break;
+            case 'DOLCE & GABBANA MAKE UP':
+                $brand = 'DOLCE & GABBANA';
+                break;
+            case 'Dolce&Gabbana':
+                $brand = 'DOLCE & GABBANA';
+                break;
+        }
+
+        $brand = strtoupper($brand);
+        return $brand;
     }
 }
