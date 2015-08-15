@@ -45,6 +45,7 @@ class LetualCategorySearch extends LetualCategory
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 50]
         ]);
 
         $this->load($params);

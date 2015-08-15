@@ -209,19 +209,17 @@ class RivegaucheProductController extends Controller
         $product->showcases_compliment = $result['showcases_compliment'];
         $product->showcases_bestsellers = $result['showcases_bestsellers'];
         $product->showcases_expertiza = $result['showcases_expertiza'];
+        $product->gold_price = $this->getPrice($result['price']['gold_price']);
+        $product->blue_price = $this->getPrice($result['price']['blue_price']);
+        $product->price = $this->getPrice($result['price']['price']);
 
         $rPrice = new RivegauchePrice();
         $rPrice->article = $article;
 
-        if (!empty($result['price']['gold_price'])) {
-            $rPrice->gold_price = (string)$result['price']['gold_price'];
-        }
-        if (!empty($result['price']['blue_price'])) {
-            $rPrice->blue_price = (string)$result['price']['blue_price'];
-        }
-        if (!empty($result['price']['price'])) {
-            $rPrice->price = (string)$result['price']['price'];
-        }
+        $rPrice->gold_price = $this->getPrice($result['price']['gold_price']);
+        $rPrice->blue_price = $this->getPrice($result['price']['blue_price']);
+        $rPrice->price = $this->getPrice($result['price']['price']);
+
 
         if ($product->save()) {
             $rPrice->save();
@@ -267,9 +265,30 @@ class RivegaucheProductController extends Controller
             case "L'OREAL":
                 $brand = 'LOREAL';
                 break;
+            case "COLORAMA":
+                $brand = 'MAYBELLINE';
+                break;
         }
 
         $brand = strtoupper($brand);
         return $brand;
+    }
+
+    /**
+     * Получаем либо цену либо 0
+     *
+     * @param $price
+     *
+     * @return float
+     */
+    private function getPrice($price)
+    {
+        $price = (float) $price;
+
+        if (!empty($price) && is_float($price)) {
+            return (float) $price;
+        }
+
+        return (float) 0;
     }
 }

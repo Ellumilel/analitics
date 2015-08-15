@@ -11,8 +11,8 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property string $article
- * @property string $new_price
- * @property string $old_price
+ * @property number $new_price
+ * @property number $old_price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -36,9 +36,9 @@ class IledebeautePrice extends \yii\db\ActiveRecord
     {
         return [
             [['article'], 'required'],
+            [['new_price', 'old_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['new_price', 'old_price'], 'string', 'max' => 500]
         ];
     }
 
@@ -50,8 +50,8 @@ class IledebeautePrice extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'article' => 'Артикул',
-            'new_price' => 'New Price',
-            'old_price' => 'Old Price',
+            'new_price' => 'Новая цена',
+            'old_price' => 'Старая цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',

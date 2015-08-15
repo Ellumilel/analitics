@@ -43,7 +43,6 @@ class ExcelComponent
             for ($i = $startRow; $i < $startRow + $chunkSize; $i++)    //внутренний цикл по строкам
             {
                 //получаем первое знаение в строке
-                //$value = trim(htmlspecialchars($objWorksheet->getCellByColumnAndRow(0, $i)->getValue()));
                 $value = $objWorksheet->getCellByColumnAndRow(0, $i)->getValue();
 
                 if (!empty($value)) {
@@ -54,15 +53,17 @@ class ExcelComponent
                                 $objWorksheet->getCellByColumnAndRow(0, $i)->getValue()
                             )
                         );
-                        $product->group = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
-                        $product->category = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
-                        $product->sub_category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
-                        $product->detail = (string) $objWorksheet->getCellByColumnAndRow(5, $i)->getValue();
-                        $product->brand = (string) $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
-                        $product->sub_brand = (string) $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
-                        $product->line = (string) $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
-                        $product->price = (string) $objWorksheet->getCellByColumnAndRow(9, $i)->getValue();
-                        $product->ma_price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
+
+                        $product->arrival = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
+                        $product->group = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
+                        $product->category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
+                        $product->sub_category = (string) $objWorksheet->getCellByColumnAndRow(5, $i)->getValue();
+                        $product->detail = (string) $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
+                        $product->brand = (string) $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
+                        $product->sub_brand = (string) $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
+                        $product->line = (string) $objWorksheet->getCellByColumnAndRow(9, $i)->getValue();
+                        $product->price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
+                        $product->ma_price = (string) $objWorksheet->getCellByColumnAndRow(11, $i)->getValue();
 
                         $product->save();
                     }
@@ -70,8 +71,8 @@ class ExcelComponent
 
                 $productPrice = new PodruzkaPrice();
                 $productPrice->article = $objWorksheet->getCellByColumnAndRow(0, $i)->getValue();
-                $productPrice->price = (string) $objWorksheet->getCellByColumnAndRow(9, $i)->getValue();
-                $productPrice->ma_price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
+                $productPrice->price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
+                $productPrice->ma_price = (string) $objWorksheet->getCellByColumnAndRow(11, $i)->getValue();
 
                 if (!$productPrice->save()) {
                     //TODO ?

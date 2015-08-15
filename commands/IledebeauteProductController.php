@@ -498,7 +498,7 @@ class IledebeauteProductController extends Controller
     }
 
     /**
-     * Чистит цену
+     * Чистит заголовок
      *
      * @param array $title
      *
@@ -542,7 +542,7 @@ class IledebeauteProductController extends Controller
     }
 
     /**
-     * Чистит цену
+     * Чистит описание
      *
      * @param $description
      *
@@ -588,6 +588,12 @@ class IledebeauteProductController extends Controller
         return $brand;
     }
 
+    /**
+     * Сохраняем результаты из массива
+     *
+     * @param $result
+     * @param $link
+     */
     private function saveResult($result, $link)
     {
         foreach ($result['items'] as $item) {
@@ -606,6 +612,8 @@ class IledebeauteProductController extends Controller
                 $product->showcases_exclusive = $item['showcases_exclusive'];
                 $product->showcases_limit = $item['showcases_limit'];
                 $product->showcases_best = $item['showcases_best'];
+                $product->new_price = $this->getPrice($item['price']['newPrice']);
+                $product->old_price = $this->getPrice($item['price']['oldPrice']);
                 $product->category = $link['category'];
                 $product->group = $link['group'];
                 $product->link = $link['link'];
@@ -616,17 +624,31 @@ class IledebeauteProductController extends Controller
                 $price = new IledebeautePrice();
                 $price->article = $item['article'];
 
-                if (!empty($item['price']['newPrice'])) {
-                    $price->new_price = (string)$item['price']['newPrice'];
-                }
-                if (!empty($item['price']['oldPrice'])) {
-                    $price->old_price = (string)$item['price']['oldPrice'];
-                }
+                $price->new_price = $this->getPrice($item['price']['newPrice']);
+                $price->old_price = $this->getPrice($item['price']['oldPrice']);
 
                 if (!empty($price) && $product->save()) {
                     $price->save();
                 }
             }
         }
+    }
+
+    /**
+     * Получаем либо цену либо 0
+     *
+     * @param $price
+     *
+     * @return float
+     */
+    private function getPrice($price)
+    {
+        $price = (float) $price;
+
+        if (!empty($price) && is_float($price)) {
+            return (float) $price;
+        }
+
+        return (float) 0;
     }
 }
