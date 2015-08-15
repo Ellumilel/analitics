@@ -1,6 +1,13 @@
 html,
 body {
     height: 100%;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 300 !important;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+td, th {
+    padding: 1px !important;
 }
 
 .wrap {

@@ -24,6 +24,8 @@ use yii\db\Expression;
  * @property integer $showcases_limit
  * @property integer $showcases_sale
  * @property integer $showcases_best
+ * @property number $new_price
+ * @property number $old_price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -47,6 +49,7 @@ class IledebeauteProduct extends \yii\db\ActiveRecord
     {
         return [
             [['article'], 'required'],
+            [['new_price', 'old_price'], 'number'],
             [['link', 'title', 'image_link'], 'string'],
             [['showcases_new', 'showcases_exclusive', 'showcases_limit', 'showcases_sale', 'showcases_best'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
@@ -63,19 +66,21 @@ class IledebeauteProduct extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'article' => 'Артикул',
-            'link' => 'Link',
-            'group' => 'Group',
-            'category' => 'Category',
-            'sub_category' => 'Sub Category',
-            'brand' => 'Brand',
-            'title' => 'Title',
-            'description' => 'Description',
-            'image_link' => 'Image Link',
-            'showcases_new' => 'Showcases New',
-            'showcases_exclusive' => 'Showcases Exclusive',
-            'showcases_limit' => 'Showcases Limit',
-            'showcases_sale' => 'Showcases Sale',
+            'link' => 'Ссылка',
+            'group' => 'Группа',
+            'category' => 'Категория',
+            'sub_category' => 'Подкатегория',
+            'brand' => 'Бренд',
+            'title' => 'Заголовок',
+            'description' => 'Описание',
+            'image_link' => 'Картинка',
+            'showcases_new' => 'Новинка',
+            'showcases_exclusive' => 'Эксклюзив',
+            'showcases_limit' => 'Ограниченная',
+            'showcases_sale' => 'Распродажа',
             'showcases_best' => 'Showcases Best',
+            'old_price' => 'Старая цена',
+            'new_price' => 'Новая цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',

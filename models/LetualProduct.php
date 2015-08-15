@@ -18,8 +18,8 @@ use yii\db\Expression;
  * @property string $brand
  * @property string $title
  * @property string $description
- * @property string $old_price
- * @property string $new_price
+ * @property number $old_price
+ * @property number $new_price
  * @property string $image_link
  * @property string $created_at
  * @property string $updated_at
@@ -45,9 +45,10 @@ class LetualProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['link', 'title', 'image_link'], 'string'],
+            [['old_price', 'new_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['group', 'category', 'sub_category', 'brand', 'description', 'old_price', 'new_price'], 'string', 'max' => 500]
+            [['group', 'category', 'sub_category', 'brand', 'description'], 'string', 'max' => 500]
         ];
     }
 
@@ -59,16 +60,16 @@ class LetualProduct extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'article' => 'Артикул',
-            'link' => 'Link',
+            'link' => 'Ссылка',
             'group' => 'Группа',
             'category' => 'Категория',
             'sub_category' => 'Подкатегория',
             'brand' => 'Бренд',
             'title' => 'Наименование',
-            'description' => 'Description',
+            'description' => 'Описание',
             'old_price' => 'Цена',
             'new_price' => 'Цена со скидкой',
-            'image_link' => 'Image Link',
+            'image_link' => 'Картинка',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -100,9 +101,12 @@ class LetualProduct extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return array
+     */
     static public function dropDownSubCategory()
     {
-        $sql = 'Select distinct sub_category from letual_product';
+        $sql = 'SELECT DISTINCT sub_category FROM letual_product';
         $subCategory = self::findBySql($sql)->all();
         $dropDown = [];
 
@@ -112,9 +116,12 @@ class LetualProduct extends \yii\db\ActiveRecord
         return $dropDown;
     }
 
+    /**
+     * @return array
+     */
     static public function dropDownCategory()
     {
-        $sql = 'Select distinct category from letual_product';
+        $sql = 'SELECT DISTINCT category FROM letual_product';
         $subCategory = self::findBySql($sql)->all();
         $dropDown = [];
 
@@ -124,9 +131,12 @@ class LetualProduct extends \yii\db\ActiveRecord
         return $dropDown;
     }
 
+    /**
+     * @return array
+     */
     static public function dropDownBrand()
     {
-        $sql = 'Select distinct brand from letual_product';
+        $sql = 'SELECT DISTINCT brand FROM letual_product';
         $brands = self::findBySql($sql)->all();
         $dropDown = [];
 

@@ -25,6 +25,9 @@ use yii\db\Expression;
  * @property integer $showcases_exclusive
  * @property integer $showcases_bestsellers
  * @property integer $showcases_expertiza
+ * @property string $gold_price
+ * @property string $blue_price
+ * @property string $price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -49,6 +52,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['link', 'title', 'image_link'], 'string'],
+            [['gold_price', 'blue_price', 'price'], 'number'],
             [['showcases_new', 'showcases_compliment', 'showcases_offer', 'showcases_exclusive', 'showcases_bestsellers', 'showcases_expertiza'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
@@ -63,21 +67,24 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'article' => 'Article',
-            'link' => 'Link',
-            'group' => 'Group',
-            'category' => 'Category',
-            'sub_category' => 'Sub Category',
-            'brand' => 'Brand',
-            'title' => 'Title',
-            'description' => 'Description',
-            'image_link' => 'Image Link',
-            'showcases_new' => 'Showcases New',
+            'article' => 'Артикул',
+            'link' => 'Ссылка',
+            'group' => 'Группа',
+            'category' => 'Категория',
+            'sub_category' => 'Под категория',
+            'brand' => 'Бренд',
+            'title' => 'Заголовок',
+            'description' => 'Описание',
+            'image_link' => 'Картинка',
+            'showcases_new' => 'Новинка',
             'showcases_compliment' => 'Showcases Compliment',
             'showcases_offer' => 'Showcases Offer',
             'showcases_exclusive' => 'Showcases Exclusive',
             'showcases_bestsellers' => 'Showcases Bestsellers',
             'showcases_expertiza' => 'Showcases Expertiza',
+            'gold_price' => 'Цена по золотой карте',
+            'blue_price' => 'Цена по стандартной карте',
+            'price' => 'Полная цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',

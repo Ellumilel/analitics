@@ -152,13 +152,8 @@ class LetualProductController extends Controller
 
                     $letualPrice = new LetualPrice();
                     $letualPrice->article = $data['article'];
-
-                    if(!empty($data['price']['newPrice'])) {
-                        $letualPrice->new_price = $data['price']['newPrice'];
-                    }
-                    if(!empty($data['price']['oldPrice'])) {
-                        $letualPrice->old_price =$data['price']['oldPrice'];
-                    }
+                    $letualPrice->new_price = $this->getPrice($data['price']['newPrice']);
+                    $letualPrice->old_price = $this->getPrice($data['price']['oldPrice']);
 
                     if (!empty($product)) {
                         $product->brand = $this->clearBrand($result['brand']);
@@ -168,13 +163,8 @@ class LetualProductController extends Controller
                         $product->category = $result['category'];
                         $product->sub_category = $result['sub_category'];
 
-                        if(!empty($letualPrice->new_price)) {
-                            $product->new_price = $letualPrice->new_price;
-                        }
-
-                        if(!empty($letualPrice->old_price)) {
-                            $product->old_price = $letualPrice->old_price;
-                        }
+                        $product->new_price = $letualPrice->new_price;
+                        $product->old_price = $letualPrice->old_price;
 
                         $product->save();
                         if (!empty($letualPrice)) {
@@ -188,6 +178,7 @@ class LetualProductController extends Controller
 
     /**
      * В рамках получения брендов пытаемся устранить косяки с заполнением
+     * и наименование брендов
      *
      * @param string $brand
      *
@@ -214,9 +205,51 @@ class LetualProductController extends Controller
             case "DSQUARED2":
                 $brand = 'DSQUARED';
                 break;
+            case "COLOR MASK":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "GLISS KUR":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "GOT2B":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "MILLION COLOR":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "PALETTE":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "PERFECT MOUSSE":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "TAFT":
+                $brand = 'SCHWARZKOPF';
+                break;
+            case "TSUBAKI":
+                $brand = 'SHISEIDO';
+                break;
         }
 
         $brand = strtoupper($brand);
         return $brand;
+    }
+
+    /**
+     * Получаем либо цену либо 0
+     *
+     * @param $price
+     *
+     * @return float
+     */
+    private function getPrice($price)
+    {
+        $price = (float) $price;
+
+        if (!empty($price) && is_float($price)) {
+            return (float) $price;
+        }
+
+        return (float) 0;
     }
 }

@@ -18,8 +18,9 @@ use yii\db\Expression;
  * @property string $brand
  * @property string $sub_brand
  * @property string $line
- * @property string $price
- * @property string $ma_price
+ * @property number $price
+ * @property number $ma_price
+ * @property string $arrival
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -43,9 +44,11 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     {
         return [
             [['article'], 'required'],
+            [['price', 'ma_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['article', 'price', 'ma_price'], 'string', 'max' => 100],
-            [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line'], 'string', 'max' => 500]
+            [['article'], 'string', 'max' => 100],
+            [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line'], 'string', 'max' => 500],
+            [['arrival'], 'string', 'max' => 40]
         ];
     }
 
@@ -66,6 +69,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             'line' => 'Линейка',
             'price' => 'Цена',
             'ma_price' => 'МА цена',
+            'arrival' => 'Приход',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -81,6 +85,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListBrand($condition)
@@ -89,6 +95,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListSubBrand($condition)
@@ -97,6 +105,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListLine($condition)
@@ -105,6 +115,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListDetail($condition)
@@ -113,6 +125,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListSubCategory($condition)
@@ -121,6 +135,8 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListCategory($condition)
@@ -129,11 +145,23 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $condition
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getListGroup($condition)
     {
         return $this::find()->distinct()->select('group')->where($condition)->all();
+    }
+
+    /**
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListArrival($condition)
+    {
+        return $this::find()->distinct()->select('arrival')->where($condition)->all();
     }
 
     /**

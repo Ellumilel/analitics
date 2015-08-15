@@ -11,9 +11,9 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property string $article
- * @property string $gold_price
- * @property string $blue_price
- * @property string $price
+ * @property number $gold_price
+ * @property number $blue_price
+ * @property number $price
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -37,9 +37,9 @@ class RivegauchePrice extends \yii\db\ActiveRecord
     {
         return [
             [['article'], 'required'],
+            [['gold_price', 'blue_price', 'price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['gold_price', 'blue_price', 'price'], 'string', 'max' => 500]
         ];
     }
 
