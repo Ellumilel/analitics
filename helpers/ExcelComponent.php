@@ -53,7 +53,7 @@ class ExcelComponent
                                 $objWorksheet->getCellByColumnAndRow(0, $i)->getValue()
                             )
                         );
-
+                        $product->title = (string) $objWorksheet->getCellByColumnAndRow(1, $i)->getValue();
                         $product->arrival = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
                         $product->group = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
                         $product->category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
