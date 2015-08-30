@@ -11,6 +11,7 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property string $article
+ * @property string $title
  * @property string $group
  * @property string $category
  * @property string $sub_category
@@ -50,7 +51,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             [['price', 'ma_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'ile_id', 'rive_id', 'letu_id'], 'string', 'max' => 500],
+            [['group', 'title', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'ile_id', 'rive_id', 'letu_id'], 'string', 'max' => 500],
             [['arrival'], 'string', 'max' => 40]
         ];
     }
@@ -63,6 +64,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'article' => 'Артикул',
+            'title' => 'Наименование',
             'group' => 'Группа',
             'category' => 'Категория',
             'sub_category' => 'Подкатегория',
