@@ -48,25 +48,28 @@ class ExcelComponent
                 if (!empty($value)) {
                     if (!PodruzkaProduct::findOne(['article' => $value])) {
                         $product = new PodruzkaProduct();
-                        $product->article = trim(
-                            htmlspecialchars(
-                                $objWorksheet->getCellByColumnAndRow(0, $i)->getValue()
-                            )
-                        );
-                        $product->title = (string) $objWorksheet->getCellByColumnAndRow(1, $i)->getValue();
-                        $product->arrival = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
-                        $product->group = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
-                        $product->category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
-                        $product->sub_category = (string) $objWorksheet->getCellByColumnAndRow(5, $i)->getValue();
-                        $product->detail = (string) $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
-                        $product->brand = (string) $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
-                        $product->sub_brand = (string) $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
-                        $product->line = (string) $objWorksheet->getCellByColumnAndRow(9, $i)->getValue();
-                        $product->price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
-                        $product->ma_price = (string) $objWorksheet->getCellByColumnAndRow(11, $i)->getValue();
-
-                        $product->save();
+                    } else {
+                        $product = PodruzkaProduct::findOne(['article' => $value]);
                     }
+
+                    $product->article = trim(
+                        htmlspecialchars(
+                            $objWorksheet->getCellByColumnAndRow(0, $i)->getValue()
+                        )
+                    );
+                    $product->title = (string) $objWorksheet->getCellByColumnAndRow(1, $i)->getValue();
+                    $product->arrival = (string) $objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
+                    $product->group = (string) $objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
+                    $product->category = (string) $objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
+                    $product->sub_category = (string) $objWorksheet->getCellByColumnAndRow(5, $i)->getValue();
+                    $product->detail = (string) $objWorksheet->getCellByColumnAndRow(6, $i)->getValue();
+                    $product->brand = (string) $objWorksheet->getCellByColumnAndRow(7, $i)->getValue();
+                    $product->sub_brand = (string) $objWorksheet->getCellByColumnAndRow(8, $i)->getValue();
+                    $product->line = (string) $objWorksheet->getCellByColumnAndRow(9, $i)->getValue();
+                    $product->price = (string) $objWorksheet->getCellByColumnAndRow(10, $i)->getValue();
+                    $product->ma_price = (string) $objWorksheet->getCellByColumnAndRow(11, $i)->getValue();
+
+                    $product->save();
                 }
 
                 $productPrice = new PodruzkaPrice();
