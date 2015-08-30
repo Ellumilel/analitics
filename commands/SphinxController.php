@@ -34,7 +34,7 @@ class SphinxController extends Controller
                         $query = new Query;
                         $str = '';
                         $rows = $query->from('iproduct')
-                            ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue($product->detail)]))
+                            ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue($product->title)]))
                             ->all();
                         foreach ($rows as $row) {
                             if (!empty($row['id'])) {
