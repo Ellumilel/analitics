@@ -21,6 +21,9 @@ use yii\db\Expression;
  * @property number $price
  * @property number $ma_price
  * @property string $arrival
+ * @property string $ile_id
+ * @property string $rive_id
+ * @property string $letu_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -47,7 +50,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             [['price', 'ma_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line'], 'string', 'max' => 500],
+            [['group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'ile_id', 'rive_id', 'letu_id'], 'string', 'max' => 500],
             [['arrival'], 'string', 'max' => 40]
         ];
     }
@@ -179,5 +182,16 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
         ];
+    }
+
+    /**
+     * @param $offset
+     * @param $limit
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getEntity($offset, $limit)
+    {
+        return $this::find()->offset($offset)->limit($limit)->all();
     }
 }
