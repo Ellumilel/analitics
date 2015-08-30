@@ -25,27 +25,32 @@ class SphinxController extends Controller
     {
         $entity = new PodruzkaProduct();
         $offset = 0;
-        do {
-            $product = $entity->getEntity($offset, 20);
-            if (!empty($product) && empty($product['ile_id'])) {
-                $query = new Query;
-                $str = '';
-                $rows = $query->from('iproduct')
-                    ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue($product['detail'])]))
-                    ->all();
-                foreach ($rows as $row) {
-                    if (!empty($row['id'])) {
-                        // проставляем идентификатор
-                        $str .= $row['id'].';';
-                    }
-                }
 
-                // обновляем таблицу podruzka_product
-                if (!empty($str)) {
-                    $productEntity = PodruzkaProduct::findOne(['id' => $product['id']]);
-                    if ($productEntity instanceof PodruzkaProduct) {
-                        $productEntity->ile_id = $str;
-                        $productEntity->save();
+        do {
+            $products = $entity->getEntity($offset, 20);
+            if (!empty($products)) {
+                foreach ($products as $product) {
+                    if (empty($product->ile_id)) {
+                        $query = new Query;
+                        $str = '';
+                        $rows = $query->from('iproduct')
+                            ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue($product->detail)]))
+                            ->all();
+                        foreach ($rows as $row) {
+                            if (!empty($row['id'])) {
+                                // проставляем идентификатор
+                                $str .= $row['id'].';';
+                            }
+                        }
+
+                        // обновляем таблицу podruzka_product
+                        if (!empty($str)) {
+                            $productEntity = PodruzkaProduct::findOne(['id' => $product['id']]);
+                            if ($productEntity instanceof PodruzkaProduct) {
+                                $productEntity->ile_id = $str;
+                                $productEntity->save();
+                            }
+                        }
                     }
                 }
 
