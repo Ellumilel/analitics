@@ -65,4 +65,18 @@ class SphinxController extends Controller
 
         return 0;
     }
+
+    /**
+     * @return int
+     */
+    public function actionIle()
+    {
+        $query = new Query;
+
+        $rows = $query->from('iproduct')
+            ->match(new Expression(':match', ['match' => '@(description) ' . \Yii::$app->sphinx->escapeMatchValue('Губка для обуви `SALTON` ВОЛНА для нубука, замши и велюра             а/п')]))
+            ->all();
+
+        return $rows;
+    }
 }
