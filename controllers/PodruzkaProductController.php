@@ -28,7 +28,7 @@ class PodruzkaProductController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','view','create','update','delete'],
+                        'actions' => ['index','matching','view','create','update','delete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -89,6 +89,51 @@ class PodruzkaProductController extends Controller
         ]);
     }
 
+    /**
+     * Lists all PodruzkaProduct models.
+     * @return mixed
+     */
+    public function actionMatching()
+    {
+        $searchModel = new PodruzkaProductSearch();
+
+        $condition = [];
+
+        $params = [];
+
+        if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
+            $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
+
+            if($params['group']) {
+                $condition['group'] = $params['group'];
+            }
+            if($params['category']) {
+                $condition['category'] = $params['category'];
+            }
+            if($params['sub_category']) {
+                $condition['sub_category'] = $params['sub_category'];
+            }
+            if($params['detail']) {
+                $condition['detail'] = $params['detail'];
+            }
+            if($params['brand']) {
+                $condition['brand'] = $params['brand'];
+            }
+            if($params['sub_brand']) {
+                $condition['sub_brand'] = $params['sub_brand'];
+            }
+            if($params['line']) {
+                $condition['line'] = $params['line'];
+            }
+        }
+        $dataProvider = $searchModel->searchMatching(Yii::$app->request->queryParams);
+
+        return $this->render('matching', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'condition' => $condition,
+        ]);
+    }
     /**
      * Displays a single PodruzkaProduct model.
      * @param integer $id

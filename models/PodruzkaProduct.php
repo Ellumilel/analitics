@@ -23,8 +23,11 @@ use yii\db\Expression;
  * @property number $ma_price
  * @property string $arrival
  * @property string $ile_id
+ * @property integer $i_id
  * @property string $rive_id
+ * @property integer $r_id
  * @property string $letu_id
+ * @property integer $l_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -49,6 +52,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['price', 'ma_price'], 'number'],
+            [['i_id', 'r_id', 'l_id'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
             [['group', 'title', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'ile_id', 'rive_id', 'letu_id'], 'string', 'max' => 500],
@@ -87,6 +91,14 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     public function getPodruzkaPrices()
     {
         return $this->hasMany(PodruzkaPrice::className(), ['article' => 'article']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getL()
+    {
+        return $this->hasOne(LetualProduct::className(), ['id' => 'l_id']);
     }
 
     /**

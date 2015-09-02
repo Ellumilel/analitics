@@ -145,4 +145,27 @@ class LetualProduct extends \yii\db\ActiveRecord
         }
         return $dropDown;
     }
+
+    /**
+     * @param $offset
+     * @param $limit
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getEntity($offset, $limit)
+    {
+        return $this::find()->offset($offset)->limit($limit)->all();
+    }
+
+    static function getStatistic()
+    {
+        $rows = (new \yii\db\Query())
+            ->select(['count(id) as counts', 'DATE_FORMAT(created_at,  "%Y-%m-%d") as dates'])
+            ->from('letual_product')
+            ->groupBy(['DATE_FORMAT(created_at,  "%Y-%m-%d")'])
+            ->orderBy('created_at')
+            ->all();
+
+        return $rows;
+    }
 }

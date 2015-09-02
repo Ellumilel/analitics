@@ -38,6 +38,8 @@ use yii\helpers\Html;
                 'items' => [
                     '<li class="header">Menu Yii2</li>',
                     ['label' => '<i class="fa fa-file-code-o"></i><span>Информационный продукт</span>', 'url' => ['/podruzka-product/index']],
+                    ['label' => '<i class="fa fa-file-code-o"></i><span>Статистика сбора данных</span>', 'url' => ['/statistic/index']],
+                    ['label' => '<i class="fa fa-file-code-o"></i><span>Сопоставление</span>', 'url' => ['/podruzka-product/matching']],
                    //['label' => '<i class="fa fa-file-code-o"></i><span>Gii</span>', 'url' => ['/gii']],
                     //['label' => '<i class="fa fa-file-code-o"></i><span>Gii2</span>', 'url' => ['/gii']],
                    // ['label' => '<i class="fa fa-dashboard"></i><span>Debug</span>', 'url' => ['/debug']],
