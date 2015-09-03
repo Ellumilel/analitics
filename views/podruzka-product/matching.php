@@ -23,8 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'article',
+            'title',
+            'arrival',
             [
                 'attribute'=>'group',
                 'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition), 'group', 'group'),
@@ -55,6 +57,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'price',
             'ma_price',
+            [
+                'attribute'=>'old_Price',
+                'label' => 'Лет.Цена',
+                'value' => function($data) {
+                    return $data->l->old_price;
+                }
+            ],
+            [
+                'attribute'=>'new_price',
+                'label' => 'Лет.Цена со скидкой',
+                'value' => function($data) {
+                    return $data->l->new_price;
+                }
+            ],
             /*[
                 'attribute' => 'act_role_id',
                 'label' => 'Actor Role',
@@ -63,16 +79,38 @@ $this->params['breadcrumbs'][] = $this->title;
             ],*/
             [
                 'attribute'=>'new_price',
-                'label' => 'Лет.Цена со скидкой',
+                'label' => 'Лет.Артикул',
                 'value' => function($data) {
-                    return $data->l->new_price;
+                    return $data->l->article;
                 }
             ],
             [
-                'attribute'=>'old_Price',
-                'label' => 'Лет.Цена',
+                'attribute'=>'new_price',
+                'label' => 'Лет.Наименование',
                 'value' => function($data) {
-                    return $data->l->old_price;
+                    return $data->l->title;
+                }
+            ],
+            [
+                'attribute'=>'new_price',
+                'label' => 'Лет.Описание',
+                'value' => function($data) {
+                    return $data->l->description;
+                }
+            ],
+            [
+                'attribute'=>'new_price',
+                'label' => 'Лет.ссылка на товар',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return '<a href="'.$data->l->link.'"  target="_blank">ссылка</a>';
+                }
+            ],
+            [
+                'attribute'=>'new_price',
+                'label' => 'Лет.дата выгрузки',
+                'value' => function($data) {
+                    return date('Y-m-d',strtotime($data->l->updated_at));
                 }
             ],
             // 'created_at',
