@@ -18,7 +18,7 @@ class ExcelComponent
     public function uploadInformProduct()
     {
         // проверяем существует есть ли файл
-        $filename = './web/files/upload.xlsx';
+        $filename = \Yii::$app->basePath . '/web/files/upload.xlsx';
 
         $chunkSize = 500;  //размер считываемых строк за раз
         $startRow = 2;  //начинаем читать со строки 2, в PHPExcel первая строка имеет индекс 1, и как правило это строка заголовков

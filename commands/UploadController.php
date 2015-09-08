@@ -24,6 +24,8 @@ class UploadController extends Controller
         // проверяем существует есть ли файл
         $filename = \Yii::$app->basePath . '/web/files/upload.xlsx';
 
+       // \Yii::info(\yii\helpers\Json::encode(['fdsfds'=>'test']), 'cron');
+
         if (file_exists($filename)) {
             // проверяем наличие запущенного процесса
             if(Upload::findOne(['status' => 0])) {
@@ -33,6 +35,7 @@ class UploadController extends Controller
                 $model->status = 0;
                 $model->task = 'Инф.продукт';
                 $model->save();
+
                 //Вызываем компонент парсинга excel
                 $component = new ExcelComponent();
                 $component->uploadInformProduct();

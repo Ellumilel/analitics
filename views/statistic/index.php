@@ -12,7 +12,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-4">
         <div class="box box-solid box-info">
             <div class="box-header">
-                <h3 class="box-title">Иль де боте всего: <?= (new \app\models\IledebeauteProduct)->find()->count() ?> </h3>
+                <h3 class="box-title">Иль де боте всего: <?= (new \app\models\IledebeauteProduct)->find()->count() ?>
+                    <?php
+                    echo \yii\helpers\Html::a('Выгрузить в excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+                        'title' => Yii::t('yii', 'Загрузить'),
+                        'onclick'=>"
+                         $.ajax({
+                            type     :'POST',
+                            cache    : false,
+                            url  : '".\Yii::$app->getUrlManager()->createUrl(['upload/cmd'])."',
+                            success  : function(response) {
+
+                            }
+                        });return false;",
+                                        ]);
+                    ?>
+                </h3>
             </div><!-- /.box-header -->
             <div class="box-body">
                 <?php

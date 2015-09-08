@@ -63,6 +63,7 @@ class SiteController extends Controller
 
             $file = \yii\web\UploadedFile::getInstanceByName($fileName);
             if ($file->saveAs($uploadPath . '/' . "upload." . $file->extension)) {
+                chmod($uploadPath . '/' . "upload." . $file->extension, 0777);
                 echo \yii\helpers\Json::encode($file);
             }
         }

@@ -11,6 +11,12 @@ use yii\data\ActiveDataProvider;
  */
 class PodruzkaProductSearch extends PodruzkaProduct
 {
+    public $l_title;
+    public $l_article;
+    public $l_desc;
+    public $l_old_price;
+    public $l_new_price;
+
     /**
      * @inheritdoc
      */
@@ -21,6 +27,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
             [['article', 'title', 'group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand',
                 'line', 'arrival', 'ile_id', 'rive_id', 'letu_id', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['price', 'ma_price'], 'number'],
+            [['l_title','l_article','l_desc','l_old_price','l_new_price'], 'safe'],
         ];
     }
 
@@ -65,6 +72,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
         ]);
 
         $query->andFilterWhere(['like', 'article', $this->article])
+            ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'group', $this->group])
             ->andFilterWhere(['like', 'category', $this->category])
             ->andFilterWhere(['like', 'sub_category', $this->sub_category])
@@ -73,7 +81,8 @@ class PodruzkaProductSearch extends PodruzkaProduct
             ->andFilterWhere(['like', 'sub_brand', $this->sub_brand])
             ->andFilterWhere(['like', 'line', $this->line])
             ->andFilterWhere(['like', 'price', $this->price])
-            ->andFilterWhere(['like', 'ma_price', $this->ma_price]);
+            ->andFilterWhere(['like', 'ma_price', $this->ma_price])
+            ;
 
         return $dataProvider;
     }
@@ -88,6 +97,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
     public function searchMatching($params)
     {
         $query = PodruzkaProduct::find();
+        $query->joinWith(['l']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -109,16 +119,42 @@ class PodruzkaProductSearch extends PodruzkaProduct
             'deleted_at' => $this->deleted_at,
         ]);
 
-        $query->andFilterWhere(['like', 'article', $this->article])
-            ->andFilterWhere(['like', 'group', $this->group])
-            ->andFilterWhere(['like', 'category', $this->category])
-            ->andFilterWhere(['like', 'sub_category', $this->sub_category])
-            ->andFilterWhere(['like', 'detail', $this->detail])
-            ->andFilterWhere(['like', 'brand', $this->brand])
-            ->andFilterWhere(['like', 'sub_brand', $this->sub_brand])
-            ->andFilterWhere(['like', 'line', $this->line])
-            ->andFilterWhere(['like', 'price', $this->price])
-            ->andFilterWhere(['like', 'ma_price', $this->ma_price])
+        $dataProvider->sort->attributes['l_article'] = [
+            'asc' => ['letual_product.article' => SORT_ASC],
+            'desc' => ['letual_product.article' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['l_title'] = [
+            'asc' => ['letual_product.title' => SORT_ASC],
+            'desc' => ['letual_product.title' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['l_old_price'] = [
+            'asc' => ['letual_product.old_price' => SORT_ASC],
+            'desc' => ['letual_product.old_price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['l_new_price'] = [
+            'asc' => ['letual_product.new_price' => SORT_ASC],
+            'desc' => ['letual_product.new_price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['l_desc'] = [
+            'asc' => ['letual_product.description' => SORT_ASC],
+            'desc' => ['letual_product.description' => SORT_DESC],
+        ];
+        $query->andFilterWhere(['like', 'podruzka_product.article', $this->article])
+            ->andFilterWhere(['like', 'podruzka_product.title', $this->title])
+            ->andFilterWhere(['like', 'podruzka_product.group', $this->group])
+            ->andFilterWhere(['like', 'podruzka_product.category', $this->category])
+            ->andFilterWhere(['like', 'podruzka_product.sub_category', $this->sub_category])
+            ->andFilterWhere(['like', 'podruzka_product.detail', $this->detail])
+            ->andFilterWhere(['like', 'podruzka_product.brand', $this->brand])
+            ->andFilterWhere(['like', 'podruzka_product.sub_brand', $this->sub_brand])
+            ->andFilterWhere(['like', 'podruzka_product.line', $this->line])
+            ->andFilterWhere(['like', 'podruzka_product.price', $this->price])
+            ->andFilterWhere(['like', 'podruzka_product.ma_price', $this->ma_price])
+            ->andFilterWhere(['like', 'letual_product.title', $this->l_title])
+            ->andFilterWhere(['like', 'letual_product.article', $this->l_article])
+            ->andFilterWhere(['like', 'letual_product.description', $this->l_desc])
+            ->andFilterWhere(['like', 'letual_product.old_price', $this->l_old_price])
+            ->andFilterWhere(['like', 'letual_product.new_price', $this->l_new_price])
             ->andWhere('l_id is not null');
 
         return $dataProvider;
