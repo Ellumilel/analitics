@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'article',
+            'title',
             [
                 'attribute'=>'group',
                 'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition), 'group', 'group'),
