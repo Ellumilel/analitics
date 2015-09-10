@@ -104,3 +104,10 @@ a.desc:after {
 .login-page, .register-page {
     background: #FFFFFF !important;
 }
+#pre_loader
+{
+    margin-left:37px;
+    width:24px;
+    height:24px;
+    background: url('../image/p_24.GIF') repeat-x scroll 0 0 transparent;
+}
