@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\LetualProduct;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
@@ -75,6 +76,9 @@ class DownloadController extends Controller
             $page->setCellValue("L1", "image_link");
             $page->setCellValue("M1", "updated_at");
             $page->setTitle("Выгрузка Летуаль"); // Заголовок делаем "Example"
+            $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+            $cacheSettings = array( 'memoryCacheSize ' => '312MB');
+            \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
             $i = 2;
 
             while ($row = $reader->read()) {
@@ -97,8 +101,9 @@ class DownloadController extends Controller
             /* Начинаем готовиться к записи информации в xlsx-файл */
             $objWriter = \PHPExcel_IOFactory::createWriter($phpexcel, 'Excel2007');
             /* Записываем в файл */
-            $objWriter->save(\Yii::$app->basePath . '/web/files/example.xlsx');
-            //print_r(Yii::$app->getRequest()->post());
+            $file = sprintf('example_%s.xlsx',time());
+            $objWriter->save(sprintf('%s/web/files/%s', \Yii::$app->basePath, $file));
+            echo \yii\helpers\Html::a('<i class="fa fa-download"></i>&nbsp;Скачать','@web/files/'.$file, ['class' => 'btn btn-primary']);
         }
     }
 }

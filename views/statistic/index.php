@@ -143,26 +143,31 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <?php
+    <div class="col-md-4">
+        <?php
         echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-             'title' => Yii::t('yii', 'Загрузить'),
-             'class' => 'btn btn-sm btn-info btn-flat pull-left',
-             'onclick'=>"
+            'title' => Yii::t('yii', 'Загрузить'),
+            'id' => 'download',
+            'class' => 'btn btn-primary',
+            'onclick'=>"
               $.ajax({
                  type :'POST',
                  cache : false,
                  data : {'letual':'123'},
                  url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
+                 beforeSend: function(){
+                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
+                    \$('#download').attr('disabled', 'disabled');
+                 },
                  success  : function(response) {
-                     
+                    $(\"#analytic_link\").html(response);
+                    \$('#download').attr('disabled', '');
                  }
              });return false;",
         ]);
 
-    ?>
-    <div id="let_download"></div>
-    <div class="col-md-4">
-
+        ?>
+        <div id="analytic_link" style="margin-top:17px;"></div>
         <!--div class="info-box bg-green">
             <span class="info-box-icon"><i class="ion ion-ios-cloud-download-outline"></i></span>
             <div class="info-box-content">
