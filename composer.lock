@@ -394,16 +394,16 @@
         },
         {
             "name": "dmstr/yii2-adminlte-asset",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-adminlte-asset.git",
-                "reference": "4740a25b28d765af706619a954372eedbe5ffa4f"
+                "reference": "769f9a12307753856a509720573f98cb378703e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-adminlte-asset/zipball/4740a25b28d765af706619a954372eedbe5ffa4f",
-                "reference": "4740a25b28d765af706619a954372eedbe5ffa4f",
+                "url": "https://api.github.com/repos/dmstr/yii2-adminlte-asset/zipball/769f9a12307753856a509720573f98cb378703e4",
+                "reference": "769f9a12307753856a509720573f98cb378703e4",
                 "shasum": ""
             },
             "require": {
@@ -444,7 +444,7 @@
                 "extension",
                 "yii2"
             ],
-            "time": "2015-09-09 17:30:24"
+            "time": "2015-09-10 12:17:21"
         },
         {
             "name": "ezyang/htmlpurifier",
