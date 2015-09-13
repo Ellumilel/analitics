@@ -29,31 +29,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 'arrival',
                 [
                     'attribute'=>'group',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition), 'group', 'group'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition, true), 'group', 'group'),
                 ],
                 [
                     'attribute'=>'category',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition), 'category', 'category'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition, true), 'category', 'category'),
                 ],
                 [
                     'attribute'=>'sub_category',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubCategory($condition), 'sub_category', 'sub_category'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubCategory($condition, true), 'sub_category', 'sub_category'),
                 ],
                 [
                     'attribute'=>'detail',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListDetail($condition), 'detail', 'detail'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListDetail($condition, true), 'detail', 'detail'),
                 ],
                 [
                     'attribute'=>'brand',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition), 'brand', 'brand'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition, true), 'brand', 'brand'),
                 ],
                 [
                     'attribute'=>'sub_brand',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubBrand($condition), 'sub_brand', 'sub_brand'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubBrand($condition, true), 'sub_brand', 'sub_brand'),
                 ],
                 [
                     'attribute'=>'line',
-                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListLine($condition), 'line', 'line'),
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListLine($condition, true), 'line', 'line'),
                 ],
                 'price',
                 'ma_price',

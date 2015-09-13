@@ -133,7 +133,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
             ->select(['count(id) as counts', 'DATE_FORMAT(created_at,  "%Y-%m-%d") as dates'])
             ->from('rivegauche_product')
             ->groupBy(['DATE_FORMAT(created_at,  "%Y-%m-%d")'])
-            ->orderBy('created_at desc')
+            ->orderBy('created_at')
             ->all();
 
         return $rows;

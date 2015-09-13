@@ -103,72 +103,135 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListBrand($condition)
+    public function getListBrand($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('brand')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('brand')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('brand')->all();
     }
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListSubBrand($condition)
+    public function getListSubBrand($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('sub_brand')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('sub_brand')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('sub_brand')->all();
     }
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListLine($condition)
+    public function getListLine($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('line')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('line')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('line')->all();
     }
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListDetail($condition)
+    public function getListDetail($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('detail')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('detail')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('detail')->all();
     }
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListSubCategory($condition)
+    public function getListSubCategory($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('sub_category')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('sub_category')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('sub_category')->all();
     }
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListCategory($condition)
+    public function getListCategory($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('category')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('category')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('category')->all();
     }
 
     /**
      * @param $condition
+     * @param bool|false $matching
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getListGroup($condition)
+    public function getListGroup($condition, $matching = false)
     {
-        return $this::find()->distinct()->select('group')->where($condition)->all();
+        $result = $this::find()->distinct()
+            ->select('group')
+            ->where($condition);
+
+        if ($matching) {
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+        }
+
+        return $result->orderBy('group')->all();
     }
 
     /**
