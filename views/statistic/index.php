@@ -58,6 +58,32 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
+    <div class="col-md-4">
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'rive']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка РивГош</a>
+        <?php
+        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+            'title' => Yii::t('yii', 'Загрузить'),
+            'id' => 'download',
+            'class' => 'btn btn-primary',
+            'onclick'=>"
+              $.ajax({
+                 type :'POST',
+                 cache : false,
+                 data : {'letual':'123'},
+                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
+                 beforeSend: function(){
+                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
+                    \$('#download').attr('disabled', 'disabled');
+                 },
+                 success  : function(response) {
+                    $(\"#analytic_link\").html(response);
+                    \$('#download').attr('disabled', '');
+                 }
+             });return false;",
+        ]);
+        */
+        ?>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -92,6 +118,32 @@ $this->params['breadcrumbs'][] = $this->title;
                 <? endforeach; ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
+    </div>
+    <div class="col-md-4">
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
+        <?php
+        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+            'title' => Yii::t('yii', 'Загрузить'),
+            'id' => 'download',
+            'class' => 'btn btn-primary',
+            'onclick'=>"
+              $.ajax({
+                 type :'POST',
+                 cache : false,
+                 data : {'letual':'123'},
+                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
+                 beforeSend: function(){
+                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
+                    \$('#download').attr('disabled', 'disabled');
+                 },
+                 success  : function(response) {
+                    $(\"#analytic_link\").html(response);
+                    \$('#download').attr('disabled', '');
+                 }
+             });return false;",
+        ]);
+        */
+        ?>
     </div>
 </div>
 <div class="row">
@@ -143,9 +195,11 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
+
     <div class="col-md-4">
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'letual']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Летуаль</a>
         <?php
-        echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
             'title' => Yii::t('yii', 'Загрузить'),
             'id' => 'download',
             'class' => 'btn btn-primary',
@@ -165,22 +219,8 @@ $this->params['breadcrumbs'][] = $this->title;
                  }
              });return false;",
         ]);
-
+        */
         ?>
-        <div id="analytic_link" style="margin-top:17px;"></div>
-        <!--div class="info-box bg-green">
-            <span class="info-box-icon"><i class="ion ion-ios-cloud-download-outline"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Downloads</span>
-                <span class="info-box-number">114,381</span>
-                <div class="progress">
-                    <div style="width: 20%" class="progress-bar"></div>
-                </div>
-                      <span class="progress-description">
-                        70% Increase in 30 Days
-                      </span>
-            </div><!-- /.info-box-content -->
-        <!--/div-->
     </div>
 </div>
 

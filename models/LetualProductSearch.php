@@ -45,7 +45,7 @@ class LetualProductSearch extends LetualProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 200000],
         ]);
 
         $this->load($params);

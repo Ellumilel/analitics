@@ -43,6 +43,12 @@ class RivegaucheProductController extends Controller
                             $this->saveResult($subHead, $link);
                         }
                     }
+                    if(empty($head['title'])) {
+                        $head = $this->getPromoHTML($crawler, true);
+                    }
+                    if(empty($head['title'])) {
+                        $head = $this->getPromo2HTML($crawler, true);
+                    }
                     $head['link'] = $link['link'];
                     $this->saveResult($head, $link);
                     unset($node);
@@ -180,6 +186,242 @@ class RivegaucheProductController extends Controller
     }
 
     /**
+     * @param $crawler
+     * @param bool|true $widthLinks
+     *
+     * @return mixed
+     */
+    private function getPromoHTML($crawler, $widthLinks = true)
+    {
+        $head = $crawler->filter('div.es_product')->each(function ($node) {
+            $title = $node->filter('div.es_right div.dior_product_category h1')->each(function ($subNode) {
+                return $subNode->text();
+            });
+
+            $links = $node->filter('div.es_right_price_group ul a')->each(function ($subNode) {
+                return $this->url.$subNode->attr('href');
+            });
+
+            $brand = $node->filter('div.es_right_lable img')->each(function ($subNode) {
+                $brand = $subNode->attr('alt');
+                $brand = str_replace(' Logo Image', '', $brand);
+                $brand = trim($brand);
+
+                return $brand;
+            });
+
+            $description = $node->filter('div.prod_add_to_cart td.leftalign')->each(function ($subNode) {
+
+                $description = trim($subNode->text());
+                $description = str_replace(' ', '', $description);
+                $description = str_replace('*', '', $description);
+                $description = str_replace('\r', '', $description);
+                $description = str_replace('\n', '', $description);
+                $description = nl2br($description);
+                $description = str_replace('<br />', '', $description);
+                $description = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $description);
+                $description = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $description);
+
+                return $description;
+            });
+
+            $price = $node->filter('td span.price')->each(function ($subNode) {
+                $goldPrice = $subNode->filter('span.gold_price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+                $bluePrice = $subNode->filter('span.blue_price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+                $price = $subNode->filter('div.card-price span.price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+                $fixPrice = $subNode->filter('div.fix-price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+
+                $bluePrice = $this->clearPrice($bluePrice);
+                $goldPrice = $this->clearPrice($goldPrice);
+                $price = $this->clearPrice($price);
+                $fixPrice = $this->clearPrice($fixPrice);
+
+                return [
+                    'gold_price' => $goldPrice,
+                    'blue_price' => $bluePrice,
+                    'price' => (!empty($price)) ? $price : $fixPrice,
+                ];
+            });
+
+            $imageLink = $node->filter('div#primary_image img')->each(function ($subNode) {
+                return $subNode->attr('src');
+            });
+
+            $showcasesOffer = $node->filter('div.showcases_offer')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesNew = $node->filter('div.showcases_new')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesExclusive = $node->filter('div.showcases_exclusive')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesCompliment = $node->filter('div.showcases_compliment')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesBestsellers = $node->filter('div.showcases_bestsellers')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesExpertiza = $node->filter('div.showcases_expertiza')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            return [
+                'title' => reset($title),
+                'links' => $links,
+                'brand' => reset($brand),
+                'price' => reset($price),
+                'description' => reset($description),
+                'image_link' => reset($imageLink),
+                'showcases_offer' => !empty(reset($showcasesOffer)) ? 1 : 0,
+                'showcases_new' => !empty(reset($showcasesNew)) ? 1 : 0,
+                'showcases_exclusive' => !empty(reset($showcasesExclusive)) ? 1 : 0,
+                'showcases_compliment' => !empty(reset($showcasesCompliment)) ? 1 : 0,
+                'showcases_bestsellers' => !empty(reset($showcasesBestsellers)) ? 1 : 0,
+                'showcases_expertiza' => !empty(reset($showcasesExpertiza)) ? 1 : 0,
+            ];
+        });
+
+        $return = reset($head);
+        if (!$widthLinks) {
+            $return['links'] = [];
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param $crawler
+     * @param bool|true $widthLinks
+     *
+     * @return mixed
+     */
+    private function getPromo2HTML($crawler, $widthLinks = true)
+    {
+        $head = $crawler->filter('div.es_product')->each(function ($node) {
+            $title = $node->filter('div.es_right div.dior_product_category h1')->each(function ($subNode) {
+                return $subNode->text();
+            });
+
+            $links = $node->filter('div.es_right_price_group ul a')->each(function ($subNode) {
+                return $this->url.$subNode->attr('href');
+            });
+
+            $brand = $node->filter('div.es_right_lable img')->each(function ($subNode) {
+                $brand = $subNode->attr('alt');
+                $brand = str_replace(' Logo Image', '', $brand);
+                $brand = trim($brand);
+
+                return $brand;
+            });
+
+            $description = $node->filter('div.prod_add_to_cart td.leftalign')->each(function ($subNode) {
+
+                $description = trim($subNode->text());
+                $description = str_replace(' ', '', $description);
+                $description = str_replace('*', '', $description);
+                $description = str_replace('\r', '', $description);
+                $description = str_replace('\n', '', $description);
+                $description = nl2br($description);
+                $description = str_replace('<br />', '', $description);
+                $description = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $description);
+                $description = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $description);
+
+                return $description;
+            });
+
+            $price = $node->filter('td span.price')->each(function ($subNode) {
+                $goldPrice = $subNode->filter('span.gold_price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+                $bluePrice = $subNode->filter('span.blue_price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+                $price = $subNode->filter('div.card-price span.price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+                $fixPrice = $subNode->filter('div.fix-price')->each(function ($subNode) {
+                    return $subNode->text();
+                });
+
+                $bluePrice = $this->clearPrice($bluePrice);
+                $goldPrice = $this->clearPrice($goldPrice);
+                $price = $this->clearPrice($price);
+                $fixPrice = $this->clearPrice($fixPrice);
+
+                return [
+                    'gold_price' => $goldPrice,
+                    'blue_price' => $bluePrice,
+                    'price' => (!empty($price)) ? $price : $fixPrice,
+                ];
+            });
+
+            $imageLink = $node->filter('div#primary_image img')->each(function ($subNode) {
+                return $subNode->attr('src');
+            });
+
+            $showcasesOffer = $node->filter('div.showcases_offer')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesNew = $node->filter('div.showcases_new')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesExclusive = $node->filter('div.showcases_exclusive')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesCompliment = $node->filter('div.showcases_compliment')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesBestsellers = $node->filter('div.showcases_bestsellers')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            $showcasesExpertiza = $node->filter('div.showcases_expertiza')->each(function ($subNode) {
+                return $subNode;
+            });
+
+            return [
+                'title' => reset($title),
+                'links' => $links,
+                'brand' => reset($brand),
+                'price' => reset($price),
+                'description' => reset($description),
+                'image_link' => reset($imageLink),
+                'showcases_offer' => !empty(reset($showcasesOffer)) ? 1 : 0,
+                'showcases_new' => !empty(reset($showcasesNew)) ? 1 : 0,
+                'showcases_exclusive' => !empty(reset($showcasesExclusive)) ? 1 : 0,
+                'showcases_compliment' => !empty(reset($showcasesCompliment)) ? 1 : 0,
+                'showcases_bestsellers' => !empty(reset($showcasesBestsellers)) ? 1 : 0,
+                'showcases_expertiza' => !empty(reset($showcasesExpertiza)) ? 1 : 0,
+            ];
+        });
+
+        $return = reset($head);
+        if (!$widthLinks) {
+            $return['links'] = [];
+        }
+
+        return $return;
+    }
+
+    /**
      * @param $result
      * @param $link
      */
@@ -212,19 +454,23 @@ class RivegaucheProductController extends Controller
         $product->gold_price = $this->getPrice($result['price']['gold_price']);
         $product->blue_price = $this->getPrice($result['price']['blue_price']);
         $product->price = $this->getPrice($result['price']['price']);
+        try {
+            $rPrice = new RivegauchePrice();
+            $rPrice->article = $article;
 
-        $rPrice = new RivegauchePrice();
-        $rPrice->article = $article;
-
-        $rPrice->gold_price = $this->getPrice($result['price']['gold_price']);
-        $rPrice->blue_price = $this->getPrice($result['price']['blue_price']);
-        $rPrice->price = $this->getPrice($result['price']['price']);
+            $rPrice->gold_price = $this->getPrice($result['price']['gold_price']);
+            $rPrice->blue_price = $this->getPrice($result['price']['blue_price']);
+            $rPrice->price = $this->getPrice($result['price']['price']);
 
 
-        if ($product->save()) {
-            $rPrice->save();
-        } else {
-            \Yii::error($link, 'cron');
+            if ($product->save()) {
+                $rPrice->save();
+            } else {
+                //print_r($result);die;
+                //\Yii::error($link, 'cron');
+            }
+        } catch (\Exception $e) {
+
         }
     }
 

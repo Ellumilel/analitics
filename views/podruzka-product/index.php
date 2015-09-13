@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php Pjax::begin(); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
