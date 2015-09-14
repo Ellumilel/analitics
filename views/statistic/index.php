@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div><!-- /.box -->
     </div>
     <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'rive']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка РивГош</a>
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
         <?php
         /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
             'title' => Yii::t('yii', 'Загрузить'),
@@ -120,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div><!-- /.box -->
     </div>
     <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'rive']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка РивГош</a>
         <?php
         /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
             'title' => Yii::t('yii', 'Загрузить'),
