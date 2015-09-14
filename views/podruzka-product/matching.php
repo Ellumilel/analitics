@@ -14,6 +14,7 @@ use app\models\PodruzkaProduct;
 $this->title = 'Сопоставление';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/matching']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузить в Excel</a>
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php Pjax::begin(); ?>
