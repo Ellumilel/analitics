@@ -128,8 +128,8 @@ class DownloadController extends Controller
             rp.`showcases_new` as `rive.showcases_new`,
             rp.`showcases_compliment` as `rive.showcases_compliment`,
             rp.`showcases_exclusive` as `rive.showcases_exclusive`,
+            rp.`showcases_offer` as `rive.showcases_offer`,
             rp.`showcases_bestsellers` as `rive.showcases_bestsellers`,
-            rp.`showcases_expertiza` as `rive.showcases_expertiza`,
             rp.`gold_price` as `rive.gold_price`,
             rp.`blue_price` as `rive.blue_price`,
             rp.`price` as `rive.price`,
@@ -139,7 +139,7 @@ class DownloadController extends Controller
             ip.`description` as `ile.description`,
             ip.`link` as `ile.link`,
             ip.`showcases_new` as `ile.showcases_new`,
-            ip.`showcases_exclusive` as `ile.showcases_new`,
+            ip.`showcases_exclusive` as `ile.showcases_exclusive`,
             ip.`showcases_limit` as `ile.showcases_limit`,
             ip.`showcases_sale` as `ile.showcases_sale`,
             ip.`showcases_best` as `ile.showcases_best`,
@@ -220,9 +220,9 @@ class DownloadController extends Controller
                 $rive_promotion[] = 'Бестселлер';
                 unset($row['rive.showcases_bestsellers']);
             }
-            if ($row['rive.showcases_expertiza']) {
-                $rive_promotion[] = 'Экспертиза';
-                unset($row['rive.showcases_expertiza']);
+            if ($row['rive.showcases_offer']) {
+                $rive_promotion[] = 'Скидка (Выбор РивГош)';
+                unset($row['rive.showcases_offer']);
             }
 
             $ile_promotion = [];
