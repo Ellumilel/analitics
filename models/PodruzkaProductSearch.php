@@ -16,6 +16,17 @@ class PodruzkaProductSearch extends PodruzkaProduct
     public $l_desc;
     public $l_old_price;
     public $l_new_price;
+    public $r_title;
+    public $r_article;
+    public $r_desc;
+    public $r_price;
+    public $r_blue_price;
+    public $r_gold_price;
+    public $i_title;
+    public $i_article;
+    public $i_desc;
+    public $i_old_price;
+    public $i_new_price;
 
     /**
      * @inheritdoc
@@ -27,7 +38,11 @@ class PodruzkaProductSearch extends PodruzkaProduct
             [['article', 'title', 'group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand',
                 'line', 'arrival', 'ile_id', 'rive_id', 'letu_id', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['price', 'ma_price'], 'number'],
-            [['l_title','l_article','l_desc','l_old_price','l_new_price'], 'safe'],
+            [[
+                'l_title','l_article','l_desc','l_old_price','l_new_price',
+                'r_title','r_article','r_desc','r_price','r_blue_price','r_gold_price',
+                'i_title','i_article','i_desc','i_old_price','i_new_price',
+            ], 'safe'],
         ];
     }
 
@@ -73,6 +88,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
 
         $query->andFilterWhere(['like', 'article', $this->article])
             ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'arrival', $this->arrival])
             ->andFilterWhere(['like', 'group', $this->group])
             ->andFilterWhere(['like', 'category', $this->category])
             ->andFilterWhere(['like', 'sub_category', $this->sub_category])
@@ -97,11 +113,15 @@ class PodruzkaProductSearch extends PodruzkaProduct
     public function searchMatching($params)
     {
         $query = PodruzkaProduct::find();
-        $query->joinWith(['l']);
+
+        $query->joinWith('r');
+        $query->joinWith('i');
+        $query->joinWith('l');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50]
+            'pagination' => ['pageSize' => 20]
         ]);
 
         $this->load($params);
@@ -139,8 +159,55 @@ class PodruzkaProductSearch extends PodruzkaProduct
             'asc' => ['letual_product.description' => SORT_ASC],
             'desc' => ['letual_product.description' => SORT_DESC],
         ];
+        $dataProvider->sort->attributes['r_article'] = [
+            'asc' => ['rivegauche_product.article' => SORT_ASC],
+            'desc' => ['rivegauche_product.article' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['r_title'] = [
+            'asc' => ['rivegauche_product.title' => SORT_ASC],
+            'desc' => ['rivegauche_product.title' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['r_price'] = [
+            'asc' => ['rivegauche_product.price' => SORT_ASC],
+            'desc' => ['rivegauche_product.price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['r_blue_price'] = [
+            'asc' => ['rivegauche_product.blue_price' => SORT_ASC],
+            'desc' => ['rivegauche_product.blue_price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['r_gold_price'] = [
+            'asc' => ['rivegauche_product.gold_price' => SORT_ASC],
+            'desc' => ['rivegauche_product.gold_price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['r_desc'] = [
+            'asc' => ['rivegauche_product.description' => SORT_ASC],
+            'desc' => ['rivegauche_product.description' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['i_article'] = [
+            'asc' => ['iledebeaute_product.article' => SORT_ASC],
+            'desc' => ['iledebeaute_product.article' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['i_title'] = [
+            'asc' => ['iledebeaute_product.title' => SORT_ASC],
+            'desc' => ['iledebeaute_product.title' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['i_old_price'] = [
+            'asc' => ['iledebeaute_product.old_price' => SORT_ASC],
+            'desc' => ['iledebeaute_product.old_price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['i_new_price'] = [
+            'asc' => ['iledebeaute_product.new_price' => SORT_ASC],
+            'desc' => ['iledebeaute_product.new_price' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['i_desc'] = [
+            'asc' => ['iledebeaute_product.description' => SORT_ASC],
+            'desc' => ['iledebeaute_product.description' => SORT_DESC],
+        ];
+
         $query->andFilterWhere(['like', 'podruzka_product.article', $this->article])
             ->andFilterWhere(['like', 'podruzka_product.title', $this->title])
+            ->andFilterWhere(['like', 'podruzka_product.arrival', $this->arrival])
             ->andFilterWhere(['like', 'podruzka_product.group', $this->group])
             ->andFilterWhere(['like', 'podruzka_product.category', $this->category])
             ->andFilterWhere(['like', 'podruzka_product.sub_category', $this->sub_category])
@@ -155,7 +222,18 @@ class PodruzkaProductSearch extends PodruzkaProduct
             ->andFilterWhere(['like', 'letual_product.description', $this->l_desc])
             ->andFilterWhere(['like', 'letual_product.old_price', $this->l_old_price])
             ->andFilterWhere(['like', 'letual_product.new_price', $this->l_new_price])
-            ->andWhere('l_id is not null');
+            ->andFilterWhere(['like', 'rivegauche_product.title', $this->r_title])
+            ->andFilterWhere(['like', 'rivegauche_product.article', $this->r_article])
+            ->andFilterWhere(['like', 'rivegauche_product.description', $this->r_desc])
+            ->andFilterWhere(['like', 'rivegauche_product.price', $this->r_price])
+            ->andFilterWhere(['like', 'rivegauche_product.new_price', $this->r_blue_price])
+            ->andFilterWhere(['like', 'rivegauche_product.old_price', $this->r_gold_price])
+            ->andFilterWhere(['like', 'iledebeaute_product.title', $this->i_title])
+            ->andFilterWhere(['like', 'iledebeaute_product.article', $this->i_article])
+            ->andFilterWhere(['like', 'iledebeaute_product.description', $this->i_desc])
+            ->andFilterWhere(['like', 'iledebeaute_product.old_price', $this->i_old_price])
+            ->andFilterWhere(['like', 'iledebeaute_product.new_price', $this->i_new_price])
+            ->andWhere('l_id is not null or r_id is not null or i_id is not null');
 
         return $dataProvider;
     }

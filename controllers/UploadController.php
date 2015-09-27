@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\PodruzkaProduct;
+use app\models\Upload;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -52,6 +54,12 @@ class UploadController extends Controller
 
     public function actionInform()
     {
-        return $this->render('inform');
+        $upload = Upload::find()->orderBy(['id' => SORT_DESC])->all();
+
+        return $this->render('inform',
+            [
+                'upload' => $upload
+            ]
+        );
     }
 }

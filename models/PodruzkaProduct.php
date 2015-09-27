@@ -102,6 +102,22 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getR()
+    {
+        return $this->hasOne(RivegaucheProduct::className(), ['id' => 'r_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getI()
+    {
+        return $this->hasOne(IledebeauteProduct::className(), ['id' => 'i_id']);
+    }
+
+    /**
      * @param $condition
      * @param bool|false $matching
      *

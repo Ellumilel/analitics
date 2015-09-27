@@ -76,27 +76,30 @@ class DownloadController extends Controller
         } else {
             $let = [];
         }
-        //sprintf('%s/web/files/%s', \Yii::$app->basePath, sprintf('example_%s.xls',time()))
-        $xls = new ExcelXML();
 
-        $header_style = array(
-            'bold'       => 1,
-            'size'       => '12',
-            'color'      => '#FFFFFF',
-            'bgcolor'    => '#4F81BD'
-        );
+        if(!empty($reader) && !empty($attr)) {
+            //sprintf('%s/web/files/%s', \Yii::$app->basePath, sprintf('example_%s.xls',time()))
+            $xls = new ExcelXML();
 
-        $xls->add_style('header', $header_style);
-        //$xls->debug();
-        $xls->add_row($attr->attributes(), 'header');
+            $header_style = array(
+                'bold'       => 1,
+                'size'       => '12',
+                'color'      => '#FFFFFF',
+                'bgcolor'    => '#4F81BD'
+            );
 
-        while ($row = $reader->read()) {
-            $xls->add_row($row);
+            $xls->add_style('header', $header_style);
+            //$xls->debug();
+            $xls->add_row($attr->attributes(), 'header');
+
+            while ($row = $reader->read()) {
+                $xls->add_row($row);
+            }
+
+            $xls->create_worksheet('Users');
+            $xml = $xls->generate();
+            $xls->download(sprintf('%s_%s.xls', $request['company'], time()));
         }
-
-        $xls->create_worksheet('Users');
-        $xml = $xls->generate();
-        $xls->download(sprintf('%s_%s.xls', $request['company'], time()));
     }
 
     public function actionMatching()
@@ -105,6 +108,7 @@ class DownloadController extends Controller
         $sql = 'Select
             pp.article,
             pp.title,
+            pp.arrival,
             pp.`group`,
             pp.category,
             pp.sub_category,
@@ -156,6 +160,7 @@ class DownloadController extends Controller
         $attr = [
             'article',
             'title',
+            'arrival',
             'group',
             'category',
             'sub_category',
@@ -169,25 +174,25 @@ class DownloadController extends Controller
             'let.title',
             'let.desc',
             'let.link',
-            'let.new_price',
             'let.old_price',
+            'let.new_price',
             'let.date',
             'rive.article',
             'rive.title',
             'rive.description',
             'rive.link',
             'rive.promo',
-            'rive.gold_price',
-            'rive.blue_price',
             'rive.price',
+            'rive.blue_price',
+            'rive.gold_price',
             'rive.date',
             'ile.article',
             'ile.title',
             'ile.description',
             'ile.link',
             'ile.promo',
-            'ile.new_price',
             'ile.old_price',
+            'ile.new_price',
             'ile.date',
         ];
         $xls = new ExcelXML();
@@ -251,42 +256,44 @@ class DownloadController extends Controller
             $ipromo = implode(',', $ile_promotion);
 
             $data = [
-                'article' =>  $row['article'],
-                'title' =>  $row['title'],
-                'group' =>  $row['group'],
-                'category' =>  $row['category'],
-                'sub_category' =>  $row['sub_category'],
-                'detail' =>  $row['detail'],
-                'brand' => $row['brand'],
-                'sub_brand' => $row['sub_brand'],
-                'line' => $row['line'],
-                'price' => str_replace('.',',', $row['price']),
-                'ma_price' => str_replace('.',',', $row['ma_price']),
-                'let.article' => $row['let.article'],
-                'let.title' => $row['let.title'],
-                'let.desc' => $row['let.desc'],
-                'let.link' => $row['let.link'],
-                'let.new_price' => str_replace('.',',', $row['let.new_price']),
-                'let.old_price' => str_replace('.',',', $row['let.old_price']),
-                'let.date' => $row['let.date'],
-                'rive.article' => $row['rive.article'],
-                'rive.title' => $row['rive.title'],
-                'rive.description' => $row['rive.description'],
-                'rive.link' => $row['rive.link'],
-                'rive.promo' => $rpromo,
-                'rive.gold_price' => str_replace('.',',', $row['rive.gold_price']),
-                'rive.blue_price' => str_replace('.',',', $row['rive.blue_price']),
-                'rive.price' => str_replace('.',',', $row['rive.price']),
-                'rive.date' => $row['rive.date'],
-                'ile.article' => $row['ile.article'],
-                'ile.title' => $row['ile.title'],
-                'ile.description' => $row['ile.description'],
-                'ile.link' => $row['ile.link'],
-                'ile.promo' => $ipromo,
-                'ile.new_price' => str_replace('.',',', $row['ile.new_price']),
-                'ile.old_price' => str_replace('.',',', $row['ile.old_price']),
-                'ile.date' => $row['ile.date'],
+                'article' => (string)str_pad($row['article'], 5, '0', STR_PAD_LEFT),
+                'title' =>  (string)$row['title'],
+                'arrival' => (string)$row['arrival'],
+                'group' => (string) $row['group'],
+                'category' =>  (string)$row['category'],
+                'sub_category' => (string) $row['sub_category'],
+                'detail' => (string) $row['detail'],
+                'brand' => (string)$row['brand'],
+                'sub_brand' =>(string) $row['sub_brand'],
+                'line' => (string)$row['line'],
+                'price' => (float) sprintf("%8.2f", trim($row['price'])),
+                'ma_price' =>(float) sprintf("%8.2f", trim($row['ma_price'])),
+                'let.article' =>(string) $row['let.article'],
+                'let.title' =>(string) $row['let.title'],
+                'let.desc' => (string)$row['let.desc'],
+                'let.link' => (string)$row['let.link'],
+                'let.old_price' => (float)sprintf("%8.2f", trim($row['let.old_price'])),
+                'let.new_price' => (float)sprintf("%8.2f", trim($row['let.new_price'])),
+                'let.date' =>(string) $row['let.date'],
+                'rive.article' =>(string) $row['rive.article'],
+                'rive.title' =>(string) $row['rive.title'],
+                'rive.description' =>(string) $row['rive.description'],
+                'rive.link' => (string)$row['rive.link'],
+                'rive.promo' => (string)$rpromo,
+                'rive.price' =>(float)sprintf("%8.2f", trim($row['rive.price'])),
+                'rive.blue_price' => (float)sprintf("%8.2f", trim($row['rive.blue_price'])),
+                'rive.gold_price' => (float)sprintf("%8.2f", trim($row['rive.gold_price'])),
+                'rive.date' =>(string) $row['rive.date'],
+                'ile.article' =>(string) $row['ile.article'],
+                'ile.title' =>(string) $row['ile.title'],
+                'ile.description' =>(string) $row['ile.description'],
+                'ile.link' =>(string) $row['ile.link'],
+                'ile.promo' =>(string) $ipromo,
+                'ile.old_price' => (float)sprintf("%8.2f", trim($row['ile.old_price'])),
+                'ile.new_price' =>(float)sprintf("%8.2f", trim($row['ile.new_price'])),
+                'ile.date' =>(string) $row['ile.date'],
             ];
+            //var_dump($data);die;
             $xls->add_row($data);
         }
 
