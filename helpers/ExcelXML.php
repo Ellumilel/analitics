@@ -2,6 +2,7 @@
 namespace app\helpers;
 
 use yii\base\Exception;
+use yii\helpers\Url;
 
 /**
  * @author Denis Tikhonov <ozy@mailserver.ru>
@@ -150,6 +151,10 @@ class ExcelXML
      * @returns string
      */
     function prepare_cell($cell_data, $style = null) {
+        $type = null;
+        if(gettype($cell_data) == 'double') {
+            $type = 'Number';
+        }
         $merge = '';
         $str = str_replace("\t", " ", $cell_data);          // replace tabs with spaces
         $str = str_replace("\r\n", "\n", $str);             // replace windows-like new-lines with unix-like
@@ -166,9 +171,19 @@ class ExcelXML
             $merge  = ' ss:MergeAcross="'.$out[1].'"';
             $str    = str_replace($out[0], '', $str);
         }
+        //preg_match('/^([\d]+)$/', $str) ? 'Number' : 'String';
         // Get type
-        $type = preg_match('/^([\d]+)$/', $str) ? 'Number' : 'String';
-        return '<Cell'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
+
+        $type = ($type) ? 'Number' : 'String';
+        if($type == 'Number') {
+            return '<Cell ss:StyleID="s66"'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
+        } else {
+            if (!empty($str) && substr($str, 0, 7) == 'http://') {
+                return '<Cell ss:HRef="'.$str.'"'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
+            } else {
+                return '<Cell'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
+            }
+        }
     }
     /**
      * Create header
@@ -210,6 +225,9 @@ xmlns:html="http://www.w3.org/TR/REC-html40">
         </Style>
         <Style ss:ID="bold">
             <Font ss:Bold="1" />
+        </Style>
+        <Style ss:ID="s66">
+            <NumberFormat ss:Format="Standard"/>
         </Style>
         $styles
     </Styles>

@@ -3,8 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
-use yii\grid\GridView;
+//use yii\grid\GridView;
 use app\models\PodruzkaProduct;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PodruzkaProductSearch */
@@ -17,17 +18,25 @@ $this->params['breadcrumbs'][] = $this->title;
 <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/matching']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузить в Excel</a>
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <?php Pjax::begin(); ?>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'pjax'=>true,
+            'pjaxSettings'=>[
+                'neverTimeout'=>true,
+                'beforeGrid'=>'My fancy content before.',
+                'afterGrid'=>'My fancy content after.',
+            ],
             'columns' => [
                 //['class' => 'yii\grid\SerialColumn'],
 
                 //'id',
                 'article',
                 'title',
-                'arrival',
+                [
+                    'attribute'=>'arrival',
+                    'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListArrival($condition), 'arrival', 'arrival'),
+                ],
                 [
                     'attribute'=>'group',
                     'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition, true), 'group', 'group'),
@@ -63,13 +72,48 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'let.price',
                     'value' => function($data) {
                         return $data->l->old_price;
-                    }
+                    },
                 ],
                 [
                     'attribute'=>'l_new_price',
                     'label' => 'let.new_price',
                     'value' => function($data) {
                         return $data->l->new_price;
+                    }
+                ],
+                [
+                    'attribute'=>'r_price',
+                    'label' => 'rive.price',
+                    'value' => function($data) {
+                        return $data->r->price;
+                    }
+                ],
+                [
+                    'attribute'=>'r_blue_price',
+                    'label' => 'rive.r_blue_price',
+                    'value' => function($data) {
+                        return $data->r->blue_price;
+                    }
+                ],
+                [
+                    'attribute'=>'r_gold_price',
+                    'label' => 'rive.r_gold_price',
+                    'value' => function($data) {
+                        return $data->r->gold_price;
+                    }
+                ],
+                [
+                    'attribute'=>'i_old_price',
+                    'label' => 'ile.price',
+                    'value' => function($data) {
+                        return $data->i->old_price;
+                    },
+                ],
+                [
+                    'attribute'=>'i_new_price',
+                    'label' => 'ile.new_price',
+                    'value' => function($data) {
+                        return $data->i->new_price;
                     }
                 ],
                 /*[
@@ -108,6 +152,72 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 ],
                 [
+                    'attribute'=>'r_article',
+                    'label' => 'rive.article',
+                    'value' => function($data) {
+                        return $data->r->article;
+                    }
+                ],
+                [
+                    'attribute'=>'r_title',
+                    'label' => 'rive.title',
+                    'value' => function($data) {
+                        return $data->r->title;
+                    }
+                ],
+                [
+                    'attribute'=>'r_desc',
+                    'label' => 'rive.r_desc',
+                    'value' => function($data) {
+                        return $data->r->description;
+                    }
+                ],
+                [
+                    'attribute'=>'r_link',
+                    'label' => 'rive.link',
+                    'format' => 'raw',
+                    'value' => function($data) {
+                        if(!empty($data->r->link)) {
+                            return '<a href="'.$data->r->link.'" target="_blank">ссылка</a>';
+                        } else{
+                            return '';
+                        }
+                    }
+                ],
+                [
+                    'attribute'=>'i_article',
+                    'label' => 'ile.article',
+                    'value' => function($data) {
+                        return $data->i->article;
+                    }
+                ],
+                [
+                    'attribute'=>'i_title',
+                    'label' => 'ile.title',
+                    'value' => function($data) {
+                        return $data->i->title;
+                    }
+                ],
+                [
+                    'attribute'=>'i_desc',
+                    'label' => 'ile.desc',
+                    'value' => function($data) {
+                        return $data->i->description;
+                    }
+                ],
+                [
+                    'attribute'=>'i_link',
+                    'label' => 'ile.link',
+                    'format' => 'raw',
+                    'value' => function($data) {
+                        if(!empty($data->i->link)) {
+                            return '<a href="'.$data->i->link.'" target="_blank">ссылка</a>';
+                        } else{
+                            return '';
+                        }
+                    }
+                ],
+                [
                     'attribute'=>'l_date',
                     'label' => 'let.date',
                     'value' => function($data) {
@@ -120,6 +230,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 //['class' => 'yii\grid\ActionColumn'],
             ],
+            'responsive'=>true,
+            'hover'=>true,
+
         ]); ?>
-    <?php Pjax::end(); ?>
 </div>
