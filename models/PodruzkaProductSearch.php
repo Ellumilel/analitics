@@ -113,10 +113,9 @@ class PodruzkaProductSearch extends PodruzkaProduct
     public function searchMatching($params)
     {
         $query = PodruzkaProduct::find();
-
-        $query->joinWith('r');
-        $query->joinWith('i');
-        $query->joinWith('l');
+        $query->joinWith('l', true, 'LEFT JOIN');
+        $query->joinWith('r', true, 'LEFT JOIN');
+        $query->joinWith('i', true, 'LEFT JOIN');
 
 
         $dataProvider = new ActiveDataProvider([

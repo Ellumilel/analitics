@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/matching']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузить в Excel</a>
 <div class="podruzka-product-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -71,49 +71,65 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute'=>'l_old_price',
                     'label' => 'let.price',
                     'value' => function($data) {
-                        return $data->l->old_price;
+                        return (!empty($data->l->old_price)) ? $data->l->old_price : null;
                     },
                 ],
                 [
                     'attribute'=>'l_new_price',
                     'label' => 'let.new_price',
                     'value' => function($data) {
-                        return $data->l->new_price;
+                        return (!empty($data->l->new_price)) ? $data->l->new_price : null;
                     }
                 ],
                 [
                     'attribute'=>'r_price',
-                    'label' => 'rive.price',
+                    'label' => 'rive.r_price',
                     'value' => function($data) {
-                        return $data->r->price;
+                        return (!empty($data->r->price)) ? $data->r->price : null;
                     }
                 ],
                 [
                     'attribute'=>'r_blue_price',
                     'label' => 'rive.r_blue_price',
                     'value' => function($data) {
-                        return $data->r->blue_price;
+                        if(!empty($data->r->blue_price)) {
+                            return $data->r->blue_price;
+                        } else {
+                            return null;
+                        }
                     }
                 ],
                 [
                     'attribute'=>'r_gold_price',
                     'label' => 'rive.r_gold_price',
                     'value' => function($data) {
-                        return $data->r->gold_price;
+                        if(!empty($data->r->gold_price)) {
+                            return $data->r->gold_price;
+                        } else {
+                            return null;
+                        }
                     }
                 ],
                 [
                     'attribute'=>'i_old_price',
                     'label' => 'ile.price',
                     'value' => function($data) {
-                        return $data->i->old_price;
+                        if(!empty($data->i->old_price)) {
+                            return $data->i->old_price;
+                        } else {
+                            return null;
+                        }
                     },
                 ],
                 [
                     'attribute'=>'i_new_price',
                     'label' => 'ile.new_price',
                     'value' => function($data) {
-                        return $data->i->new_price;
+                        if(!empty($data->i->new_price)) {
+                            return $data->i->new_price;
+                        } else {
+                            return null;
+                        }
                     }
                 ],
                 /*[
@@ -123,24 +139,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filter' => yii\helpers\ArrayHelper::map(app\models\ActorRole::find()->orderBy('role_name')->asArray()->all(),'act_role_id','role_name')
                 ],*/
                 [
-                    'attribute'=>'l_article',
-                    'label' => 'l.article',
-                    'value' => function($data) {
-                        return $data->l->article;
-                    }
-                ],
-                [
                     'attribute'=>'l_title',
                     'label' => 'let.title',
                     'value' => function($data) {
-                        return $data->l->title;
+                        return (!empty($data->l->title)) ? $data->l->title : null;
                     }
                 ],
                 [
                     'attribute'=>'l_desc',
                     'label' => 'let.desc',
                     'value' => function($data) {
-                        return $data->l->description;
+                        return (!empty($data->l->description)) ? $data->l->description : null;
                     }
                 ],
                 [
@@ -148,28 +157,25 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'let.link',
                     'format' => 'raw',
                     'value' => function($data) {
-                        return '<a href="'.$data->l->link.'" target="_blank">ссылка</a>';
-                    }
-                ],
-                [
-                    'attribute'=>'r_article',
-                    'label' => 'rive.article',
-                    'value' => function($data) {
-                        return $data->r->article;
+                        if(!empty($data->l->link)) {
+                            return '<a href="'.$data->l->link.'" target="_blank">ссылка</a>';
+                        } else{
+                            return null;
+                        }
                     }
                 ],
                 [
                     'attribute'=>'r_title',
                     'label' => 'rive.title',
                     'value' => function($data) {
-                        return $data->r->title;
+                        return (!empty($data->r->title)) ? $data->r->title : null;
                     }
                 ],
                 [
                     'attribute'=>'r_desc',
                     'label' => 'rive.r_desc',
                     'value' => function($data) {
-                        return $data->r->description;
+                        return (!empty($data->r->description)) ? $data->r->description : null;
                     }
                 ],
                 [
@@ -180,29 +186,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         if(!empty($data->r->link)) {
                             return '<a href="'.$data->r->link.'" target="_blank">ссылка</a>';
                         } else{
-                            return '';
+                            return null;
                         }
-                    }
-                ],
-                [
-                    'attribute'=>'i_article',
-                    'label' => 'ile.article',
-                    'value' => function($data) {
-                        return $data->i->article;
                     }
                 ],
                 [
                     'attribute'=>'i_title',
                     'label' => 'ile.title',
                     'value' => function($data) {
-                        return $data->i->title;
+                        return (!empty($data->i->title)) ? $data->i->title : null;
                     }
                 ],
                 [
                     'attribute'=>'i_desc',
                     'label' => 'ile.desc',
                     'value' => function($data) {
-                        return $data->i->description;
+                        return (!empty($data->i->description)) ? $data->i->description : null;
                     }
                 ],
                 [
@@ -213,7 +212,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         if(!empty($data->i->link)) {
                             return '<a href="'.$data->i->link.'" target="_blank">ссылка</a>';
                         } else{
-                            return '';
+                            return null;
                         }
                     }
                 ],
@@ -221,7 +220,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute'=>'l_date',
                     'label' => 'let.date',
                     'value' => function($data) {
-                        return date('Y-m-d',strtotime($data->l->updated_at));
+                        if(!empty($data->l->updated_at)) {
+                            return date('Y-m-d',strtotime($data->l->updated_at));
+                        } else{
+                            return null;
+                        }
                     }
                 ],
                 // 'created_at',

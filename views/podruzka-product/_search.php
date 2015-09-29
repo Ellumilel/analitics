@@ -6,12 +6,20 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\PodruzkaProductSearch */
 /* @var $form yii\widgets\ActiveForm */
+$this->registerJs(
+    '$("document").ready(function(){
+        $("#w0").on("pjax:end", function() {
+            $.pjax.reload({container:"#w1"});  //Reload GridView
+        });
+    });'
+);
+
 ?>
 
 <div class="podruzka-product-search">
-
+    <?php yii\widgets\Pjax::begin(['id' => 'search-form']) ?>
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['matching'],
         'method' => 'get',
     ]); ?>
 
@@ -25,13 +33,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'sub_category') ?>
 
-    <?php // echo $form->field($model, 'detail') ?>
+    <?= $form->field($model, 'detail') ?>
 
-    <?php // echo $form->field($model, 'brand') ?>
+    <?= $form->field($model, 'brand') ?>
 
-    <?php // echo $form->field($model, 'sub_brand') ?>
+    <?= $form->field($model, 'sub_brand') ?>
 
-    <?php // echo $form->field($model, 'line') ?>
+    <?= $form->field($model, 'line') ?>
 
     <?php // echo $form->field($model, 'created_at') ?>
 
@@ -45,5 +53,6 @@ use yii\widgets\ActiveForm;
     </div>
 
     <?php ActiveForm::end(); ?>
+    <?php yii\widgets\Pjax::end() ?>
 
 </div>

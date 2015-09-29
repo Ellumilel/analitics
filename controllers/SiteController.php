@@ -2,7 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\IledebeauteProduct;
+use app\models\LetualProduct;
+use app\models\PodruzkaProduct;
 use app\models\ProductLink;
+use app\models\RivegaucheProduct;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -71,9 +75,38 @@ class SiteController extends Controller
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $let = LetualProduct::find()->count();
+        $rive = RivegaucheProduct::find()->count();
+        $ile = IledebeauteProduct::find()->count();
+
+        return $this->render(
+            'index',
+            [
+                'let_count' => $let,
+                'riv_count' => $rive,
+                'ile_count' => $ile,
+                'let_update' => LetualProduct::find()->select('max(updated_at) as updated_at')->one()->updated_at,
+                'riv_update' => RivegaucheProduct::find()->select('max(updated_at) as updated_at')->one()->updated_at,
+                'ile_update' => IledebeauteProduct::find()->select('max(updated_at) as updated_at')->one()->updated_at,
+                'pod_update' => PodruzkaProduct::find()->select('max(updated_at) as updated_at')->one()->updated_at,
+                'let_avg' => LetualProduct::find()->select('avg(old_price) as old_price')->join('INNER JOIN','podruzka_product','podruzka_product.l_id=letual_product.id')->one(),
+                'riv_avg' => RivegaucheProduct::find()->select('avg(rivegauche_product.price) as price')->join('INNER JOIN','podruzka_product','podruzka_product.r_id=rivegauche_product.id')->one(),
+                'ile_avg' => IledebeauteProduct::find()->select('avg(old_price) as old_price')->join('INNER JOIN','podruzka_product','podruzka_product.i_id=iledebeaute_product.id')->one(),
+                'pod_avg' => PodruzkaProduct::find()->select('avg(price) as price')->where('l_id is not null or r_id is not null or i_id is not null')->one(),
+                'let_avg_brand' => LetualProduct::find()->select('avg(old_price) as old_price')->where('brand in (select brand from podruzka_product)')->one(),
+                'riv_avg_brand' => RivegaucheProduct::find()->select('avg(price) as price')->where('brand in (select brand from podruzka_product)')->one(),
+                'ile_avg_brand' => IledebeauteProduct::find()->select('avg(old_price) as old_price')->where('brand in (select brand from podruzka_product)')->one(),
+                'pod_avg_brand' => PodruzkaProduct::find()->select('avg(price) as price')->where('brand in (select brand from rivegauche_product) or brand in (select brand from letual_product) or brand in (select brand from iledebeaute_product)')->one(),
+                'let_compare' => PodruzkaProduct::find()->where('l_id is not null')->count(),
+                'riv_compare' => PodruzkaProduct::find()->where('r_id is not null')->count(),
+                'ile_compare' => PodruzkaProduct::find()->where('i_id is not null')->count(),
+            ]
+        );
     }
 
     public function actionLogin()
