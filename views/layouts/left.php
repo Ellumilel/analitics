@@ -53,16 +53,32 @@ use yii\helpers\Html;
         );
         ?>
 
-        <!--ul class="sidebar-menu">
+        <ul class="sidebar-menu">
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-share"></i> <span>Same tools</span>
+                    <i class="fa fa-pie-chart"></i> <span>Среднее по сопоставленным</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?= \yii\helpers\Url::to(['/gii']) ?>"><span class="fa fa-file-code-o"></span> Gii</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/statistic/avg-brand']) ?>"><span class="fa fa-files-o"></span>по брендам</a>
                     </li>
-                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="fa fa-dashboard"></span> Debug</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/statistic/avg-category']) ?>"><span class="fa fa-files-o"></span>по категориям</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/statistic/avg-matching']) ?>"><span class="fa fa-files-o"></span>по брендам + категориям</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!--ul class="sidebar-menu">
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-share"></i> <span>Средние значения</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?= \yii\helpers\Url::to(['/gii']) ?>"><span class="fa fa-file-code-o"></span>по бренду</a>
+                    </li>
+                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="fa fa-dashboard"></span>по категориям</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="fa fa-dashboard"></span>по сопоставленным</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-circle-o"></i> Level One <i class="fa fa-angle-left pull-right"></i></a>
@@ -82,7 +98,5 @@ use yii\helpers\Html;
                 </ul>
             </li>
         </ul-->
-
     </section>
-
 </aside>

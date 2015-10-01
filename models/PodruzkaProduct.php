@@ -287,4 +287,82 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     {
         return $this::find()->offset($offset)->limit($limit)->all();
     }
+
+    /**
+     * @return array
+     */
+    public function getBrandAvgPrice()
+    {
+        $db = Yii::$app->getDb();
+        $sql = 'Select
+                pp.brand,
+                avg(pp.price) p_price,
+                AVG(ma_price) p_ma_price,
+                lp.old_price l_old_price,
+                lp.new_price l_new_price,
+                rp.price r_price,
+                rp.blue_price r_blue_price,
+                rp.gold_price r_gold_price,
+                ip.old_price i_old_price,
+                ip.new_price i_new_price
+                FROM podruzka_product pp
+                LEFT JOIN (select AVG(old_price) old_price, AVG(new_price) new_price, brand from letual_product GROUP BY brand) lp on lp.brand = pp.brand
+                LEFT JOIN (select AVG(price) price, AVG(blue_price) blue_price, AVG(gold_price) gold_price, brand from rivegauche_product GROUP BY brand) rp on rp.brand = pp.brand
+                LEFT JOIN (select AVG(new_price) new_price, AVG(old_price) old_price, brand from iledebeaute_product GROUP BY brand) ip on ip.brand = pp.brand
+                where arrival="Разрешен"
+                group by brand;';
+        return $db->createCommand($sql)->queryAll();
+    }
+
+    /**
+     * @return array
+     */
+    public function getCategoryAvgPrice()
+    {
+        $db = Yii::$app->getDb();
+        $sql = 'SELECT
+                pp.category,
+                AVG(pp.price) p_price,
+                AVG(ma_price) p_ma_price,
+                AVG(lp.old_price) l_old_price,
+                AVG(lp.new_price) l_new_price,
+                AVG(rp.price) r_price,
+                AVG(rp.blue_price) r_blue_price,
+                AVG(rp.gold_price) r_gold_price,
+                AVG(ip.old_price) i_old_price,
+                AVG(ip.new_price) i_new_price
+                FROM podruzka_product pp
+                LEFT JOIN letual_product lp on lp.id = pp.l_id
+                LEFT JOIN rivegauche_product rp on rp.id = pp.r_id
+                LEFT JOIN iledebeaute_product ip on ip.id = pp.i_id
+                WHERE arrival="Разрешен"
+                group by pp.category';
+        return $db->createCommand($sql)->queryAll();
+    }
+    /**
+     * @return array
+     */
+    public function getBrandCategoryAvgPrice()
+    {
+        $db = Yii::$app->getDb();
+        $sql = 'SELECT
+                pp.brand,
+                pp.category,
+                AVG(pp.price) p_price,
+                AVG(ma_price) p_ma_price,
+                AVG(lp.old_price) l_old_price,
+                AVG(lp.new_price) l_new_price,
+                AVG(rp.price) r_price,
+                AVG(rp.blue_price) r_blue_price,
+                AVG(rp.gold_price) r_gold_price,
+                AVG(ip.old_price) i_old_price,
+                AVG(ip.new_price) i_new_price
+                FROM podruzka_product pp
+                LEFT JOIN letual_product lp on lp.id = pp.l_id
+                LEFT JOIN rivegauche_product rp on rp.id = pp.r_id
+                LEFT JOIN iledebeaute_product ip on ip.id = pp.i_id
+                WHERE arrival="Разрешен"
+                group by pp.brand, pp.category';
+        return $db->createCommand($sql)->queryAll();
+    }
 }
