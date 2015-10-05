@@ -5,7 +5,7 @@
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $product array */
 
-$this->title = 'Статистика сбора данных';
+$this->title = 'Статистика сбора данных по новинкам';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">

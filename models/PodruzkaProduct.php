@@ -296,6 +296,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         $db = Yii::$app->getDb();
         $sql = 'Select
                 pp.brand,
+                count(pp.brand) as count,
                 avg(pp.price) p_price,
                 AVG(ma_price) p_ma_price,
                 lp.old_price l_old_price,
@@ -322,6 +323,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         $db = Yii::$app->getDb();
         $sql = 'SELECT
                 pp.category,
+                count(pp.category) as count,
                 AVG(pp.price) p_price,
                 AVG(ma_price) p_ma_price,
                 AVG(lp.old_price) l_old_price,
@@ -348,6 +350,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         $sql = 'SELECT
                 pp.brand,
                 pp.category,
+                count(pp.brand+pp.category) as count,
                 AVG(pp.price) p_price,
                 AVG(ma_price) p_ma_price,
                 AVG(lp.old_price) l_old_price,
