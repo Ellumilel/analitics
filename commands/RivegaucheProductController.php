@@ -433,6 +433,9 @@ class RivegaucheProductController extends Controller
      */
     private function saveResult($result, $link)
     {
+        if(empty($result) || empty($result['link']) || empty($result['title']) || empty($result['title'])) {
+            return;
+        }
         preg_match('/[0-9]+$/i', $result['link'], $data);
         $article = $data[0];
         unset($data);
@@ -449,8 +452,8 @@ class RivegaucheProductController extends Controller
         $product->group = $link['group'];
         $product->link = $result['link'];
         $product->sub_category = $link['sub_category'];
-        $product->image_link = $result['image_link'];
-        $product->description = $result['description'];
+        $product->image_link = !empty($result['image_link']) ? $result['image_link'] : '';
+        $product->description = !empty($result['description']) ? $result['description'] : '';
         $product->showcases_offer = $result['showcases_offer'];
         $product->showcases_new = $result['showcases_new'];
         $product->showcases_exclusive = $result['showcases_exclusive'];
