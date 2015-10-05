@@ -30,43 +30,46 @@ use yii\helpers\Html;
         </form>
         <!-- /.search form -->
 
-        <?=
-        Nav::widget(
+        <?= \app\widgets\Menu::widget(
             [
-                'encodeLabels' => false,
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
-                    '<li class="header">Управление</li>',
-                    ['label' => '<i class="fa fa-file-code-o"></i><span>Информационный продукт</span>', 'url' => ['/podruzka-product/index']],
-                    ['label' => '<i class="fa fa-file-code-o"></i><span>Статистика сбора данных</span>', 'url' => ['/statistic/index']],
-                    ['label' => '<i class="fa fa-file-code-o"></i><span>Сопоставление</span>', 'url' => ['/podruzka-product/matching']],
-                   //['label' => '<i class="fa fa-file-code-o"></i><span>Gii</span>', 'url' => ['/gii']],
-                    //['label' => '<i class="fa fa-file-code-o"></i><span>Gii2</span>', 'url' => ['/gii']],
-                   // ['label' => '<i class="fa fa-dashboard"></i><span>Debug</span>', 'url' => ['/debug']],
+                    ['label' => 'Управление', 'options' => ['class' => 'header']],
+                    ['label' => 'Информационный продукт', 'icon' => 'fa fa-dashboard', 'url' => ['/podruzka-product/index']],
+                    ['label' => 'Статистика сбора данных', 'icon' => 'fa fa-book', 'url' => ['/statistic/index']],
+                    ['label' => 'Сопоставление', 'icon' => 'fa fa-files-o', 'url' => ['/podruzka-product/matching']],
+                    ['label' => 'Сравнение цен', 'icon' => 'fa fa-circle-o text-yellow', 'url' => ['/statistic/price-matching']],
+                    ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
                     [
-                        'label' => '<i class="glyphicon glyphicon-lock"></i><span>Sing in</span>', //for basic
-                        'url' => ['/site/login'],
-                        'visible' =>Yii::$app->user->isGuest
+                        'label' => 'Среднее по сопоставленным',
+                        'icon' => 'fa fa-share',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => 'по категориям', 'icon' => 'fa fa-circle-o text-aqua', 'url' => ['/statistic/avg-category'],],
+                            ['label' => 'по брендам', 'icon' => 'fa fa-circle-o text-aqua', 'url' => ['/statistic/avg-brand'],],
+                            ['label' => 'по брендам + категориям', 'icon' => 'fa fa-circle-o text-aqua', 'url' => ['/statistic/avg-matching'],],
+                            /*[
+                                'label' => 'Среднее по сопоставленным',
+                                'icon' => 'fa fa-circle-o',
+                                'url' => '#',
+                                'items' => [
+                                    ['label' => 'по категориям', 'icon' => 'fa fa-circle-o', 'url' => ['/statistic/avg-category'],],
+                                    [
+                                        'label' => 'по брендам',
+                                        'icon' => 'fa fa-circle-o',
+                                        'url' => ['/statistic/avg-brand'],
+                                        'items' => [
+                                            ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
+                                            ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
+                                        ],
+                                    ],
+                                ],
+                            ],*/
+                        ],
                     ],
                 ],
             ]
-        );
-        ?>
-        <ul class="sidebar-menu">
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-pie-chart"></i> <span>Среднее по сопоставленным</span>
-                    <i class="fa fa-angle-left pull-right"></i>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="<?= \yii\helpers\Url::to(['/statistic/avg-brand']) ?>"><span class="fa fa-files-o"></span>по брендам</a>
-                    </li>
-                    <li><a href="<?= \yii\helpers\Url::to(['/statistic/avg-category']) ?>"><span class="fa fa-files-o"></span>по категориям</a>
-                    <li><a href="<?= \yii\helpers\Url::to(['/statistic/avg-matching']) ?>"><span class="fa fa-files-o"></span>по брендам + категориям</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        ) ?>
         <!--ul class="sidebar-menu">
             <li class="treeview">
                 <a href="#">
