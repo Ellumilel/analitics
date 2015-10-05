@@ -55,6 +55,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 [
+                    'attribute' => 'l_new_price',
+                    'label' => 'let.new_price',
+                    'format' => 'raw',
+                    'value' => function ($data) {
+                        return (!empty($data->l->new_price)) ? TextHelper::getPriceMatch(
+                            $data->price,
+                            $data->l->new_price
+                        ) : '';
+                    },
+                ],
+                [
                     'attribute' => 'r_price',
                     'label' => 'rive.r_price',
                     'format' => 'raw',
@@ -66,8 +77,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 [
+                    'attribute' => 'r_gold_price',
+                    'label' => 'rive.r_gold_price',
+                    'format' => 'raw',
+                    'value' => function ($data) {
+                        return (!empty($data->r->gold_price)) ? TextHelper::getPriceMatch(
+                            $data->price,
+                            $data->r->gold_price
+                        ) : '';
+                    },
+                ],
+                [
                     'attribute' => 'i_old_price',
-                    'label' => 'ile.price',
+                    'label' => 'ile.old_price',
                     'format' => 'raw',
                     'value' => function ($data) {
                         return (!empty($data->i->old_price)) ? TextHelper::getPriceMatch(
@@ -76,7 +98,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         ) : '';
                     },
                 ],
-
+                [
+                    'attribute' => 'i_new_price',
+                    'label' => 'ile.new_price',
+                    'format' => 'raw',
+                    'value' => function ($data) {
+                        return (!empty($data->i->new_price)) ? TextHelper::getPriceMatch(
+                            $data->price,
+                            $data->i->new_price
+                        ) : '';
+                    },
+                ],
                 //['class' => 'yii\grid\ActionColumn'],
             ],
         ]
