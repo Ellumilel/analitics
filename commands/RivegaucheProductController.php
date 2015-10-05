@@ -442,7 +442,7 @@ class RivegaucheProductController extends Controller
             $product = new RivegaucheProduct();
         }
 
-        $product->brand = $this->clearBrand($result['brand']);
+        $product->brand = $this->clearBrand($result);
         $product->title = $result['title'];
         $product->article = $article;
         $product->category = $link['category'];
@@ -507,23 +507,26 @@ class RivegaucheProductController extends Controller
     /**
      * В рамках получения брендов пытаемся устранить косяки с заполнением
      *
-     * @param string $brand
+     * @param array $result
      *
      * @return string
      */
-    private function clearBrand($brand)
+    private function clearBrand($result)
     {
-        switch ($brand) {
-            case "L'OREAL":
-                $brand = 'LOREAL';
-                break;
-            case "COLORAMA":
-                $brand = 'MAYBELLINE';
-                break;
+        if (!empty($result['brand'])) {
+            switch ($result['brand']) {
+                case "L'OREAL":
+                    $result['brand'] = 'LOREAL';
+                    break;
+                case "COLORAMA":
+                    $result['brand'] = 'MAYBELLINE';
+                    break;
+            }
+
+            $result['brand'] = strtoupper($result['brand']);
         }
 
-        $brand = strtoupper($brand);
-        return $brand;
+        return $result;
     }
 
     /**
