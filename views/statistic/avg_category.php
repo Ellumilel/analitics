@@ -19,6 +19,7 @@
                     <tr>
                         <th style="width: 30px">#</th>
                         <th>Категории</th>
+                        <th>кол-во арт.</th>
                         <th>p_price</th>
                         <th>p_ma_price</th>
                         <th>l_old_price</th>
@@ -33,6 +34,7 @@
                         <tr>
                             <td><?= $key+1; ?></td>
                             <td><?= $brand['category']; ?></td>
+                            <td><?= $brand['count']; ?></td>
                             <?php if(!empty($brand['p_price']) && $brand['p_price'] !=0): ?>
                                 <td><?= number_format($brand['p_price'], 0, ',', ' '); ?></td>
                             <?php else: ?>

@@ -1,7 +1,6 @@
 <?php
 namespace app\commands;
 
-use app\models\IledebeauteLink;
 use app\models\RivegaucheLink;
 use app\models\RivegauchePrice;
 use app\models\RivegaucheProduct;
@@ -33,6 +32,13 @@ class RivegaucheProductController extends Controller
             if (!empty($links)) {
                 foreach ($links as $link) {
                     $client = new Client();
+                    $client->setClient(new \GuzzleHttp\Client(
+                        [
+                            'defaults' => [
+                                'timeout' => 20
+                            ]
+                        ]
+                    ));
                     $crawler = $client->request('GET', $link['link']);
                     $head = $this->getHtml($crawler, true);
                     if (!empty($head['links'])) {

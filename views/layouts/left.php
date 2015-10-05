@@ -36,7 +36,7 @@ use yii\helpers\Html;
                 'encodeLabels' => false,
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
-                    '<li class="header">Menu Yii2</li>',
+                    '<li class="header">Управление</li>',
                     ['label' => '<i class="fa fa-file-code-o"></i><span>Информационный продукт</span>', 'url' => ['/podruzka-product/index']],
                     ['label' => '<i class="fa fa-file-code-o"></i><span>Статистика сбора данных</span>', 'url' => ['/statistic/index']],
                     ['label' => '<i class="fa fa-file-code-o"></i><span>Сопоставление</span>', 'url' => ['/podruzka-product/matching']],
@@ -52,7 +52,6 @@ use yii\helpers\Html;
             ]
         );
         ?>
-
         <ul class="sidebar-menu">
             <li class="treeview">
                 <a href="#">
