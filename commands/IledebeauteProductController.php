@@ -182,8 +182,14 @@ class IledebeauteProductController extends Controller
                                         return $sub->text();
                                     }
                                 );
+
                                 if (empty(reset($oldPrice)) && empty(reset($newPrice))) {
-                                    $newPrice = $sub->filter('span.def')->each(
+                                    $newPrice = $sub->filter('div.vip_price span.def')->each(
+                                        function ($sub) {
+                                            return $sub->text();
+                                        }
+                                    );
+                                    $oldPrice = $sub->filter('div.full_price span.def')->each(
                                         function ($sub) {
                                             return $sub->text();
                                         }
