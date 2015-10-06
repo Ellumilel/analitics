@@ -433,8 +433,10 @@ class RivegaucheProductController extends Controller
      */
     private function saveResult($result, $link)
     {
-        if(empty($result) || empty($result['link']) || empty($result['title']) || empty($result['title'])) {
+        if(empty($result) || empty($result['link']) || empty($result['title']) || empty($result['category'])) {
             return;
+        } else {
+            \Yii::error('Ошибка сохранения артикула R: '.json_encode($result),'cron');
         }
         preg_match('/[0-9]+$/i', $result['link'], $data);
         $article = $data[0];
@@ -475,11 +477,10 @@ class RivegaucheProductController extends Controller
             if ($product->save()) {
                 $rPrice->save();
             } else {
-                //print_r($result);die;
-                //\Yii::error($link, 'cron');
+                \Yii::error('Ошибка сохранения артикула R: '.json_encode($result),'cron');
             }
         } catch (\Exception $e) {
-
+            \Yii::error(sprintf('Exception %s сохранения артикула R: %s',$e->getMessage(), json_encode($result)),'cron');
         }
     }
 
