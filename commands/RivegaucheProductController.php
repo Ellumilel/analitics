@@ -18,34 +18,52 @@ class RivegaucheProductController extends Controller
 {
     /** @var string */
     private $url = 'http://shop.rivegauche.ru';
-
     /**
      * @return int
      */
+    private $proxyList = [
+        'http://141.101.118.147:80',
+        'http://213.85.92.10:80',
+        'http://104.28.4.57:80',
+        'http://64.15.205.101:80',
+        'http://208.48.81.133:80',
+        'http://208.91.197.104:80',
+        'http://104.28.8.165:80',
+        'http://104.28.12.100:80',
+        'http://104.28.17.74:80',
+        'http://108.162.197.200:80',
+        'http://104.28.7.184:80',
+    ];
     public function actionIndex()
     {
         /** @var $entity RivegaucheLink */
         $entity = new RivegaucheLink();
         $offset = 0;
         do {
-            $links = $entity->getLinks($offset, 20);
+            $links = $entity->getLinks($offset, 5);
             if (!empty($links)) {
                 foreach ($links as $link) {
-                    try {
-                        $client = new Client();
-                        $client->setClient(new \GuzzleHttp\Client(
-                            [
-                                'defaults' => [
-                                    'timeout' => 20
-                                ]
-                            ]
-                        ));
-                        $crawler = $client->request('GET', $link['link']);
-                    } catch(\Exception $e) {
-                        \Yii::error(sprintf('Ошибка: %s получения ссылки: %s', $e->getMessage(), $link['link']),'cron');
-                        break;
-                    }
+                    \Yii::info(sprintf('Обрабатываем: %s ',$link['link']),'cron');
+
+                    $client = new Client();
+                    $guzzle = $client->getClient();
+
+                    $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_PROXY, 'http://141.101.118.147:80');
+                    //$client->getClient()->setDefaultOption('config/curl/'.CURLOPT_TIMEOUT, 10);
+                    $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_CONNECTTIMEOUT, 10);
+                    $client->setClient($guzzle);
+                    /*$guzzle = $client->getClient();
+                    $guzzle->setDefaultOption('timeout', 10);
+
+                    $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_TIMEOUT_MS, 100);
+                    $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_CONNECTTIMEOUT, 5);
+                    $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_RETURNTRANSFER, true);
+                    $client->setClient($guzzle);*/
+                    $crawler = $client->request('GET', $link['link']);
+
+                    \Yii::info(sprintf('Извлекаем тело: %s ',$link['link']),'cron');
                     $head = $this->getHtml($crawler, true);
+                    \Yii::info(sprintf('HEAD тело: %s ',$link['link']),'cron');
                     if (!empty($head['links'])) {
                         foreach ($head['links'] as $l) {
                             $crawler = $client->request('GET', $l);
@@ -67,7 +85,7 @@ class RivegaucheProductController extends Controller
                     unset($head);
                 }
                 $z = 1;
-                $offset += 20;
+                $offset += 5;
                 unset($links);
                 unset($client);
             } else {
@@ -438,6 +456,7 @@ class RivegaucheProductController extends Controller
      */
     private function saveResult($result, $link)
     {
+        \Yii::info(sprintf('Сохраняем тело: %s ',json_encode($result)),'cron');
         if(empty($result) || empty($result['link']) || empty($result['title']) || empty($result['category'])) {
             return;
         } else {
