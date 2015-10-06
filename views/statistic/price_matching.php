@@ -39,8 +39,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute'=>'arrival',
                     'filter'=> \yii\helpers\ArrayHelper::map((new \app\models\PodruzkaProduct())->getListArrival($condition), 'arrival', 'arrival'),
                 ],
-                'category',
-                'brand',
+                [
+                    'attribute'=>'category',
+                    'filter'=> \yii\helpers\ArrayHelper::map((new \app\models\PodruzkaProduct())->getListCategory($condition, true), 'category', 'category'),
+                ],
+                [
+                    'attribute'=>'brand',
+                    'filter'=> \yii\helpers\ArrayHelper::map((new \app\models\PodruzkaProduct())->getListBrand($condition, true), 'brand', 'brand'),
+                ],
                 'price',
                 'ma_price',
                 [
@@ -48,9 +54,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'let.price',
                     'format' => 'raw',
                     'value' => function ($data) {
-                        return (!empty($data->l->old_price)) ? TextHelper::getPriceMatch(
+                        return (!empty($data->l->old_price)) ? TextHelper::getPriceMatchLink(
                             $data->price,
-                            $data->l->old_price
+                            $data->l->old_price,
+                            $data->l->link
                         ) : '';
                     },
                 ],
@@ -59,9 +66,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'let.new_price',
                     'format' => 'raw',
                     'value' => function ($data) {
-                        return (!empty($data->l->new_price)) ? TextHelper::getPriceMatch(
+                        return (!empty($data->l->new_price)) ? TextHelper::getPriceMatchLink(
                             $data->price,
-                            $data->l->new_price
+                            $data->l->new_price,
+                            $data->l->link
                         ) : '';
                     },
                 ],
@@ -70,9 +78,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'rive.r_price',
                     'format' => 'raw',
                     'value' => function ($data) {
-                        return (!empty($data->r->price)) ? TextHelper::getPriceMatch(
+                        return (!empty($data->r->price)) ? TextHelper::getPriceMatchLink(
                             $data->price,
-                            $data->r->price
+                            $data->r->price,
+                            $data->r->link
                         ) : '';
                     },
                 ],
@@ -81,9 +90,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'rive.r_gold_price',
                     'format' => 'raw',
                     'value' => function ($data) {
-                        return (!empty($data->r->gold_price)) ? TextHelper::getPriceMatch(
+                        return (!empty($data->r->gold_price)) ? TextHelper::getPriceMatchLink(
                             $data->price,
-                            $data->r->gold_price
+                            $data->r->gold_price,
+                            $data->r->link
                         ) : '';
                     },
                 ],
@@ -92,9 +102,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'ile.old_price',
                     'format' => 'raw',
                     'value' => function ($data) {
-                        return (!empty($data->i->old_price)) ? TextHelper::getPriceMatch(
+                        return (!empty($data->i->old_price)) ? TextHelper::getPriceMatchLink(
                             $data->price,
-                            $data->i->old_price
+                            $data->i->old_price,
+                            $data->i->link
                         ) : '';
                     },
                 ],
@@ -103,9 +114,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'ile.new_price',
                     'format' => 'raw',
                     'value' => function ($data) {
-                        return (!empty($data->i->new_price)) ? TextHelper::getPriceMatch(
+                        return (!empty($data->i->new_price)) ? TextHelper::getPriceMatchLink(
                             $data->price,
-                            $data->i->new_price
+                            $data->i->new_price,
+                            $data->i->link
                         ) : '';
                     },
                 ],

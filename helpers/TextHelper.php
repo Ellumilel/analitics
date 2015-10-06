@@ -44,4 +44,11 @@ class TextHelper
 
         return $result;
     }
+
+    public static function getPriceMatchLink($price, $priceCompare, $link)
+    {
+        $result = sprintf('<a href="%s" target="_blank">%s</a>', $link, self::getPriceMatch($price, $priceCompare));
+
+        return $result;
+    }
 }
