@@ -31,15 +31,20 @@ class RivegaucheProductController extends Controller
             $links = $entity->getLinks($offset, 20);
             if (!empty($links)) {
                 foreach ($links as $link) {
-                    $client = new Client();
-                    $client->setClient(new \GuzzleHttp\Client(
-                        [
-                            'defaults' => [
-                                'timeout' => 20
+                    try {
+                        $client = new Client();
+                        $client->setClient(new \GuzzleHttp\Client(
+                            [
+                                'defaults' => [
+                                    'timeout' => 20
+                                ]
                             ]
-                        ]
-                    ));
-                    $crawler = $client->request('GET', $link['link']);
+                        ));
+                        $crawler = $client->request('GET', $link['link']);
+                    } catch(\Exception $e) {
+                        \Yii::error(sprintf('Ошибка: %s получения ссылки: %s', $e->getMessage(), $link['link']),'cron');
+                        break;
+                    }
                     $head = $this->getHtml($crawler, true);
                     if (!empty($head['links'])) {
                         foreach ($head['links'] as $l) {
