@@ -37,7 +37,7 @@ class IledebeauteLink extends \yii\db\ActiveRecord
             [['link'], 'required'],
             [['link'], 'string'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['group', 'category', 'sub_category'], 'string', 'max' => 500]
+            [['group', 'category', 'sub_category'], 'string', 'max' => 500],
         ];
     }
 
@@ -84,5 +84,20 @@ class IledebeauteLink extends \yii\db\ActiveRecord
     public function getLinks($offset, $limit)
     {
         return $this::find()->offset($offset)->limit($limit)->all();
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return LetualLink|null|static
+     */
+    public static function getByLink($url)
+    {
+        $linkModel = null;
+        if (!$linkModel = self::findOne(['link' => $url])) {
+            $linkModel = new self();
+            $linkModel->link = $url;
+        }
+        return $linkModel;
     }
 }

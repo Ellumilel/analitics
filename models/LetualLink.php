@@ -85,4 +85,19 @@ class LetualLink extends \yii\db\ActiveRecord
             ],
         ];
     }
+
+    /**
+     * @param string $url
+     *
+     * @return LetualLink|null|static
+     */
+    public static function getByLink($url)
+    {
+        $linkModel = null;
+        if (!$linkModel = self::findOne(['link' => $url])) {
+            $linkModel = new self();
+            $linkModel->link = $url;
+        }
+        return $linkModel;
+    }
 }
