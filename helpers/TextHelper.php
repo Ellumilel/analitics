@@ -88,7 +88,7 @@ class TextHelper
     {
         $result = sprintf('<a href="%s" target="_blank">%s</a>', $link, Html::img($imgLink, [
             'height' => '130px;',
-            'width' => '150px;',
+            'width' => '100px;',
         ]));
         return $result;
     }

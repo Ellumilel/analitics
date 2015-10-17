@@ -70,6 +70,10 @@ class LetualProductController extends Controller
                             ];
                         });
 
+                        $image = $node->filter('td img')->each(function ($node) {
+                            return $this->url.$node->attr('src');
+                        });
+
                         $article = trim(reset($article));
                         $article = str_replace('Артикул ', '', $article);
                         $article = preg_replace("/[^a-zA-Z0-9]/", "", $article);
@@ -79,6 +83,7 @@ class LetualProductController extends Controller
                             'article' => $article,
                             'description' => reset($description),
                             'price' => reset($price),
+                            'image' => reset($image),
                         ];
                     });
 
@@ -86,14 +91,18 @@ class LetualProductController extends Controller
                         return $node->attr('alt');
                     });
 
-                    $image = $crawler->filter('div.atg_store_productImage img')->each(function ($node) {
-                        return $this->url.$node->attr('src');
-                    });
+                    //Если не нашли картинку в списке выбора
+                    if (empty($result['image'])) {
+                        $image = $crawler->filter('div.atg_store_productImage img')->each(function ($node) {
+                            return $this->url.$node->attr('src');
+                        });
+
+                        $result['image'] = reset($image);
+                    }
 
                     $result = $this->checkArray($result);
 
                     $result['brand'] = reset($brand);
-                    $result['image'] = reset($image);
                     $result['link'] = $link->link;
                     $result['group'] = $link->group;
                     $result['category'] = $link->category;
