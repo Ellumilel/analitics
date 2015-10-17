@@ -2,6 +2,8 @@
 
 namespace app\helpers;
 
+use yii\helpers\Html;
+
 /**
  * @author Denis Tikhonov <ozy@mailserver.ru>
  *
@@ -45,10 +47,49 @@ class TextHelper
         return $result;
     }
 
+    /**
+     * Выбирает цену и оборачивает в ссылку
+     *
+     * @param string $price
+     * @param string $priceCompare
+     * @param string $link
+     *
+     * @return string
+     */
     public static function getPriceMatchLink($price, $priceCompare, $link)
     {
         $result = sprintf('<a href="%s" target="_blank">%s</a>', $link, self::getPriceMatch($price, $priceCompare));
 
+        return $result;
+    }
+
+    /**
+     * Возвращаем объект картинку для отображения в grid
+     * @param string $imgLink
+     *
+     * @return string
+     */
+    public static function getImage($imgLink)
+    {
+        $result = Html::img($imgLink, ['width' => '100px;']);
+
+        return $result;
+    }
+
+    /**
+     * Возвращаем объект картинку обернутую в <a>
+     *
+     * @param string $imgLink
+     * @param string $link
+     *
+     * @return string
+     */
+    public static function getImageLink($imgLink, $link)
+    {
+        $result = sprintf('<a href="%s" target="_blank">%s</a>', $link, Html::img($imgLink, [
+            'height' => '130px;',
+            'width' => '150px;',
+        ]));
         return $result;
     }
 }

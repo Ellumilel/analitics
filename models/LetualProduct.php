@@ -104,7 +104,7 @@ class LetualProduct extends \yii\db\ActiveRecord
     /**
      * @return array
      */
-    static public function dropDownSubCategory()
+    public static function dropDownSubCategory()
     {
         $sql = 'SELECT DISTINCT sub_category FROM letual_product';
         $subCategory = self::findBySql($sql)->all();
@@ -119,7 +119,7 @@ class LetualProduct extends \yii\db\ActiveRecord
     /**
      * @return array
      */
-    static public function dropDownCategory()
+    public static function dropDownCategory()
     {
         $sql = 'SELECT DISTINCT category FROM letual_product';
         $subCategory = self::findBySql($sql)->all();
@@ -134,7 +134,7 @@ class LetualProduct extends \yii\db\ActiveRecord
     /**
      * @return array
      */
-    static public function dropDownBrand()
+    public static function dropDownBrand()
     {
         $sql = 'SELECT DISTINCT brand FROM letual_product';
         $brands = self::findBySql($sql)->all();
@@ -157,7 +157,7 @@ class LetualProduct extends \yii\db\ActiveRecord
         return $this::find()->offset($offset)->limit($limit)->all();
     }
 
-    static function getStatistic()
+    public static function getStatistic()
     {
         $rows = (new \yii\db\Query())
             ->select(['count(id) as counts', 'DATE_FORMAT(created_at,  "%Y-%m-%d") as dates'])
@@ -167,5 +167,71 @@ class LetualProduct extends \yii\db\ActiveRecord
             ->all();
 
         return $rows;
+    }
+
+    /**
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListSubCategory($condition)
+    {
+        $result = $this::find()->distinct()
+            ->select('sub_category')
+            ->where($condition);
+        if (!empty($condition['created_at'])) {
+            $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
+        }
+        return $result->orderBy('sub_category')->all();
+    }
+
+    /**
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListCategory($condition)
+    {
+        $result = $this::find()->distinct()
+            ->select('category')
+            ->where($condition);
+        if (!empty($condition['created_at'])) {
+            $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
+        }
+        return $result->orderBy('category')->all();
+    }
+
+    /**
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListGroup($condition)
+    {
+        $result = $this::find()->distinct()
+            ->select('group')
+            ->where($condition);
+        if (!empty($condition['created_at'])) {
+            $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
+        }
+        return $result->orderBy('group')->all();
+    }
+
+    /**
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListBrand($condition)
+    {
+        $result = $this::find()->distinct()
+            ->select('brand')
+            ->where($condition);
+
+        if (!empty($condition['created_at'])) {
+            $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
+        }
+
+        return $result->orderBy('brand')->all();
     }
 }
