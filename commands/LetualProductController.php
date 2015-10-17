@@ -91,6 +91,8 @@ class LetualProductController extends Controller
                         return $node->attr('alt');
                     });
 
+                    $result = $this->checkArray($result);
+
                     //Если не нашли картинку в списке выбора
                     if (empty($result['image'])) {
                         $image = $crawler->filter('div.atg_store_productImage img')->each(function ($node) {
@@ -99,8 +101,6 @@ class LetualProductController extends Controller
 
                         $result['image'] = reset($image);
                     }
-
-                    $result = $this->checkArray($result);
 
                     $result['brand'] = reset($brand);
                     $result['link'] = $link->link;
@@ -133,7 +133,7 @@ class LetualProductController extends Controller
     private function checkArray($result)
     {
         $data = [];
-        foreach ($result as $key=>$res) {
+        foreach ($result as $key => $res) {
             if (empty($res['article'])) {
                 unset($result[$key]);
             } else {
@@ -146,8 +146,8 @@ class LetualProductController extends Controller
 
     private function saveResult($result)
     {
-        foreach($result as $key=>$res) {
-            if($key == 'elements') {
+        foreach ($result as $key => $res) {
+            if ($key == 'elements') {
                 foreach ($res as $data) {
                     $product = LetualProduct::findOne(['article' => $data['article']]);
 
@@ -166,7 +166,7 @@ class LetualProductController extends Controller
 
                     if (!empty($product)) {
                         $product->brand = $this->clearBrand($result['brand']);
-                        $product->image_link = $result['image'];
+                        $product->image_link = (!empty($result['image'])) ? $result['image'] : $product->image_link;
                         $product->link = $result['link'];
                         $product->group = $result['group'];
                         $product->category = $result['category'];
