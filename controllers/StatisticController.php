@@ -136,11 +136,14 @@ class StatisticController extends Controller
         $price = [];
         $model = new LetualProduct();
         $partner = '';
+
         if (!empty($params['partner'])) {
             switch ($params['partner']) {
                 case 'ile':
                     $searchModel = new IledebeauteProductSearch();
-                    $condition = $params['IledebeauteProductSearch'];
+                    if (!empty($params['IledebeauteProductSearch'])) {
+                        $condition = $params['IledebeauteProductSearch'];
+                    }
                     if ($params['date']) {
                         $condition['created_at'] = $params['date'];
                     }
@@ -150,7 +153,9 @@ class StatisticController extends Controller
                     break;
                 case 'riv':
                     $searchModel = new RivegaucheProductSearch();
-                    $condition = $params['RivegaucheProductSearch'];
+                    if (!empty($params['RivegaucheProductSearch'])) {
+                        $condition = $params['RivegaucheProductSearch'];
+                    }
                     if ($params['date']) {
                         $condition['created_at'] = $params['date'];
                     }
@@ -160,7 +165,9 @@ class StatisticController extends Controller
                     break;
                 case 'let':
                     $searchModel = new LetualProductSearch();
-                    $condition = $params['LetualProductSearch'];
+                    if (!empty($params['LetualProductSearch'])) {
+                        $condition = $params['LetualProductSearch'];
+                    }
                     if ($params['date']) {
                         $condition['created_at'] = $params['date'];
                     }
