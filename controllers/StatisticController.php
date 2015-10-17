@@ -2,8 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\IledebeauteProduct;
+use app\models\IledebeauteProductSearch;
+use app\models\LetualProduct;
+use app\models\LetualProductSearch;
 use app\models\PodruzkaProduct;
 use app\models\PodruzkaProductSearch;
+use app\models\RivegaucheProduct;
+use app\models\RivegaucheProductSearch;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -24,7 +30,14 @@ class StatisticController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','avg-brand','avg-category','avg-matching','price-matching'],
+                        'actions' => [
+                            'index',
+                            'avg-brand',
+                            'avg-category',
+                            'avg-matching',
+                            'price-matching',
+                            'new-product',
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -55,7 +68,8 @@ class StatisticController extends Controller
     public function actionAvgBrand()
     {
         $brands = (new PodruzkaProduct())->getBrandAvgPrice();
-        return $this->render('avg_brand',['brands' => $brands]);
+
+        return $this->render('avg_brand', ['brands' => $brands]);
     }
 
     /**
@@ -66,6 +80,7 @@ class StatisticController extends Controller
     public function actionAvgCategory()
     {
         $category = (new PodruzkaProduct())->getCategoryAvgPrice();
+
         return $this->render('avg_category', ['category' => $category]);
     }
 
@@ -77,7 +92,8 @@ class StatisticController extends Controller
     public function actionAvgMatching()
     {
         $brands = (new PodruzkaProduct())->getBrandCategoryAvgPrice();
-        return $this->render('avg_matching',['brands' => $brands]);
+
+        return $this->render('avg_matching', ['brands' => $brands]);
     }
 
     /**
@@ -90,22 +106,84 @@ class StatisticController extends Controller
 
         if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
             $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
-            if($params['arrival']) {
+            if ($params['arrival']) {
                 $condition['arrival'] = $params['arrival'];
             }
-            if($params['category']) {
+            if ($params['category']) {
                 $condition['category'] = $params['category'];
             }
-            if($params['brand']) {
+            if ($params['brand']) {
                 $condition['brand'] = $params['brand'];
             }
         }
         $dataProvider = $searchModel->searchPriceMatching(Yii::$app->request->queryParams);
 
-        return $this->render('price_matching', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'condition' => $condition,
-        ]);
+        return $this->render(
+            'price_matching',
+            [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'condition' => $condition,
+            ]
+        );
+    }
+
+    public function actionNewProduct()
+    {
+        // параметры по умолчанию
+        $params = Yii::$app->request->queryParams;
+        $condition = [];
+        $price = [];
+        $model = new LetualProduct();
+        $partner = '';
+        if (!empty($params['partner'])) {
+            switch ($params['partner']) {
+                case 'ile':
+                    $searchModel = new IledebeauteProductSearch();
+                    $condition = $params['IledebeauteProductSearch'];
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['new_price', 'old_price'];
+                    $model = new IledebeauteProduct();
+                    $partner = 'Иль Де Ботэ';
+                    break;
+                case 'riv':
+                    $searchModel = new RivegaucheProductSearch();
+                    $condition = $params['RivegaucheProductSearch'];
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['price', 'blue_price', 'gold_price'];
+                    $model = new RivegaucheProduct();
+                    $partner = 'РивГош';
+                    break;
+                case 'let':
+                    $searchModel = new LetualProductSearch();
+                    $condition = $params['LetualProductSearch'];
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['new_price', 'old_price'];
+                    $model = new LetualProduct();
+                    $partner = 'Летуаль';
+                    break;
+            }
+        }
+        if (!empty($searchModel)) {
+            $dataProvider = $searchModel->searchNewProduct(Yii::$app->request->queryParams);
+
+            return $this->render(
+                'new_product',
+                [
+                    'model' => $model,
+                    'partner' => $partner,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'condition' => $condition,
+                    'price' => $price,
+                ]
+            );
+        }
     }
 }

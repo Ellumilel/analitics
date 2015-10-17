@@ -49,7 +49,7 @@ class ParserService implements ConfigInterface
     /**
      * @param string $url
      *
-     * @return mixed
+     * @return array
      */
     public function collectLLinkData($url)
     {
@@ -65,7 +65,7 @@ class ParserService implements ConfigInterface
     /**
      * @param string $url
      *
-     * @return mixed
+     * @return array
      */
     public function collectRLinkData($url)
     {
@@ -87,7 +87,7 @@ class ParserService implements ConfigInterface
     /**
      * @param string $url
      *
-     * @return mixed
+     * @return array
      */
     public function collectILinkData($url)
     {

@@ -92,7 +92,7 @@ class RivegaucheLink extends \yii\db\ActiveRecord
     /**
      * @param string $url
      *
-     * @return LetualLink|null|static
+     * @return RivegaucheLink|null|static
      */
     public static function getByLink($url)
     {

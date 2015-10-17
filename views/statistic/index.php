@@ -34,27 +34,33 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php
                     $model = \app\models\IledebeauteProduct::getStatistic();
                 ?>
-                <? $countLast = (new \app\models\IledebeauteProduct)->find()->count(); ?>
-                <? foreach ($model as $row): ?>
-                    <? $countNew = $row['counts']; ?>
+                <?php $countLast = (new \app\models\IledebeauteProduct)->find()->count(); ?>
+                <?php foreach ($model as $row): ?>
+                    <?php $countNew = $row['counts']; ?>
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
-                            <? if($countLast == 0): ?>
+                            <?php if($countLast == 0): ?>
                                 <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <? else: ?>
-                                <? if($countNew * 100 / $countLast > 0): ?>
+                            <?php else: ?>
+                                <?php if($countNew * 100 / $countLast > 0): ?>
                                     <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <? elseif($countNew * 100 / $countLast < 0): ?>
+                                <?php elseif($countNew * 100 / $countLast < 0): ?>
                                     <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <? else: ?>
+                                <?php else: ?>
                                     <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <? endif; ?>
-                            <? endif; ?>
-                            <h5 class="description-header"><?=$row['counts']?></h5>
-                            <span class="description-text"><?=$row['dates']?></span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <h5 class="description-header">
+                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
+                                        ['statistic/new-product', 'partner'=>'ile', 'date' => $row['dates']]
+                                ); ?>">
+                                    <?=$row['counts']?>
+                                </a>
+                            </h5>
+                            <span class="description-text"><?= $row['dates'] ?></span>
                         </div><!-- /.description-block -->
                     </div>
-                <? endforeach; ?>
+                <?php endforeach; ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
@@ -95,27 +101,33 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php
                     $model = \app\models\RivegaucheProduct::getStatistic();
                 ?>
-                <? $countLast = (new \app\models\RivegaucheProduct)->find()->count(); ?>
-                <? foreach ($model as $row): ?>
-                    <? $countNew = $row['counts']; ?>
+                <?php $countLast = (new \app\models\RivegaucheProduct)->find()->count(); ?>
+                <?php foreach ($model as $row): ?>
+                    <?php $countNew = $row['counts']; ?>
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
-                            <? if($countLast == 0): ?>
+                            <?php if($countLast == 0): ?>
                                 <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <? else: ?>
-                                <? if($countNew * 100 / $countLast > 0): ?>
+                            <?php else: ?>
+                                <?php if($countNew * 100 / $countLast > 0): ?>
                                     <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <? elseif($countNew * 100 / $countLast < 0): ?>
+                                <?php elseif($countNew * 100 / $countLast < 0): ?>
                                     <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <? else: ?>
+                                <?php else: ?>
                                     <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <? endif; ?>
-                            <? endif; ?>
-                            <h5 class="description-header"><?=$row['counts']?></h5>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <h5 class="description-header">
+                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
+                                        ['statistic/new-product', 'partner'=>'riv', 'date' => $row['dates']]
+                                ); ?>">
+                                    <?=$row['counts']?>
+                                </a>
+                            </h5>
                             <span class="description-text"><?=$row['dates']?></span>
                         </div><!-- /.description-block -->
                     </div>
-                <? endforeach; ?>
+                <?php endforeach; ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
@@ -171,27 +183,33 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]);*/
                 ?>
-                <? $countLast = (new \app\models\LetualProduct)->find()->count(); ?>
-                <? foreach ($model as $row): ?>
-                    <? $countNew = $row['counts']; ?>
+                <?php $countLast = (new \app\models\LetualProduct)->find()->count(); ?>
+                <?php foreach ($model as $row): ?>
+                    <?php $countNew = $row['counts']; ?>
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
-                            <? if($countLast == 0): ?>
+                            <?php if($countLast == 0): ?>
                                 <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <? else: ?>
-                                <? if($countNew * 100 / $countLast > 0): ?>
+                            <?php else: ?>
+                                <?php if($countNew * 100 / $countLast > 0): ?>
                                     <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <? elseif($countNew * 100 / $countLast < 0): ?>
+                                <?php elseif($countNew * 100 / $countLast < 0): ?>
                                     <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <? else: ?>
+                                <?php else: ?>
                                     <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <? endif; ?>
-                            <? endif; ?>
-                            <h5 class="description-header"><?=$row['counts']?></h5>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <h5 class="description-header">
+                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
+                                        ['statistic/new-product', 'partner'=>'let', 'date' => $row['dates']]
+                                ); ?>">
+                                    <?=$row['counts']?>
+                                </a>
+                            </h5>
                             <span class="description-text"><?=$row['dates']?></span>
                         </div><!-- /.description-block -->
                     </div>
-                <? endforeach; ?>
+                <?php endforeach; ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>

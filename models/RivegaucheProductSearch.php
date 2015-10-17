@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\LetualProduct;
+use app\models\RivegaucheProduct;
 
 /**
- * LetualProductSearch represents the model behind the search form about `app\models\LetualProduct`.
+ * RivegaucheProductSearch represents the model behind the search form about `app\models\RivegaucheProduct`.
  */
-class LetualProductSearch extends LetualProduct
+class RivegaucheProductSearch extends RivegaucheProduct
 {
     /**
      * @inheritdoc
@@ -18,26 +18,9 @@ class LetualProductSearch extends LetualProduct
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [
-                [
-                    'article',
-                    'link',
-                    'group',
-                    'category',
-                    'sub_category',
-                    'brand',
-                    'title',
-                    'old_price',
-                    'new_price',
-                    'description',
-                    'image_link',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ],
-                'safe',
-            ],
+            [['id', 'showcases_new', 'showcases_compliment', 'showcases_offer', 'showcases_exclusive', 'showcases_bestsellers', 'showcases_expertiza'], 'integer'],
+            [['article', 'link', 'group', 'category', 'sub_category', 'brand', 'title', 'description', 'image_link', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['gold_price', 'blue_price', 'price'], 'number'],
         ];
     }
 
@@ -59,24 +42,31 @@ class LetualProductSearch extends LetualProduct
      */
     public function search($params)
     {
-        $query = LetualProduct::find();
+        $query = RivegaucheProduct::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 200000],
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
+            // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-        //$query->join('INNER JOIN','letual_price','letual_price.article = letual_product.article');
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'showcases_new' => $this->showcases_new,
+            'showcases_compliment' => $this->showcases_compliment,
+            'showcases_offer' => $this->showcases_offer,
+            'showcases_exclusive' => $this->showcases_exclusive,
+            'showcases_bestsellers' => $this->showcases_bestsellers,
+            'showcases_expertiza' => $this->showcases_expertiza,
+            'gold_price' => $this->gold_price,
+            'blue_price' => $this->blue_price,
+            'price' => $this->price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
@@ -89,18 +79,16 @@ class LetualProductSearch extends LetualProduct
             ->andFilterWhere(['like', 'sub_category', $this->sub_category])
             ->andFilterWhere(['like', 'brand', $this->brand])
             ->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'new_price', $this->new_price])
-            ->andFilterWhere(['like', 'old_price', $this->old_price])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'image_link', $this->image_link]);
+
         return $dataProvider;
     }
 
     public function searchNewProduct($params)
     {
-
-        $query = LetualProduct::find();
-       // print_r($params);die;
+        $query = RivegaucheProduct::find();
+        // print_r($params);die;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => 50],
@@ -126,8 +114,9 @@ class LetualProductSearch extends LetualProduct
             ->andFilterWhere(['like', 'sub_category', $this->sub_category])
             ->andFilterWhere(['like', 'brand', $this->brand])
             ->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'new_price', $this->new_price])
-            ->andFilterWhere(['like', 'old_price', $this->old_price])
+            ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'gold_price', $this->gold_price])
+            ->andFilterWhere(['like', 'blue_price', $this->blue_price])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'image_link', $this->image_link]);
 
