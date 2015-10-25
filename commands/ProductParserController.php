@@ -29,12 +29,16 @@ class ProductParserController extends Controller
             if (!empty($links)) {
                 foreach ($links as $link) {
                     $crawler = $this->riveGetData($link->link);
+                    if (!$crawler) {
+                        break;
+                    }
                     $attributes = [
                         'link' => $link->link,
                         'group' => $link->group,
                         'category' => $link->category,
                         'sub_category' => $link->sub_category,
                     ];
+
                     $service = new ParserService();
                     $result = $service->productParse($crawler, ParserService::RIV, $attributes);
 
