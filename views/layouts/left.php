@@ -30,43 +30,92 @@ use yii\helpers\Html;
         </form>
         <!-- /.search form -->
 
-        <?= \app\widgets\Menu::widget(
-            [
+        <?= \app\widgets\Menu::widget([
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
                     ['label' => 'Управление', 'options' => ['class' => 'header']],
-                    ['label' => 'Информационный продукт', 'icon' => 'fa fa-dashboard', 'url' => ['/podruzka-product/index']],
-                    ['label' => 'Статистика сбора данных', 'icon' => 'fa fa-book', 'url' => ['/statistic/index']],
-                    ['label' => 'Сопоставление', 'icon' => 'fa fa-files-o', 'url' => ['/podruzka-product/matching']],
-                    ['label' => 'Сравнение цен', 'icon' => 'fa fa-circle-o text-yellow', 'url' => ['/statistic/price-matching']],
-                    ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
-                    [
-                        'label' => 'Среднее по сопоставленным',
-                        'icon' => 'fa fa-share',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => 'по категориям', 'icon' => 'fa fa-circle-o text-aqua', 'url' => ['/statistic/avg-category'],],
-                            ['label' => 'по брендам', 'icon' => 'fa fa-circle-o text-aqua', 'url' => ['/statistic/avg-brand'],],
-                            ['label' => 'по брендам + категориям', 'icon' => 'fa fa-circle-o text-aqua', 'url' => ['/statistic/avg-matching'],],
-                            /*[
-                                'label' => 'Среднее по сопоставленным',
-                                'icon' => 'fa fa-circle-o',
-                                'url' => '#',
-                                'items' => [
-                                    ['label' => 'по категориям', 'icon' => 'fa fa-circle-o', 'url' => ['/statistic/avg-category'],],
+                        [
+                                'label' => 'Информационный продукт',
+                                'icon' => 'fa fa-dashboard text-aqua',
+                                'url' => ['/podruzka-product/index']
+                        ],
+                        [
+                                'label' => 'Статистика сбора данных',
+                                'icon' => 'fa fa-book text-aqua',
+                                'url' => ['/statistic/index']
+                        ],
+                        [
+                                'label' => 'Сопоставление',
+                                'icon' => 'fa fa-files-o text-aqua',
+                                'url' => ['/podruzka-product/matching']
+                        ],
+                        [
+                                'label' => 'Сравнение цен',
+                                'icon' => 'fa fa-circle-o text-aqua',
+                                'url' => ['/statistic/price-matching']
+                        ],
+                        ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
+                        [
+                            'label' => 'Среднее по сопоставл.:',
+                            'icon' => 'fa fa-share text-yellow',
+                            'url' => '#',
+                            'items' => [
                                     [
-                                        'label' => 'по брендам',
-                                        'icon' => 'fa fa-circle-o',
-                                        'url' => ['/statistic/avg-brand'],
-                                        'items' => [
-                                            ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
-                                            ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
+                                            'label' => 'по категориям',
+                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'url' => ['/statistic/avg-category'],
+                                    ],
+                                    [
+                                            'label' => 'по брендам',
+                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'url' => ['/statistic/avg-brand'],
+                                    ],
+                                    [
+                                            'label' => 'по брендам + категориям',
+                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'url' => ['/statistic/avg-matching'],
+                                    ],
+                                /*[
+                                    'label' => 'Среднее по сопоставл.',
+                                    'icon' => 'fa fa-circle-o',
+                                    'url' => '#',
+                                    'items' => [
+                                        ['label' => 'по категориям', 'icon' => 'fa fa-circle-o', 'url' => ['/statistic/avg-category'],],
+                                        [
+                                            'label' => 'по брендам',
+                                            'icon' => 'fa fa-circle-o',
+                                            'url' => ['/statistic/avg-brand'],
+                                            'items' => [
+                                                ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
+                                                ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
+                                            ],
                                         ],
                                     ],
-                                ],
-                            ],*/
+                                ],*/
+                            ],
                         ],
-                    ],
+                        /*[
+                                'label' => 'Таблицы сбора: ',
+                                'icon' => 'fa fa-table text-yellow',
+                                'url' => '#',
+                                'items' => [
+                                        [
+                                                'label' => 'Летуаль',
+                                                'icon' => 'fa fa-circle-o text-aqua',
+                                                'url' => ['/letual-product/index'],
+                                        ],
+                                        [
+                                                'label' => 'РивГош',
+                                                'icon' => 'fa fa-circle-o text-aqua',
+                                                'url' => ['/rivegauche-product/index'],
+                                        ],
+                                        [
+                                                'label' => 'ИльДеБоте',
+                                                'icon' => 'fa fa-circle-o text-aqua',
+                                                'url' => ['/iledebeaute-product/index'],
+                                        ],
+                                ],
+                        ],*/
                 ],
             ]
         ) ?>
