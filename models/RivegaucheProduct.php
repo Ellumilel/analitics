@@ -53,10 +53,20 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
             [['article'], 'required'],
             [['link', 'title', 'image_link'], 'string'],
             [['gold_price', 'blue_price', 'price'], 'number'],
-            [['showcases_new', 'showcases_compliment', 'showcases_offer', 'showcases_exclusive', 'showcases_bestsellers', 'showcases_expertiza'], 'integer'],
+            [
+                [
+                    'showcases_new',
+                    'showcases_compliment',
+                    'showcases_offer',
+                    'showcases_exclusive',
+                    'showcases_bestsellers',
+                    'showcases_expertiza',
+                ],
+                'integer',
+            ],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['group', 'category', 'sub_category', 'brand', 'description'], 'string', 'max' => 500]
+            [['group', 'category', 'sub_category', 'brand', 'description'], 'string', 'max' => 500],
         ];
     }
 
@@ -155,6 +165,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
         if (!empty($condition['created_at'])) {
             $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
         }
+
         return $result->orderBy('sub_category')->all();
     }
 
@@ -171,6 +182,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
         if (!empty($condition['created_at'])) {
             $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
         }
+
         return $result->orderBy('category')->all();
     }
 
@@ -187,6 +199,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
         if (!empty($condition['created_at'])) {
             $result->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$condition['created_at'].'"');
         }
+
         return $result->orderBy('group')->all();
     }
 

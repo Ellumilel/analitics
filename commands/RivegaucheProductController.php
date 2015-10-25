@@ -8,6 +8,8 @@ use yii\console\Controller;
 use Goutte\Client;
 
 /**
+ * @deprecated Уже не используется
+ *
  * @author Denis Tikhonov <ozy@mailserver.ru>
  *
  * Class RivegaucheProductController
