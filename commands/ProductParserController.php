@@ -28,6 +28,7 @@ class ProductParserController extends Controller
             $links = $entity->getLinks($offset, 5);
             if (!empty($links)) {
                 foreach ($links as $link) {
+                    \Yii::info(sprintf('Обработка: %s ', $link->id), 'cron');
                     $crawler = $this->riveGetData($link->link);
                     if (!$crawler) {
                         break;
@@ -41,7 +42,6 @@ class ProductParserController extends Controller
 
                     $service = new ParserService();
                     $result = $service->productParse($crawler, ParserService::RIV, $attributes);
-
                     if (empty($result->getPrice()) || empty($result->getTitle())) {
                         \Yii::error(
                             sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
@@ -152,13 +152,13 @@ class ProductParserController extends Controller
         //Максимальное количество секунд выполнения запроса
         $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_TIMEOUT, 10);
         //Ожидание до подключения
-        $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_CONNECTTIMEOUT, 30);
+        $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_CONNECTTIMEOUT, 15);
         $client->setClient($guzzle);
 
         try {
             $crawler = $client->request('GET', $url);
         } catch (\Exception $e) {
-            \Yii::error(sprintf('Ошибка обработки: %s ', $url), 'cron');
+            \Yii::error(sprintf('Ошибка обработки: %s %s ', $e->getMessage(), $url), 'cron');
             return null;
         }
 

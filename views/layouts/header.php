@@ -53,16 +53,13 @@ use yii\bootstrap\NavBar;
                         <li><a href="#">One more separated link</a></li>
                     </ul>
                 </li>
-                <? if(!Yii::$app->user->isGuest): ?>
-                    <li><?= Html::a(
-                            'Выход',
-                            ['/site/logout'],
-                            ['data-method' => 'post']
-                        ) ?></li>
-
-                <? else: ?>
-                    <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/site/login");  ?>">Вход</a></li>
-                <? endif; ?>
+                <?php if (!Yii::$app->user->isGuest) : ?>
+                    <li><?= Html::a('Выход', ['/site/logout'], ['data-method' => 'post']) ?></li>
+                <?php else : ?>
+                    <li>
+                        <a href="<?= \Yii::$app->getUrlManager()->createUrl("/site/login"); ?>">Вход</a>
+                    </li>
+                <?php endif; ?>
                 <!-- Messages: style can be found in dropdown.less-->
                 <!--li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
