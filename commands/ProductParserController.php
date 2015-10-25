@@ -61,10 +61,11 @@ class ProductParserController extends Controller
                         ];
 
                         $crawler = $this->riveGetData($url);
-                        $service = new ParserService();
-                        $result = $service->productParse($crawler, ParserService::RIV, $attributes);
-
-                        $this->saveResult($result);
+                        if ($crawler) {
+                            $service = new ParserService();
+                            $result = $service->productParse($crawler, ParserService::RIV, $attributes);
+                            $this->saveResult($result);
+                        }
                     }
                     unset($node);
                     unset($service);
