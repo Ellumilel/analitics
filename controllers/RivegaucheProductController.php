@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\RivegaucheProduct;
 use app\models\RivegaucheProductSearch;
+use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -116,6 +117,39 @@ class RivegaucheProductController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function actionEmptyBrand()
+    {
+        $searchModel = new RivegaucheProductSearch();
+        $dataProvider = $searchModel->searchEmptyBrand(Yii::$app->request->queryParams);
+
+        return $this->render('empty_brand', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionEmptyBrandUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
+        if ($post) {
+            $post['RivegaucheProduct']['brand'] = strtoupper($post['RivegaucheProduct']['brand']);
+        }
+        if ($model->load($post) && $model->save(true)) {
+            return $this->redirect(['empty-brand']);
+        } else {
+            return $this->render('empty_brand_update', [
+                'model' => $model,
+            ]);
         }
     }
 }

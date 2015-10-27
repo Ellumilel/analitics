@@ -220,4 +220,26 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
 
         return $result->orderBy('brand')->all();
     }
+
+    /**
+     * Метод возвращает количество строк с пустыми брендами
+     *
+     * @return null
+     */
+    public static function getEmptyBrand()
+    {
+        $result = null;
+        $rows = (new \yii\db\Query())
+            ->select(['count(*) as counts'])
+            ->from('rivegauche_product')
+            ->where('brand is null or brand = ""')
+            ->orderBy('created_at')
+            ->one();
+
+        if (!empty($rows['counts'])) {
+            $result = $rows['counts'];
+        }
+
+        return $result;
+    }
 }

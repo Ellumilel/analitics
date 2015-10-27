@@ -5,25 +5,27 @@ use yii\bootstrap\NavBar;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+$lCount =  \app\models\RivegaucheProduct::getEmptyBrand();
+$count = 0;
+if ($lCount) {
+    $count++;
+}
 ?>
 
 <header class="main-header">
-
     <?= Html::a('<span class="logo-mini">А</span><span class="logo-lg">' . Yii::$app->name . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
-
     <nav class="navbar navbar-static-top" role="navigation">
-
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
-
         <div class="navbar-custom-menu">
-
             <ul class="nav navbar-nav">
                 <li class="dropdown notifications-menu">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="false">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">0</span>
+                        <?php if ($count) : ?>
+                            <span class="label label-danger"><?= $count; ?></span>
+                        <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="header">Сообщения системы</li>
@@ -31,9 +33,12 @@ use yii\bootstrap\NavBar;
                             <!-- inner menu: contains the actual data -->
                             <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
                                     <li>
-                                        <a href="#">
-                                            <i class="fa fa-warning text-yellow"></i> Нужно заполнить пустые бренды(0)
+                                        <?php if ($lCount =  \app\models\RivegaucheProduct::getEmptyBrand()) : ?>
+                                        <a href="<?= \yii\helpers\Url::to(['/rivegauche-product/empty-brand']) ?>">
+                                                <i class="fa fa-warning text-red"></i>
+                                                Пустые бренды у РивГош (<?=$lCount?>)
                                         </a>
+                                        <?php endif; ?>
                                     </li>
                                 </ul><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 195.122px;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
                         </li>
