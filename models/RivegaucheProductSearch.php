@@ -18,8 +18,35 @@ class RivegaucheProductSearch extends RivegaucheProduct
     public function rules()
     {
         return [
-            [['id', 'showcases_new', 'showcases_compliment', 'showcases_offer', 'showcases_exclusive', 'showcases_bestsellers', 'showcases_expertiza'], 'integer'],
-            [['article', 'link', 'group', 'category', 'sub_category', 'brand', 'title', 'description', 'image_link', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [
+                [
+                    'id',
+                    'showcases_new',
+                    'showcases_compliment',
+                    'showcases_offer',
+                    'showcases_exclusive',
+                    'showcases_bestsellers',
+                    'showcases_expertiza',
+                ],
+                'integer',
+            ],
+            [
+                [
+                    'article',
+                    'link',
+                    'group',
+                    'category',
+                    'sub_category',
+                    'brand',
+                    'title',
+                    'description',
+                    'image_link',
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+                'safe',
+            ],
             [['gold_price', 'blue_price', 'price'], 'number'],
         ];
     }
@@ -120,6 +147,31 @@ class RivegaucheProductSearch extends RivegaucheProduct
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'image_link', $this->image_link]);
 
+        return $dataProvider;
+    }
+
+    public function searchEmptyBrand($params)
+    {
+        $query = RivegaucheProduct::find();
+        $dataProvider = new ActiveDataProvider(['query' => $query, 'pagination' => ['pageSize' => 50]]);
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+        $query->where('brand is null or brand =""');
+
+        $query->andFilterWhere(['like', 'article', $this->article])
+            ->andFilterWhere(['like', 'link', $this->link])
+            ->andFilterWhere(['like', 'group', $this->group])
+            ->andFilterWhere(['like', 'category', $this->category])
+            ->andFilterWhere(['like', 'sub_category', $this->sub_category])
+            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'gold_price', $this->gold_price])
+            ->andFilterWhere(['like', 'blue_price', $this->blue_price])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'image_link', $this->image_link]);
         return $dataProvider;
     }
 }

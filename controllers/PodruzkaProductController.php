@@ -50,33 +50,29 @@ class PodruzkaProductController extends Controller
     public function actionIndex()
     {
         $searchModel = new PodruzkaProductSearch();
-
         $condition = [];
-
-        $params = [];
-
         if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
             $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
 
-            if($params['group']) {
+            if ($params['group']) {
                 $condition['group'] = $params['group'];
             }
-            if($params['category']) {
+            if ($params['category']) {
                 $condition['category'] = $params['category'];
             }
-            if($params['sub_category']) {
+            if ($params['sub_category']) {
                 $condition['sub_category'] = $params['sub_category'];
             }
-            if($params['detail']) {
+            if ($params['detail']) {
                 $condition['detail'] = $params['detail'];
             }
-            if($params['brand']) {
+            if ($params['brand']) {
                 $condition['brand'] = $params['brand'];
             }
-            if($params['sub_brand']) {
+            if ($params['sub_brand']) {
                 $condition['sub_brand'] = $params['sub_brand'];
             }
-            if($params['line']) {
+            if ($params['line']) {
                 $condition['line'] = $params['line'];
             }
         }
@@ -96,33 +92,29 @@ class PodruzkaProductController extends Controller
     public function actionMatching()
     {
         $searchModel = new PodruzkaProductSearch();
-
         $condition = [];
-
-        $params = [];
-
         if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
             $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
 
-            if($params['group']) {
+            if ($params['group']) {
                 $condition['group'] = $params['group'];
             }
-            if($params['category']) {
+            if ($params['category']) {
                 $condition['category'] = $params['category'];
             }
-            if($params['sub_category']) {
+            if ($params['sub_category']) {
                 $condition['sub_category'] = $params['sub_category'];
             }
-            if($params['detail']) {
+            if ($params['detail']) {
                 $condition['detail'] = $params['detail'];
             }
-            if($params['brand']) {
+            if ($params['brand']) {
                 $condition['brand'] = $params['brand'];
             }
-            if($params['sub_brand']) {
+            if ($params['sub_brand']) {
                 $condition['sub_brand'] = $params['sub_brand'];
             }
-            if($params['line']) {
+            if ($params['line']) {
                 $condition['line'] = $params['line'];
             }
         }
