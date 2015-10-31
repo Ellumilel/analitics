@@ -94,7 +94,7 @@ use yii\helpers\Html;
                                 ],*/
                             ],
                         ],
-                        /*[
+                        [
                                 'label' => 'Таблицы сбора: ',
                                 'icon' => 'fa fa-table text-yellow',
                                 'url' => '#',
@@ -115,7 +115,7 @@ use yii\helpers\Html;
                                                 'url' => ['/iledebeaute-product/index'],
                                         ],
                                 ],
-                        ],*/
+                        ],
                 ],
             ]
         ) ?>

@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\IledebeauteProduct;
+use app\models\LetualProduct;
+use app\models\RivegaucheProduct;
 use Yii;
 use app\models\PodruzkaProduct;
 use app\models\PodruzkaProductSearch;
@@ -28,7 +31,7 @@ class PodruzkaProductController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','matching','view','create','update','delete'],
+                        'actions' => ['index', 'matching', 'view', 'create', 'update', 'delete', 'article-update'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -202,5 +205,32 @@ class PodruzkaProductController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionArticleUpdate()
+    {
+        if ($pArticle = reset($_POST['PodruzkaProduct'])['article']) {
+            if ($pp = PodruzkaProduct::find()->where(['article'=> $pArticle])->one()) {
+                if (!empty($_POST['l_id'])) {
+                    if ($lp = LetualProduct::find()->where(['article'=> $_POST['l_id']])->one()) {
+                        $pp->l_id = $lp->id;
+                    }
+                }
+                if (!empty($_POST['r_id'])) {
+                    if ($rp = RivegaucheProduct::find()->where(['article'=> $_POST['r_id']])->one()) {
+                        $pp->r_id = $rp->id;
+                    }
+                }
+                if (!empty($_POST['i_id'])) {
+                    if ($ip = IledebeauteProduct::find()->where(['article'=> $_POST['i_id']])->one()) {
+                        $pp->i_id = $ip->id;
+                    }
+                }
+                $pp->save();
+
+                return json_encode(['result' => true]);
+            }
+        }
+        return json_encode(['result' => false]);
     }
 }

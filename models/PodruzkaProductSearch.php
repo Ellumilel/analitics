@@ -120,7 +120,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 20]
+            'pagination' => ['pageSize' => 50]
         ]);
 
         $this->load($params);
@@ -254,7 +254,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 60]
+            'pagination' => ['pageSize' => 50]
         ]);
 
         $this->load($params);
