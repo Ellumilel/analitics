@@ -1,10 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use app\models\PodruzkaProduct;
+use \app\models\LetualProduct;
+use \app\models\RivegaucheProduct;
+use \app\models\IledebeauteProduct;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PodruzkaProductSearch */
@@ -38,15 +40,30 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'size'=>'md',
                                 'afterInput'=>function ($form, $widget) use ($model, $index) {
                                     return
-                                            Html::activeLabel($model,'l_id').
-                                            Html::input('', 'l_id', \app\models\LetualProduct::findOne(['id'=>$model->l_id])->article).'</br>'.
-                                            Html::activeLabel($model,'r_id').
-                                            Html::input('', 'r_id', \app\models\RivegaucheProduct::findOne(['id'=>$model->r_id])->article).'</br>'.
-                                            Html::activeLabel($model,'i_id').
-                                            Html::input('', 'i_id', \app\models\IledebeauteProduct::findOne(['id'=>$model->i_id])->article);/*$form->field($model, "l_id")
-                                        ->widget(\kartik\widgets\InputWidget::classname(), [
-                                                'options'=>['id'=>"color-{$index}"],
-                                        ]);*/
+                                            Html::activeLabel($model, 'l_id').
+                                            Html::input(
+                                                '',
+                                                'r_id',
+                                                (!empty($lp = LetualProduct::find()->where(
+                                                    ['id' => $model->l_id]
+                                                )->one())) ? $lp->article : ''
+                                            ).'</br>'.
+                                            Html::activeLabel($model, 'r_id').
+                                            Html::input(
+                                                '',
+                                                'r_id',
+                                                (!empty($lp = RivegaucheProduct::find()->where(
+                                                    ['id' => $model->r_id]
+                                                )->one())) ? $lp->article : ''
+                                            ).'</br>'.
+                                            Html::activeLabel($model, 'i_id').
+                                            Html::input(
+                                                '',
+                                                'i_id',
+                                                (!empty($lp = IledebeauteProduct::find()->where(
+                                                    ['id' => $model->i_id]
+                                                )->one())) ? $lp->article : ''
+                                            );
                                 },
                                 'formOptions' => [
                                         'action' => \Yii::$app->getUrlManager()->createUrl(['podruzka-product/article-update']),
