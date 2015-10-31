@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use app\models\PodruzkaProduct;
 
 /* @var $this yii\web\View */
@@ -16,45 +16,124 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <?php Pjax::begin(); ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'resizableColumns' => true,
+        'bordered' => false,
         'columns' => [
-            'article',
+            [
+                    'format'=>'raw',
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'article',
+                    'filterWidgetOptions' => [
+                            'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    ],
+                    'value'=>function ($model, $key, $index, $widget) {
+                        return $model->article;
+                    },
+                    'editableOptions'=> function ($model, $key, $index) {
+                        return [
+                                'header'=>'l_id',
+                                'size'=>'md',
+                                'afterInput'=>function ($form, $widget) use ($model, $index) {
+                                    return
+                                            Html::activeLabel($model,'l_id').
+                                            Html::input('', 'l_id', \app\models\LetualProduct::findOne(['id'=>$model->l_id])->article).'</br>'.
+                                            Html::activeLabel($model,'r_id').
+                                            Html::input('', 'r_id', \app\models\RivegaucheProduct::findOne(['id'=>$model->r_id])->article).'</br>'.
+                                            Html::activeLabel($model,'i_id').
+                                            Html::input('', 'i_id', \app\models\IledebeauteProduct::findOne(['id'=>$model->i_id])->article);/*$form->field($model, "l_id")
+                                        ->widget(\kartik\widgets\InputWidget::classname(), [
+                                                'options'=>['id'=>"color-{$index}"],
+                                        ]);*/
+                                },
+                                'formOptions' => [
+                                        'action' => \Yii::$app->getUrlManager()->createUrl(['podruzka-product/article-update']),
+                                ],
+                        ];
+                    }
+            ],
             'title',
             [
-                'attribute'=>'arrival',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListArrival($condition), 'arrival', 'arrival'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'arrival',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map((new PodruzkaProduct)->getListArrival($condition), 'arrival', 'arrival'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '80px'],
+                ],
+                'value' => 'arrival',
             ],
             [
-                'attribute'=>'group',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition), 'group', 'group'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'group',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition, true), 'group', 'group'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '150px'],
+                ],
+                'value' => 'group',
             ],
             [
-                'attribute'=>'category',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition), 'category', 'category'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'category',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition, true), 'category', 'category'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '150px'],
+                ],
+                'value' => 'category',
             ],
             [
-                'attribute'=>'sub_category',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubCategory($condition), 'sub_category', 'sub_category'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'sub_category',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubCategory($condition, true), 'sub_category', 'sub_category'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '150px'],
+                ],
+                'value' => 'sub_category',
             ],
             [
-                'attribute'=>'detail',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListDetail($condition), 'detail', 'detail'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'detail',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListDetail($condition, true), 'detail', 'detail'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '200px'],
+                ],
+                'value' => 'detail',
             ],
             [
-                'attribute'=>'brand',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition), 'brand', 'brand'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'brand',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition, true), 'brand', 'brand'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '80px'],
+                ],
+                'value' => 'brand',
             ],
             [
-                'attribute'=>'sub_brand',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubBrand($condition), 'sub_brand', 'sub_brand'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'sub_brand',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListSubBrand($condition, true), 'sub_brand', 'sub_brand'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '80px'],
+                ],
+                'value' => 'sub_brand',
             ],
             [
-                'attribute'=>'line',
-                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListLine($condition), 'line', 'line'),
+                'filterInputOptions'=>['placeholder'=>''],
+                'attribute' => 'line',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter'=> ArrayHelper::map((new PodruzkaProduct)->getListLine($condition, true), 'line', 'line'),
+                'filterWidgetOptions'=>[
+                        'pluginOptions'=>['allowClear'=>true, 'width' => '80px'],
+                ],
+                'value' => 'line',
             ],
              'price',
              'ma_price',
@@ -64,6 +143,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //['class' => 'yii\grid\ActionColumn'],
         ],
+        'responsive' => true,
+        'hover' => true,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+                'neverTimeout'=>true,
+                'beforeGrid'=>'My fancy content before.',
+                'afterGrid'=>'My fancy content after.',
+        ]
     ]); ?>
-    <?php Pjax::end(); ?>
 </div>

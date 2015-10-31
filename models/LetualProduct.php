@@ -104,6 +104,21 @@ class LetualProduct extends \yii\db\ActiveRecord
     /**
      * @return array
      */
+    public static function dropDownGroup()
+    {
+        $sql = 'SELECT DISTINCT `group` FROM letual_product';
+        $groups = self::findBySql($sql)->all();
+        $dropDown = [];
+
+        foreach ($groups as $group) {
+            $dropDown[$group->group] = $group->group;
+        }
+        return $dropDown;
+    }
+
+    /**
+     * @return array
+     */
     public static function dropDownSubCategory()
     {
         $sql = 'SELECT DISTINCT sub_category FROM letual_product';

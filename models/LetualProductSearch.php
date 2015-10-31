@@ -63,7 +63,7 @@ class LetualProductSearch extends LetualProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 100],
+            'pagination' => ['pageSize' => 50],
         ]);
 
         $this->load($params);
@@ -98,7 +98,6 @@ class LetualProductSearch extends LetualProduct
 
     public function searchNewProduct($params)
     {
-
         $query = LetualProduct::find();
        // print_r($params);die;
         $dataProvider = new ActiveDataProvider([

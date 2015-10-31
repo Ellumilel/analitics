@@ -242,4 +242,64 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
 
         return $result;
     }
+
+    /**
+     * @return array
+     */
+    public static function dropDownGroup()
+    {
+        $sql = 'SELECT DISTINCT `group` FROM rivegauche_product  order by `group` asc';
+        $groups = self::findBySql($sql)->all();
+        $dropDown = [];
+
+        foreach ($groups as $group) {
+            $dropDown[$group->group] = $group->group;
+        }
+        return $dropDown;
+    }
+
+    /**
+     * @return array
+     */
+    public static function dropDownSubCategory()
+    {
+        $sql = 'SELECT DISTINCT sub_category FROM rivegauche_product order by sub_category asc';
+        $subCategory = self::findBySql($sql)->all();
+        $dropDown = [];
+
+        foreach ($subCategory as $category) {
+            $dropDown[$category->sub_category] = $category->sub_category;
+        }
+        return $dropDown;
+    }
+
+    /**
+     * @return array
+     */
+    public static function dropDownCategory()
+    {
+        $sql = 'SELECT DISTINCT category FROM rivegauche_product order by category asc';
+        $subCategory = self::findBySql($sql)->all();
+        $dropDown = [];
+
+        foreach ($subCategory as $category) {
+            $dropDown[$category->category] = $category->category;
+        }
+        return $dropDown;
+    }
+
+    /**
+     * @return array
+     */
+    public static function dropDownBrand()
+    {
+        $sql = 'SELECT DISTINCT brand FROM rivegauche_product order by brand asc';
+        $brands = self::findBySql($sql)->all();
+        $dropDown = [];
+
+        foreach ($brands as $brand) {
+            $dropDown[$brand->brand] = $brand->brand;
+        }
+        return $dropDown;
+    }
 }
