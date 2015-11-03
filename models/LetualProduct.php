@@ -102,63 +102,59 @@ class LetualProduct extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return array
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public static function dropDownGroup()
+    public function dropDownGroup($condition)
     {
-        $sql = 'SELECT DISTINCT `group` FROM letual_product';
-        $groups = self::findBySql($sql)->all();
-        $dropDown = [];
+        $result = $this::find()->distinct()
+            ->select('group')
+            ->where($condition);
 
-        foreach ($groups as $group) {
-            $dropDown[$group->group] = $group->group;
-        }
-        return $dropDown;
+        return $result->orderBy('group')->all();
     }
 
     /**
-     * @return array
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public static function dropDownSubCategory()
+    public function dropDownSubCategory($condition)
     {
-        $sql = 'SELECT DISTINCT sub_category FROM letual_product';
-        $subCategory = self::findBySql($sql)->all();
-        $dropDown = [];
+        $result = $this::find()->distinct()
+            ->select('sub_category')
+            ->where($condition);
 
-        foreach ($subCategory as $category) {
-            $dropDown[$category->sub_category] = $category->sub_category;
-        }
-        return $dropDown;
+        return $result->orderBy('sub_category')->all();
     }
 
     /**
-     * @return array
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public static function dropDownCategory()
+    public function dropDownCategory($condition)
     {
-        $sql = 'SELECT DISTINCT category FROM letual_product';
-        $subCategory = self::findBySql($sql)->all();
-        $dropDown = [];
+        $result = $this::find()->distinct()
+            ->select('category')
+            ->where($condition);
 
-        foreach ($subCategory as $category) {
-            $dropDown[$category->category] = $category->category;
-        }
-        return $dropDown;
+        return $result->orderBy('category')->all();
     }
 
     /**
-     * @return array
+     * @param $condition
+     *
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public static function dropDownBrand()
+    public function dropDownBrand($condition)
     {
-        $sql = 'SELECT DISTINCT brand FROM letual_product';
-        $brands = self::findBySql($sql)->all();
-        $dropDown = [];
+        $result = $this::find()->distinct()
+            ->select('brand')
+            ->where($condition);
 
-        foreach ($brands as $brand) {
-            $dropDown[$brand->brand] = $brand->brand;
-        }
-        return $dropDown;
+        return $result->orderBy('brand')->all();
     }
 
     /**
