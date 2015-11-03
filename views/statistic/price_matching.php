@@ -1,8 +1,11 @@
 <?php
 
 use yii\widgets\Pjax;
-use yii\grid\GridView;
 use app\helpers\TextHelper;
+use yii\helpers\ArrayHelper;
+use kartik\grid\GridView;
+use app\models\PodruzkaProduct;
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PodruzkaProductSearch */
@@ -16,36 +19,91 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-4">
         <div>
             <ul>
-                <li><a href="#">Цена Подружки выше на <span class="pull text-red">   <i class="fa fa-angle-up"></i> 123</span></a></li>
-                <li><a href="#">Цена Подружки ниже на<span class="pull text-green">   <i class="fa fa-angle-down"></i> 123</span></a></li>
-                <li><a href="#">Цены одинаковые <span class="pull text-yellow">   <i class="fa fa-angle-left"></i> 0</span></a></li>
+                <li><a href="#">Цена Подружки выше на <span class="pull text-red">   <i class="fa fa-angle-up"></i> 123</span></a>
+                </li>
+                <li><a href="#">Цена Подружки ниже на<span class="pull text-green">   <i class="fa fa-angle-down"></i> 123</span></a>
+                </li>
+                <li><a href="#">Цены одинаковые <span class="pull text-yellow">   <i
+                                class="fa fa-angle-left"></i> 0</span></a></li>
             </ul>
         </div>
     </div>
 </div>
 <div class="podruzka-product-index">
-
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <?php Pjax::begin(); ?>
-
-    <?= GridView::widget(
-        [
+    <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'resizableColumns' => true,
+            'bordered' => false,
+            'rowOptions' => function ($model, $key, $index, $grid) {
+                return [
+                    'id' => $model['id'],
+                    'onclick' => '
+            if ( !$(this).hasClass("success") ) {
+                $(this).addClass("success");
+            } else {
+                $(this).removeClass("success");
+            }'
+                ];
+            },
             'columns' => [
-                'article',
+                [
+                    'format' => 'raw',
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'article',
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    ],
+                    'value' => function ($model, $key, $index, $widget) {
+                        return $model->article;
+                    },
+                    'editableOptions' => function ($model, $key, $index) {
+                        return [
+                            'header' => 'l_id',
+                            'size' => 'md',
+                            'afterInput' => function ($form, $widget) use ($model, $index) {
+                                return TextHelper::getArticleMatchingForm($model);
+                            },
+                            'formOptions' => [
+                                'action' => \Yii::$app->getUrlManager()->createUrl(['podruzka-product/article-update']),
+                            ],
+                        ];
+                    }
+                ],
                 'title',
                 [
-                    'attribute'=>'arrival',
-                    'filter'=> \yii\helpers\ArrayHelper::map((new \app\models\PodruzkaProduct())->getListArrival($condition), 'arrival', 'arrival'),
+                    'filterInputOptions' => ['placeholder' => ''],
+                    'attribute' => 'arrival',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ArrayHelper::map((new PodruzkaProduct)->getListArrival($condition), 'arrival',
+                        'arrival'),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true, 'width' => '90px'],
+                    ],
+                    'value' => 'arrival',
                 ],
                 [
-                    'attribute'=>'category',
-                    'filter'=> \yii\helpers\ArrayHelper::map((new \app\models\PodruzkaProduct())->getListCategory($condition, true), 'category', 'category'),
+                    'filterInputOptions' => ['placeholder' => ''],
+                    'attribute' => 'category',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition, true), 'category',
+                        'category'),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true, 'width' => '190px'],
+                    ],
+                    'value' => 'category',
                 ],
                 [
-                    'attribute'=>'brand',
-                    'filter'=> \yii\helpers\ArrayHelper::map((new \app\models\PodruzkaProduct())->getListBrand($condition, true), 'brand', 'brand'),
+                    'filterInputOptions' => ['placeholder' => ''],
+                    'attribute' => 'brand',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition, true), 'brand',
+                        'brand'),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true, 'width' => '120px'],
+                    ],
+                    'value' => 'brand',
                 ],
                 'price',
                 'ma_price',
@@ -123,7 +181,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 //['class' => 'yii\grid\ActionColumn'],
             ],
+            'responsive' => true,
+            'hover' => true,
+            'pjax' => true,
+            'pjaxSettings' => [
+                'neverTimeout' => true,
+                'beforeGrid' => 'My fancy content before.',
+                'afterGrid' => 'My fancy content after.',
+            ]
         ]
     ); ?>
-    <?php Pjax::end(); ?>
 </div>
