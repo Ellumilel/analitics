@@ -2,6 +2,9 @@
 
 namespace app\helpers;
 
+use app\models\IledebeauteProduct;
+use app\models\LetualProduct;
+use app\models\RivegaucheProduct;
 use yii\helpers\Html;
 
 /**
@@ -90,6 +93,33 @@ class TextHelper
             'height' => '130px;',
             'width' => '100px;',
         ]));
+        return $result;
+    }
+
+    /**
+     * Возвращает строку с инпутами для таблицы с формой сопоставления
+     *
+     * @param $model
+     *
+     * @return string
+     */
+    public static function getArticleMatchingForm($model)
+    {
+        $result = Html::activeLabel($model, 'l_id');
+        $result .= Html::input('', 'l_id',
+            (!empty($lp = LetualProduct::find()->where(['id' => $model->l_id])->one())) ? $lp->article : '',
+            ['class' => 'kv-editable-input form-control']);
+
+        $result .= Html::activeLabel($model, 'r_id');
+        $result .= Html::input('', 'r_id',
+            (!empty($lp = RivegaucheProduct::find()->where(['id' => $model->r_id])->one())) ? $lp->article : '',
+            ['class' => 'kv-editable-input form-control']);
+
+        $result .= Html::activeLabel($model, 'i_id');
+        $result .= Html::input('', 'i_id',
+            (!empty($lp = IledebeauteProduct::find()->where(['id' => $model->i_id])->one())) ? $lp->article : '',
+            ['class' => 'kv-editable-input form-control']);
+
         return $result;
     }
 }

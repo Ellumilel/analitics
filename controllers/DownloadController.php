@@ -7,6 +7,7 @@ use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\LetualProductSearch;
 use app\helpers\ExcelXML;
+use app\models\PodruzkaProduct;
 use app\models\RivegaucheProduct;
 use Yii;
 use yii\filters\AccessControl;
@@ -30,7 +31,7 @@ class DownloadController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['download', 'export', 'matching'],
+                        'actions' => ['download', 'export', 'matching', 'inform-product'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -98,7 +99,69 @@ class DownloadController extends Controller
 
             $xls->create_worksheet('Users');
             $xml = $xls->generate();
-            $xls->download(sprintf('%s_%s.xls', $request['company'], time()));
+            $xls->download(sprintf('%s_%s.xls', $request['company'], date_format(new \DateTime(), 'Y-m-d H:i:s')));
+        }
+    }
+
+    /**
+     * Выгрузка полной таблицы информ продукта
+     *
+     * @TODO переделать порционно лимит по памяти (
+     */
+    public function actionInformProduct()
+    {
+        $downloadAttr = [];
+        $command = Yii::$app->getDb()->createCommand('
+        SELECT
+            `id`,
+            `article`,
+            `title`,
+            `group`,
+            `category`,
+            `sub_category`,
+            `detail`,
+            `brand`,
+            `sub_brand`,
+            `line`,
+            `price`,
+            `ma_price`,
+            `arrival`
+        FROM podruzka_product
+        ');
+        $attr = new PodruzkaProduct();
+        foreach ($attr->attributes() as $att) {
+            if ($att != 'l_id' && $att != 'r_id' && $att != 'i_id' && $att != 'ile_id' && $att != 'rive_id'
+                && $att != 'letu_id' && $att != 'updated_at' && $att != 'created_at' && $att != 'deleted_at') {
+                $downloadAttr[] = $att;
+            }
+        }
+        $reader = $command->query();
+
+        if(!empty($reader) && !empty($attr)) {
+            $xls = new ExcelXML();
+            $header_style = array(
+                'bold'       => 1,
+                'size'       => '12',
+                'color'      => '#FFFFFF',
+                'bgcolor'    => '#4F81BD'
+            );
+
+            $xls->add_style('header', $header_style);
+            $xls->add_row($downloadAttr, 'header');
+
+            unset($downloadAttr);
+            unset($attr);
+            unset($header_style);
+
+            while ($row = $reader->read()) {
+                $xls->add_row($row);
+                unset($row);
+            }
+
+            $xls->create_worksheet('informProduct');
+            $xml = $xls->generate();
+
+            $xls->download(sprintf('%s.xls', date_format(new \DateTime(), 'Y-m-d H:i:s')));
         }
     }
 
@@ -299,6 +362,6 @@ class DownloadController extends Controller
 
         $xls->create_worksheet('matching');
         $xml = $xls->generate();
-        $xls->download(sprintf('matching_%s.xls', time()));
+        $xls->download(sprintf('matching_%s.xls', date_format(new \DateTime(), 'Y-m-d H:i:s')));
     }
 }
