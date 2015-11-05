@@ -47,6 +47,7 @@ if ($lCount) {
                         </li>
                     </ul>
                 </li>
+                <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/matching");  ?>">Загрузка сопоставления</a></li>
                 <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/inform");  ?>">Загрузка информ.продукта</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Управление категориями <span class="caret"></span></a>

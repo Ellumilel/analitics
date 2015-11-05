@@ -24,7 +24,7 @@ class UploadController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['inform'],
+                        'actions' => ['inform', 'matching'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -56,10 +56,19 @@ class UploadController extends Controller
     {
         $upload = Upload::find()->orderBy(['id' => SORT_DESC])->all();
 
-        return $this->render('inform',
+        return $this->render(
+            'inform',
             [
-                'upload' => $upload
+                'upload' => $upload,
             ]
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function actionMatching()
+    {
+        return $this->render('matching');
     }
 }

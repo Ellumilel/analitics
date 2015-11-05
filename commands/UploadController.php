@@ -28,7 +28,7 @@ class UploadController extends Controller
 
         if (file_exists($filename)) {
             // проверяем наличие запущенного процесса
-            if(Upload::findOne(['status' => 0])) {
+            if (Upload::findOne(['status' => 0])) {
                 return 0;
             } else {
                 $model = new Upload();
