@@ -137,31 +137,35 @@ class DownloadController extends Controller
         }
         $reader = $command->query();
 
-        if(!empty($reader) && !empty($attr)) {
-            $xls = new ExcelXML();
-            $header_style = array(
-                'bold'       => 1,
-                'size'       => '12',
-                'color'      => '#FFFFFF',
-                'bgcolor'    => '#4F81BD'
-            );
+        if (!empty($reader) && !empty($attr)) {
+            $filename = sprintf('%s.csv', date_format(new \DateTime(), 'Y-m-d'));
+            $now = gmdate("D, d M Y H:i:s");
+            header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+            header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+            header("Last-Modified: {$now} GMT");
 
-            $xls->add_style('header', $header_style);
-            $xls->add_row($downloadAttr, 'header');
+            // force download
+            header("Content-Type: application/force-download");
+            header("Content-Type: application/octet-stream");
+            header("Content-Type: application/download");
+            header('Content-Type: text/csv; charset=windows-1251');
+            // disposition / encoding on response body
+            header("Content-Disposition: attachment;filename={$filename}");
+            header("Content-Transfer-Encoding: binary");
 
-            unset($downloadAttr);
-            unset($attr);
-            unset($header_style);
-
+            ob_start();
+            $df = fopen("php://output", 'w');
+            fputcsv($df, $downloadAttr, ';');
             while ($row = $reader->read()) {
-                $xls->add_row($row);
+                foreach ($row as $r) {
+                    $data[] =  iconv('utf-8','windows-1251',$r);
+                }
+                fputcsv($df, $data, ';');
                 unset($row);
+                unset($data);
             }
-
-            $xls->create_worksheet('informProduct');
-            $xml = $xls->generate();
-
-            $xls->download(sprintf('%s.xls', date_format(new \DateTime(), 'Y-m-d H:i:s')));
+            fclose($df);
+            echo ob_get_clean();
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\ExcelComponent;
 use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\PodruzkaProduct;
@@ -30,7 +31,7 @@ class SiteController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['logout', 'index', 'upload'],
+                        'actions' => ['logout', 'index', 'upload', 'upload-matching'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -72,6 +73,84 @@ class SiteController extends Controller
             }
         }
 
+        return false;
+    }
+
+    public function actionUploadMatching()
+    {
+        $fileName = 'file';
+        $uploadPath = \Yii::$app->basePath . '/web/files';
+
+        if (isset($_FILES[$fileName])) {
+            $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+            if ($file->saveAs($uploadPath . '/' . "upload_matching." . $file->extension)) {
+                chmod($uploadPath . '/' . "upload_matching." . $file->extension, 0777);
+                if (isset($file)) {
+                    $fName = $uploadPath . '/' . "upload_matching." . $file->extension;
+                    //начинаем читать со строки 2, в PHPExcel первая строка имеет индекс 1, и как правило это строка заголовков
+                    $startRow = 2;
+                    $objReader = \PHPExcel_IOFactory::createReaderForFile($fName);
+                    $objReader->setReadDataOnly(true);
+
+                    $objPHPExcel = $objReader->load($fName); //открываем файл
+                    $objPHPExcel->setActiveSheetIndex(0); //устанавливаем индекс активной страницы
+                    $objWorksheet = $objPHPExcel->getActiveSheet(); //делаем активной нужную страницу
+                    $emptyPodrArt = [];
+                    $emptyLArt = [];
+                    $emptyRArt = [];
+                    $emptyIArt = [];
+                    //внутренний цикл по строкам
+                    for ($i = $startRow; $i < $startRow + 20000; $i++) {
+                        //получаем первое знаение в строке
+                        $value = trim($objWorksheet->getCellByColumnAndRow(0, $i)->getValue());
+
+                        if (!empty($value)) {
+                            $product = PodruzkaProduct::findOne(['article' => $value]);
+                            if (empty($product)) {
+                                $emptyPodrArt[] = $value;
+                                continue;
+                            }
+
+                            if ($letual = LetualProduct::findOne(['article' => (string)$objWorksheet->getCellByColumnAndRow(1, $i)->getValue()])) {
+                                $product->l_id = $letual->id;
+                            } else {
+                                $emptyLArt[] = (string)$objWorksheet->getCellByColumnAndRow(1, $i)->getValue();
+                            }
+
+                            if ($rivegauche = RivegaucheProduct::findOne(['article' => (string)$objWorksheet->getCellByColumnAndRow(2, $i)->getValue()])) {
+                                $product->r_id = $rivegauche->id;
+                            } else {
+                                $emptyRArt[] = (string)$objWorksheet->getCellByColumnAndRow(2, $i)->getValue();
+                            }
+
+                            if ($iledebeaute = IledebeauteProduct::findOne(['article' => (string)$objWorksheet->getCellByColumnAndRow(3, $i)->getValue()])) {
+                                $product->i_id = $iledebeaute->id;
+                            } else {
+                                $emptyIArt[] = (string)$objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
+                            }
+
+                            if($product instanceof PodruzkaProduct ) {
+                                $product->save();
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    $result = [
+                        'emptyPodrArt' => $emptyPodrArt,
+                        'emptyLArt' => $emptyLArt,
+                        'emptyRArt' => $emptyRArt,
+                        'emptyIArt' => $emptyIArt,
+                    ];
+                    $objPHPExcel->disconnectWorksheets(); //чистим
+                    unset($objPHPExcel); //память
+                    //unlink($fName);
+
+                    echo \yii\helpers\Json::encode($result);
+                    //echo 123;
+                }
+            }
+        }
         return false;
     }
 

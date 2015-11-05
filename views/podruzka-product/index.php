@@ -13,6 +13,9 @@ use \app\helpers\TextHelper;
 $this->title = 'Информационный продукт';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/inform-product']); ?>" class="btn btn-primary" >
+    <i class="fa fa-download"></i> Выгрузка Инф.продукта
+</a>
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?= GridView::widget([
