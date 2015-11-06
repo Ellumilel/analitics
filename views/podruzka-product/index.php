@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListGroup($condition), 'group', 'group'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '150px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '170px'],
                 ],
                 'value' => 'group',
             ],
@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition), 'category',
                     'category'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '150px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
                 ],
                 'value' => 'category',
             ],
@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListSubCategory($condition),
                     'sub_category', 'sub_category'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '150px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '220px'],
                 ],
                 'value' => 'sub_category',
             ],
@@ -105,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListDetail($condition), 'detail',
                     'detail'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '240px'],
                 ],
                 'value' => 'detail',
             ],
@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition), 'brand', 'brand'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '80px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '120px'],
                 ],
                 'value' => 'brand',
             ],
@@ -126,7 +126,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListSubBrand($condition), 'sub_brand',
                     'sub_brand'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '80px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '120px'],
                 ],
                 'value' => 'sub_brand',
             ],
@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map((new PodruzkaProduct)->getListLine($condition), 'line', 'line'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '80px'],
+                    'pluginOptions' => ['allowClear' => true, 'width' => '140px'],
                 ],
                 'value' => 'line',
             ],
