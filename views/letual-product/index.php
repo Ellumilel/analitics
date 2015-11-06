@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'kartik\grid\EditableColumn',
                 'attribute' => 'brand',
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map((new LetualProduct)->dropDownSubCategory($condition), 'brand',
+                'filter' => ArrayHelper::map((new LetualProduct)->dropDownBrand($condition), 'brand',
                     'brand'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
