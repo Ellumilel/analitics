@@ -189,6 +189,10 @@ class DownloadController extends Controller
             lp.`title` as`let.title`,
             lp.`description` as `let.desc`,
             lp.`link` as `let.link`,
+            lp.`showcases_new` as `let.showcases_new`,
+            lp.`showcases_exclusive` as `let.showcases_exclusive`,
+            lp.`showcases_bestsellers` as `let.showcases_bestsellers`,
+            lp.`showcases_limit` as `let.showcases_limit`,
             lp.`new_price` as `let.new_price`,
             lp.`old_price` as `let.old_price`,
             lp.`updated_at` as `let.date`,
@@ -241,6 +245,7 @@ class DownloadController extends Controller
             'let.title',
             'let.desc',
             'let.link',
+            'let.promo',
             'let.old_price',
             'let.new_price',
             'let.date',
@@ -319,8 +324,27 @@ class DownloadController extends Controller
                 unset($row['ile.showcases_best']);
             }
 
+            $let_promotion = [];
+            if ($row['let.showcases_new']) {
+                $let_promotion[] = 'Новинка';
+                unset($row['let.showcases_new']);
+            }
+            if ($row['let.showcases_exclusive']) {
+                $let_promotion[] = 'Только в Л Этуаль';
+                unset($row['let.showcases_exclusive']);
+            }
+            if ($row['let.showcases_bestsellers']) {
+                $let_promotion[] = 'Бестселлер';
+                unset($row['let.showcases_bestsellers']);
+            }
+            if ($row['let.showcases_limit']) {
+                $let_promotion[] = 'Лимитированный выпуск';
+                unset($row['let.showcases_limit']);
+            }
+
             $rpromo = implode(',', $rive_promotion);
             $ipromo = implode(',', $ile_promotion);
+            $lpromo = implode(',', $let_promotion);
 
             $data = [
                 'article' => (string)str_pad($row['article'], 5, '0', STR_PAD_LEFT),
@@ -339,6 +363,7 @@ class DownloadController extends Controller
                 'let.title' =>(string) $row['let.title'],
                 'let.desc' => (string)$row['let.desc'],
                 'let.link' => (string)$row['let.link'],
+                'let.promo' => (string)$lpromo,
                 'let.old_price' => (float)sprintf("%8.2f", trim($row['let.old_price'])),
                 'let.new_price' => (float)sprintf("%8.2f", trim($row['let.new_price'])),
                 'let.date' =>(string) $row['let.date'],

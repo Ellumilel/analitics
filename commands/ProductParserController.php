@@ -2,6 +2,9 @@
 
 namespace app\commands;
 
+use app\models\LetualLink;
+use app\models\LetualPrice;
+use app\models\LetualProduct;
 use app\models\RivegaucheLink;
 use app\models\RivegauchePrice;
 use app\models\RivegaucheProduct;
@@ -19,19 +22,84 @@ use Goutte\Client;
  */
 class ProductParserController extends Controller
 {
+    /**
+     * Метод запускается по крон собирает данные по РивГош
+     *
+     * @return int
+     */
+    public function actionLetual()
+    {
+        $entity = new LetualLink();
+        $offset = 0;
+        do {
+            $links = $entity->getLinks($offset, 20);
+            if (!empty($links)) {
+                foreach ($links as $link) {
+                    \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
+                    $crawler = $this->getData($link->link);
+                    if (!$crawler) {
+                        \Yii::error(
+                            sprintf('Не удалось получить страницу: %s ', $link->link),
+                            'cron'
+                        );
+                        continue;
+                    }
+                    $attributes = [
+                        'link' => $link->link,
+                        'group' => $link->group,
+                        'category' => $link->category,
+                        'sub_category' => $link->sub_category,
+                    ];
+
+                    $service = new ParserService();
+                    $result = $service->productParse($crawler, ParserService::LET, $attributes);
+                    foreach ($result as $res) {
+                        if ($res instanceof Response) {
+                            if (empty($res->getPrice()) || empty($res->getTitle())) {
+                                \Yii::error(
+                                    sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
+                                    'cron'
+                                );
+                                continue;
+                            } else {
+                                $this->saveLetualResult($res);
+                            }
+                            continue;
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+
+                $z = 1;
+                $offset += 20;
+                unset($links);
+                unset($client);
+            } else {
+                $z = 0;
+            }
+        } while ($z > 0);
+
+        return 0;
+    }
+    /**
+     * Метод запускается по крон собирает данные по РивГош
+     *
+     * @return int
+     */
     public function actionRivegauche()
     {
         /** @var $entity RivegaucheLink */
         $entity = new RivegaucheLink();
         $offset = 0;
         do {
-            $links = $entity->getLinks($offset, 5);
+            $links = $entity->getLinks($offset, 20);
             if (!empty($links)) {
                 foreach ($links as $link) {
-                    \Yii::info(sprintf('Обработка: %s ', $link->id), 'cron');
-                    $crawler = $this->riveGetData($link->link);
+                    \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
+                    $crawler = $this->getData($link->link);
                     if (!$crawler) {
-                        break;
+                        continue;
                     }
                     $attributes = [
                         'link' => $link->link,
@@ -42,12 +110,13 @@ class ProductParserController extends Controller
 
                     $service = new ParserService();
                     $result = $service->productParse($crawler, ParserService::RIV, $attributes);
+
                     if (empty($result->getPrice()) || empty($result->getTitle())) {
                         \Yii::error(
                             sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                             'cron'
                         );
-                        break;
+                        continue;
                     } else {
                         $this->saveResult($result);
                     }
@@ -60,7 +129,7 @@ class ProductParserController extends Controller
                             'sub_category' => $link->sub_category,
                         ];
 
-                        $crawler = $this->riveGetData($url);
+                        $crawler = $this->getData($url);
                         if ($crawler) {
                             $service = new ParserService();
                             $result = $service->productParse($crawler, ParserService::RIV, $attributes);
@@ -73,7 +142,7 @@ class ProductParserController extends Controller
                     unset($head);
                 }
                 $z = 1;
-                $offset += 5;
+                $offset += 20;
                 unset($links);
                 unset($client);
             } else {
@@ -139,11 +208,61 @@ class ProductParserController extends Controller
     }
 
     /**
+     * @param Response $result
+     */
+    private function saveLetualResult(Response $result)
+    {
+        $product = LetualProduct::findOne(['article' => $result->getArticle()]);
+
+        if (!$product) {
+            $product = new LetualProduct();
+        }
+        $product->attributes = $result->toArray();
+        try {
+            $lPrice = new LetualPrice();
+            $lPrice->article = $result->getArticle();
+
+            if ($result->getPrice()) {
+                $lPrice->old_price = $result->getPrice();
+            }
+
+            if ($result->getNewPrice()) {
+                $lPrice->new_price = $result->getNewPrice();
+            }
+
+            if ($product->save()) {
+                if (!empty($lPrice->new_price) || !empty($lPrice->new_price)) {
+                    $lPrice->save();
+                }
+            } else {
+                \Yii::error(
+                    sprintf(
+                        'Ошибка сохранения артикула L: %s data: %s',
+                        $result->getArticle(),
+                        json_encode($result->toArray())
+                    ),
+                    'cron'
+                );
+            }
+        } catch (\Exception $e) {
+            \Yii::error(
+                sprintf(
+                    'Exception %s сохранения артикула L %s data: %s',
+                    $e->getMessage(),
+                    $result->getArticle(),
+                    json_encode($result->toArray())
+                ),
+                'cron'
+            );
+        }
+    }
+
+    /**
      * @param string $url
      *
      * @return null|\Symfony\Component\DomCrawler\Crawler
      */
-    private function riveGetData($url)
+    private function getData($url)
     {
         $client = new Client();
         $guzzle = $client->getClient();
