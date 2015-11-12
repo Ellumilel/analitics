@@ -67,7 +67,13 @@ class ParserService implements ConfigInterface
         $parser = null;
         switch ($partner) {
             case $this::LET:
-                $parser = new LetualParser($data);
+                $parser = new LetualParser(
+                    $data,
+                    $attributes['category'],
+                    $attributes['sub_category'],
+                    $attributes['group'],
+                    $attributes['link']
+                );
                 break;
             case $this::RIV:
                 $parser = new RivegaucheParser(

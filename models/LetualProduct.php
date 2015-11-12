@@ -18,8 +18,12 @@ use yii\db\Expression;
  * @property string $brand
  * @property string $title
  * @property string $description
- * @property number $old_price
- * @property number $new_price
+ * @property integer $showcases_new
+ * @property integer $showcases_exclusive
+ * @property integer $showcases_bestsellers
+ * @property integer $showcases_limit
+ * @property string $old_price
+ * @property string $new_price
  * @property string $image_link
  * @property string $created_at
  * @property string $updated_at
@@ -45,6 +49,7 @@ class LetualProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['link', 'title', 'image_link'], 'string'],
+            [['showcases_new', 'showcases_exclusive', 'showcases_bestsellers', 'showcases_limit'], 'integer'],
             [['old_price', 'new_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
@@ -67,6 +72,10 @@ class LetualProduct extends \yii\db\ActiveRecord
             'brand' => 'Бренд',
             'title' => 'Наименование',
             'description' => 'Описание',
+            'showcases_new' => 'Showcases New',
+            'showcases_exclusive' => 'Showcases Exclusive',
+            'showcases_bestsellers' => 'Showcases Bestsellers',
+            'showcases_limit' => 'Showcases Limit',
             'old_price' => 'Цена',
             'new_price' => 'Цена со скидкой',
             'image_link' => 'Картинка',
