@@ -38,7 +38,7 @@ class Rivegauche implements RequestInterface
      */
     public function getUrl()
     {
-        return $this->url;
+        return $this->url.'&page='.$this->getPage();
     }
 
     /**

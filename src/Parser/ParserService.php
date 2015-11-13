@@ -122,12 +122,14 @@ class ParserService implements ConfigInterface
         $request = new Rivegauche();
         $page = $request->getPage();
         $return = [];
+
         do {
             $response = $this->request($this->prepareRequest($request->setUrl($url)->setPage($page)));
             $data = $this->linkParser->convertRLink($response);
 
             $i = (empty($data)) ? 0 : 1;// выход из цикла
             $return = array_merge($return, $data);
+
             $page++;
         } while ($i > 0);
 
@@ -151,6 +153,7 @@ class ParserService implements ConfigInterface
 
             $i = (empty($data)) ? 0 : 1; // выход из цикла
             $return = array_merge($return, $data);
+
             $page++;
         } while ($i > 0);
 
