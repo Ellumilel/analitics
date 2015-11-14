@@ -72,6 +72,7 @@ class LinkController extends Controller
                     } else {
                         $urls = [];
                     }
+
                     foreach ($urls as $key => $url) {
                         $attributes = [
                             'group' => $link->group,
