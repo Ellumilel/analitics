@@ -36,7 +36,7 @@ class LinkParser
      */
     public function convertRLink(Crawler $response)
     {
-        $urls = $response->filter('div.es_product_images a')->each(
+        $urls = $response->filter('ul.es_page_type div.es_product_images a')->each(
             function ($node) {
                 $href = $node->attr('href');
                 $url = sprintf('http://shop.rivegauche.ru%s', $href);
@@ -46,7 +46,7 @@ class LinkParser
         );
 
         if (empty($urls)) {
-            $urls = $response->filter('div.es_product_name a')->each(
+            $urls = $response->filter('ul.es_page_type div.es_product_name a')->each(
                 function ($node) {
                     $href = $node->attr('href');
                     $url = sprintf('http://shop.rivegauche.ru%s', $href);
