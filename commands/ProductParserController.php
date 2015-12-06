@@ -36,6 +36,7 @@ class ProductParserController extends Controller
             if (!empty($links)) {
                 foreach ($links as $link) {
                     \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
+                    $link->link='http://www.letu.ru/makiyazh/dlya-glaz/tush/lancome-tush-dlya-resnits-grandiose/16900021';
                     $crawler = $this->getData($link->link);
                     if (!$crawler) {
                         \Yii::error(
@@ -53,6 +54,7 @@ class ProductParserController extends Controller
 
                     $service = new ParserService();
                     $result = $service->productParse($crawler, ParserService::LET, $attributes);
+
                     foreach ($result as $res) {
                         if ($res instanceof Response) {
                             if (empty($res->getPrice()) || empty($res->getTitle())) {
@@ -82,19 +84,21 @@ class ProductParserController extends Controller
 
         return 0;
     }
+
     /**
      * Метод запускается по крон собирает данные по РивГош
+     * @param $offset
+     * @param $total
      *
      * @return int
      */
-    public function actionRivegauche()
+    public function actionRivegauche($offset, $total)
     {
         /** @var $entity RivegaucheLink */
         $entity = new RivegaucheLink();
-        $offset = 0;
         do {
             $links = $entity->getLinks($offset, 20);
-            if (!empty($links)) {
+            if (!empty($links) && $offset < $total) {
                 foreach ($links as $link) {
                     \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
                     $crawler = $this->getData($link->link);
@@ -218,6 +222,8 @@ class ProductParserController extends Controller
             $product = new LetualProduct();
         }
         $product->attributes = $result->toArray();
+        $product->new_price = $result->getPrice();
+
         try {
             $lPrice = new LetualPrice();
             $lPrice->article = $result->getArticle();
