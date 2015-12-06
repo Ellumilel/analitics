@@ -343,6 +343,9 @@ class LetualParser implements ParserInterface
 
             $oldPrice = trim(reset($oldPrice));
             $oldPrice = str_replace(' ', '', $oldPrice);
+            $oldPrice = str_replace('*', '', $oldPrice);
+            $oldPrice = str_replace('\r', '', $oldPrice);
+            $oldPrice = str_replace('\n', '', $oldPrice);
 
             return [
                 'oldPrice' => $oldPrice,

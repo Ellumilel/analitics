@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\helpers\ExcelComponent;
+use app\helpers\ExportExcel;
 use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\LetualProductSearch;
@@ -62,15 +63,15 @@ class DownloadController extends Controller
     {
         $request = Yii::$app->getRequest()->get();
 
-        if($request['company'] == 'letual') {
+        if ($request['company'] == 'letual') {
             $command = Yii::$app->getDb()->createCommand('SELECT * FROM letual_product');
             $attr = new LetualProduct();
             $reader = $command->query();
-        } elseif($request['company'] == 'rive') {
+        } elseif ($request['company'] == 'rive') {
             $command = Yii::$app->getDb()->createCommand('SELECT * FROM rivegauche_product');
             $attr = new RivegaucheProduct();
             $reader = $command->query();
-        } elseif($request['company'] == 'ile') {
+        } elseif ($request['company'] == 'ile') {
             $command = Yii::$app->getDb()->createCommand('SELECT * FROM iledebeaute_product');
             $attr = new IledebeauteProduct();
             $reader = $command->query();
@@ -78,29 +79,51 @@ class DownloadController extends Controller
             $let = [];
         }
 
-        if(!empty($reader) && !empty($attr)) {
-            //sprintf('%s/web/files/%s', \Yii::$app->basePath, sprintf('example_%s.xls',time()))
-            $xls = new ExcelXML();
+        $filename = sprintf('%s_%s.xls', $request['company'], date_format(new \DateTime(), 'Y-m-d'));
 
-            $header_style = array(
-                'bold'       => 1,
-                'size'       => '12',
-                'color'      => '#FFFFFF',
-                'bgcolor'    => '#4F81BD'
-            );
+        $export = new ExportExcel($filename, count($attr->getAttributes()), $reader->count() + 1);
 
-            $xls->add_style('header', $header_style);
-            //$xls->debug();
-            $xls->add_row($attr->attributes(), 'header');
+        $export->openWriter();
+        $export->openWorkbook();
 
-            while ($row = $reader->read()) {
-                $xls->add_row($row);
-            }
+        $export->writeDocumentProperties();
+        $export->writeStyles();
+        $export->openWorksheet();
 
-            $xls->create_worksheet('Users');
-            $xml = $xls->generate();
-            $xls->download(sprintf('%s_%s.xls', $request['company'], date_format(new \DateTime(), 'Y-m-d H:i:s')));
+        //title row
+        $export->resetRow();
+        $export->openRow(true);
+
+        foreach ($attr->getAttributes() as $code => $format) {
+            $export->appendCellString($attr->getAttributeLabel($code));
         }
+        $export->closeRow();
+        $export->flushRow();
+
+        while ($row = $reader->read()) {
+            $export->resetRow();
+            $export->openRow();
+            foreach ($attr->getAttributes() as $code => $format) {
+                $export->appendCellString($row[$code]);
+            }
+            $export->closeRow();
+            $export->flushRow();
+        }
+        //close all
+        $export->closeWorksheet();
+        $export->closeWorkbook();
+        $export->closeWriter();
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export->getBaseFullFileName()));
+
+        readfile($export->getBaseFullFileName());
     }
 
     /**
