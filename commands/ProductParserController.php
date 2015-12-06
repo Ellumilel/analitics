@@ -38,7 +38,6 @@ class ProductParserController extends Controller
             if (!empty($links) && $offset < $total) {
                 foreach ($links as $link) {
                     \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
-                    $link->link='http://www.letu.ru/makiyazh/dlya-glaz/tush/lancome-tush-dlya-resnits-grandiose/16900021';
                     $crawler = $this->getData($link->link);
                     if (!$crawler) {
                         \Yii::error(
@@ -224,7 +223,7 @@ class ProductParserController extends Controller
             $product = new LetualProduct();
         }
         $product->attributes = $result->toArray();
-        $product->new_price = $result->getPrice();
+        $product->new_price = $result->getNewPrice();
 
         try {
             $lPrice = new LetualPrice();
