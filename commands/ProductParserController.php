@@ -224,6 +224,7 @@ class ProductParserController extends Controller
         }
         $product->attributes = $result->toArray();
         $product->new_price = $result->getNewPrice();
+        $product->old_price = $result->getPrice();
 
         try {
             $lPrice = new LetualPrice();
