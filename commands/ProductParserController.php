@@ -63,15 +63,13 @@ class ProductParserController extends Controller
                                     sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                                     'cron'
                                 );
-                                continue;
                             } else {
                                 $this->saveLetualResult($res);
                             }
-                            continue;
-                        } else {
-                            continue;
                         }
                     }
+
+                    unset($result);
                 }
 
                 $z = 1;
