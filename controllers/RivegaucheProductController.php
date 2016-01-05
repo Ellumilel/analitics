@@ -37,6 +37,7 @@ class RivegaucheProductController extends Controller
                             'delete',
                             'empty-brand',
                             'empty-brand-update',
+                            'brand-update',
                         ],
                         'allow' => true,
                         'roles' => ['@'],
@@ -193,6 +194,28 @@ class RivegaucheProductController extends Controller
             return $this->render('empty_brand_update', [
                 'model' => $model,
             ]);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function actionBrandUpdate()
+    {
+        $post = Yii::$app->request->post();
+        if (!empty($post['editableKey'])
+            && !empty($model = $this->findModel($post['editableKey']))
+            && $post['RivegaucheProduct'][0]['brand']
+        ) {
+            $brand = strtoupper($post['RivegaucheProduct'][0]['brand']);
+            $model->brand = $brand;
+            if ($model->save(true)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }

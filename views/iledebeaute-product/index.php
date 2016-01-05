@@ -30,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 //'filterType' => GridView::FILTER_RANGE,
                 'attribute' => 'article',
-                'value' => 'article',
+                'value' => function ($data) {
+                    if (!empty($data->article)) {
+                        return '<a href="' . $data->link . '" target="_blank">'.$data->article.'</a>';
+                    } else {
+                        return '';
+                    }
+                },
                 'format' => 'raw',
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true, 'width' => '400px'],

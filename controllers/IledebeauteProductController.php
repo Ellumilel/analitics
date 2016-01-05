@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\IledebeauteProduct;
 use app\models\IledebeauteProductSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,6 +18,29 @@ class IledebeauteProductController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['inform'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => [
+                            'index',
+                            'view',
+                            'create',
+                            'update',
+                            'delete',
+                            'brand-update',
+                        ],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -134,6 +158,28 @@ class IledebeauteProductController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function actionBrandUpdate()
+    {
+        $post = Yii::$app->request->post();
+        if (!empty($post['editableKey'])
+            && !empty($model = $this->findModel($post['editableKey']))
+            && $post['IledebeauteProduct'][0]['brand']
+        ) {
+            $brand = strtoupper($post['IledebeauteProduct'][0]['brand']);
+            $model->brand = $brand;
+            if ($model->save(true)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }

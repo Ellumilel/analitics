@@ -35,6 +35,7 @@ class ProductParserController extends Controller
         $entity = new LetualLink();
         do {
             $links = $entity->getLinks($offset, 20);
+
             if (!empty($links) && $offset < $total) {
                 foreach ($links as $link) {
                     \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
@@ -68,7 +69,6 @@ class ProductParserController extends Controller
                             }
                         }
                     }
-
                     unset($result);
                 }
 

@@ -31,7 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'attribute' => 'article',
-                'value' => 'article',
+                //'value' => 'article',
+                'value' => function ($data) {
+                    if (!empty($data->article)) {
+                        return '<a href="' . $data->link . '" target="_blank">'.$data->article.'</a>';
+                    } else {
+                        return '';
+                    }
+                },
                 'format' => 'raw',
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true, 'width' => '400px'],
@@ -51,8 +58,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['placeholder' => ''],
                 'attribute' => 'category',
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map((new LetualProduct)->dropDownCategory($condition), 'category',
-                    'category'),
+                'filter' => ArrayHelper::map(
+                    (new LetualProduct)->dropDownCategory($condition),
+                    'category',
+                    'category'
+                ),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
                 ],
@@ -95,16 +105,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'title:ntext',
             'description',
             [
-                'attribute' => 'new_price',
-                'value' => 'new_price',
+                'attribute' => 'old_price',
+                'value' => 'old_price',
                 'format' => 'raw',
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
                 ],
             ],
             [
-                'attribute' => 'old_price',
-                'value' => 'old_price',
+                'attribute' => 'new_price',
+                'value' => 'new_price',
                 'format' => 'raw',
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true, 'width' => '50px'],

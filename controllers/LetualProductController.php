@@ -28,7 +28,14 @@ class LetualProductController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','view','create','update','delete'],
+                        'actions' => [
+                            'index',
+                            'view',
+                            'create',
+                            'update',
+                            'delete',
+                            'brand-update',
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -152,6 +159,28 @@ class LetualProductController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function actionBrandUpdate()
+    {
+        $post = Yii::$app->request->post();
+        if (!empty($post['editableKey'])
+            && !empty($model = $this->findModel($post['editableKey']))
+            && $post['LetualProduct'][0]['brand']
+        ) {
+            $brand = strtoupper($post['LetualProduct'][0]['brand']);
+            $model->brand = $brand;
+            if ($model->save(true)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }
