@@ -55,6 +55,7 @@ if ($lCount) {
                         <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/letual-category/index");  ?>">Летуаль</a></li>
                         <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/rivegauche-category/index");  ?>">РивГош</a></li>
                         <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/iledebeaute-category/index");  ?>">ИльДеБоте</a></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/elize-category/index");  ?>">Элизе</a></li>
                         <li class="divider"></li>
                         <li><a href="#">One more separated link</a></li>
                     </ul>
