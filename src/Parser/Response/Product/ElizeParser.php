@@ -49,7 +49,7 @@ class ElizeParser implements ParserInterface
      */
     public function getResponse()
     {
-        $result[] = $this->response->filter('table.atg_store_productSummary tr')->each(function ($node) {
+        $result[] = $this->response->filter('div.itemViewBox div.row')->each(function ($node) {
             $this->subResponse = $node;
             $result = (new Response())
                 ->setTitle($this->getTitle())
@@ -81,6 +81,7 @@ class ElizeParser implements ParserInterface
             if (!empty($price['oldPrice'])) {
                 $result->setPrice($price['oldPrice']);
             }
+
             if (!empty($result->getArticle())) {
                 return $result;
             } else {
@@ -102,9 +103,10 @@ class ElizeParser implements ParserInterface
      */
     public function getTitle()
     {
-        $title = $this->subResponse->filter('tr td h2')->each(function ($node) {
+        $title = $this->subResponse->filter('div.name')->each(function ($node) {
             /** @var Crawler $node */
-            return $node->text();
+            $title = trim($node->text());
+            return $title;
         });
 
         return reset($title);
@@ -117,12 +119,10 @@ class ElizeParser implements ParserInterface
      */
     public function getArticle()
     {
-        $article = $this->subResponse->filter('td p.article')->each(function ($node) {
+        $article = $this->subResponse->filter('div#count_products input')->each(function ($node) {
             /** @var Crawler $node */
-            $article = trim($node->text());
-            $article = str_replace('Артикул ', '', $article);
-            $article = preg_replace("/[^a-zA-Z0-9]/", "", $article);
-
+            $article = $node->attr('name');
+            $article = trim($article);
             return $article;
         });
 
@@ -136,9 +136,9 @@ class ElizeParser implements ParserInterface
      */
     public function getBrand()
     {
-        $brand = $this->response->filter('#brandImage')->each(function ($node) {
+        $brand = $this->response->filter('div.productItemBox div.itemBox a p.sub_title')->each(function ($node) {
             /** @var Crawler $node */
-            $brand = $node->attr('alt');
+            $brand = $node->text();
             $brand = trim($brand);
 
             return $this->clearBrand($brand);
@@ -170,9 +170,9 @@ class ElizeParser implements ParserInterface
      */
     public function getImageLink()
     {
-        $imageLink = $this->subResponse->filter('td img')->each(function ($node) {
+        $imageLink = $this->subResponse->filter('div.image img')->each(function ($node) {
             /** @var Crawler $node */
-            return 'http://www.letu.ru'.$node->attr('src');
+            return 'http://elize.ru/'.$node->attr('src');
         });
 
         return reset($imageLink);
@@ -324,13 +324,13 @@ class ElizeParser implements ParserInterface
      */
     public function getPrice()
     {
-        $price = $this->subResponse->filter('td.price')->each(function ($node) {
+        $price = $this->subResponse->filter('div.price')->each(function ($node) {
             /** @var Crawler $node */
-            $oldPrice = $node->filter('p.old_price')->each(function ($subsNode) {
+            $oldPrice = $node->filter('p.old span')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
                 return $subsNode->text();
             });
-            $newPrice = $node->filter('p.new_price')->each(function ($subsNode) {
+            $newPrice = $node->filter('p span.real_price')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
                 return $subsNode->text();
             });
@@ -346,7 +346,9 @@ class ElizeParser implements ParserInterface
             $oldPrice = str_replace('*', '', $oldPrice);
             $oldPrice = str_replace('\r', '', $oldPrice);
             $oldPrice = str_replace('\n', '', $oldPrice);
-
+            if (empty($oldPrice)) {
+                $oldPrice = $newPrice;
+            }
             return [
                 'oldPrice' => $oldPrice,
                 'newPrice' => $newPrice,
@@ -377,47 +379,17 @@ class ElizeParser implements ParserInterface
     private function clearBrand($brand)
     {
         switch ($brand) {
-            case 'DOLCE&GABBANA':
-                $brand = 'DOLCE & GABBANA';
-                break;
-            case 'DOLCE & GABBANA MAKE UP':
-                $brand = 'DOLCE & GABBANA';
-                break;
-            case 'Dolce&Gabbana':
-                $brand = 'DOLCE & GABBANA';
-                break;
-            case "L`OREAL PARIS":
+            case 'L OREAL':
                 $brand = 'LOREAL';
                 break;
-            case "YES TO...":
-                $brand = 'YES TO';
+            case 'L OREAL PROFESSIONAL':
+                $brand = 'LOREAL PROFESSIONNEL';
                 break;
-            case "DSQUARED2":
-                $brand = 'DSQUARED';
+            case 'MAYBELLINE NY':
+                $brand = 'MAYBELLINE';
                 break;
-            case "COLOR MASK":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "GLISS KUR":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "GOT2B":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "MILLION COLOR":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "PALETTE":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "PERFECT MOUSSE":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "TAFT":
-                $brand = 'SCHWARZKOPF';
-                break;
-            case "TSUBAKI":
-                $brand = 'SHISEIDO';
+            case "NIVEA MEN":
+                $brand = 'NIVEA';
                 break;
         }
 

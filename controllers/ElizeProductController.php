@@ -50,11 +50,29 @@ class ElizeProductController extends Controller
     public function actionIndex()
     {
         $searchModel = new ElizeProductSearch();
+        $condition = [];
+        if (isset(Yii::$app->request->queryParams['ElizeProductSearch'])) {
+            $params = Yii::$app->request->queryParams['ElizeProductSearch'];
+
+            if ($params['group']) {
+                $condition['group'] = $params['group'];
+            }
+            if ($params['category']) {
+                $condition['category'] = $params['category'];
+            }
+            if ($params['sub_category']) {
+                $condition['sub_category'] = $params['sub_category'];
+            }
+            if ($params['brand']) {
+                $condition['brand'] = $params['brand'];
+            }
+        }
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'condition' => $condition,
         ]);
     }
 

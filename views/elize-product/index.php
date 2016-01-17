@@ -107,7 +107,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'title:ntext',
-                'description',
                 [
                     'attribute' => 'old_price',
                     'value' => 'old_price',

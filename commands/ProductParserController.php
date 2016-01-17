@@ -3,6 +3,8 @@
 namespace app\commands;
 
 use app\models\ElizeLink;
+use app\models\ElizePrice;
+use app\models\ElizeProduct;
 use app\models\LetualLink;
 use app\models\LetualPrice;
 use app\models\LetualProduct;
@@ -102,6 +104,7 @@ class ProductParserController extends Controller
             if (!empty($links) && $offset < $total) {
                 foreach ($links as $link) {
                     \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
+
                     $crawler = $this->getData($link->link);
                     if (!$crawler) {
                         \Yii::error(
@@ -118,17 +121,17 @@ class ProductParserController extends Controller
                     ];
 
                     $service = new ParserService();
-                    $result = $service->productParse($crawler, ParserService::LET, $attributes);
+                    $result = $service->productParse($crawler, ParserService::ELI, $attributes);
 
                     foreach ($result as $res) {
                         if ($res instanceof Response) {
-                            if (empty($res->getPrice()) || empty($res->getTitle())) {
+                            if (empty($res->getNewPrice()) || empty($res->getTitle())) {
                                 \Yii::error(
                                     sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                                     'cron'
                                 );
                             } else {
-                                $this->saveLetualResult($res);
+                                $this->saveElizeResult($res);
                             }
                         }
                     }
@@ -317,6 +320,59 @@ class ProductParserController extends Controller
             \Yii::error(
                 sprintf(
                     'Exception %s сохранения артикула L %s data: %s',
+                    $e->getMessage(),
+                    $result->getArticle(),
+                    json_encode($result->toArray())
+                ),
+                'cron'
+            );
+        }
+    }
+
+    /**
+     * @param Response $result
+     */
+    private function saveElizeResult(Response $result)
+    {
+        $product = ElizeProduct::findOne(['article' => $result->getArticle()]);
+
+        if (!$product) {
+            $product = new ElizeProduct();
+        }
+        $product->attributes = $result->toArray();
+        $product->new_price = $result->getNewPrice();
+        $product->old_price = $result->getPrice();
+
+        try {
+            $ePrice = new ElizePrice();
+            $ePrice->article = $result->getArticle();
+
+            if ($result->getPrice()) {
+                $ePrice->old_price = $result->getPrice();
+            }
+
+            if ($result->getNewPrice()) {
+                $ePrice->new_price = $result->getNewPrice();
+            }
+
+            if ($product->save()) {
+                if (!empty($ePrice->new_price) || !empty($ePrice->new_price)) {
+                    $ePrice->save();
+                }
+            } else {
+                \Yii::error(
+                    sprintf(
+                        'Ошибка сохранения артикула E: %s data: %s',
+                        $result->getArticle(),
+                        json_encode($result->toArray())
+                    ),
+                    'cron'
+                );
+            }
+        } catch (\Exception $e) {
+            \Yii::error(
+                sprintf(
+                    'Exception %s сохранения артикула E %s data: %s',
                     $e->getMessage(),
                     $result->getArticle(),
                     json_encode($result->toArray())

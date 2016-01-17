@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ElizeProduct;
 use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\RivegaucheProduct;
@@ -224,6 +225,11 @@ class PodruzkaProductController extends Controller
                 if (!empty($_POST['i_id'])) {
                     if ($ip = IledebeauteProduct::find()->where(['article'=> $_POST['i_id']])->one()) {
                         $pp->i_id = $ip->id;
+                    }
+                }
+                if (!empty($_POST['i_id'])) {
+                    if ($ep = ElizeProduct::find()->where(['article'=> $_POST['e_id']])->one()) {
+                        $pp->e_id = $ep->id;
                     }
                 }
                 $pp->save();
