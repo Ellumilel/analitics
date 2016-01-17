@@ -28,6 +28,7 @@ use yii\db\Expression;
  * @property integer $r_id
  * @property string $letu_id
  * @property integer $l_id
+ * @property integer $e_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -52,11 +53,27 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['price', 'ma_price'], 'number'],
-            [['i_id', 'r_id', 'l_id'], 'integer'],
+            [['i_id', 'r_id', 'l_id', 'e_id'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['article'], 'string', 'max' => 100],
-            [['group', 'title', 'category', 'sub_category', 'detail', 'brand', 'sub_brand', 'line', 'ile_id', 'rive_id', 'letu_id'], 'string', 'max' => 500],
-            [['arrival'], 'string', 'max' => 40]
+            [
+                [
+                    'group',
+                    'title',
+                    'category',
+                    'sub_category',
+                    'detail',
+                    'brand',
+                    'sub_brand',
+                    'line',
+                    'ile_id',
+                    'rive_id',
+                    'letu_id',
+                ],
+                'string',
+                'max' => 500,
+            ],
+            [['arrival'], 'string', 'max' => 40],
         ];
     }
 
@@ -82,6 +99,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             'l_id' => 'арт. Летуаль',
             'r_id' => 'арт. РивГош',
             'i_id' => 'арт. ИльДеБоте',
+            'e_id' => 'арт. Элизэ',
             'l_title' => 'Л наименование',
             'l_date' => 'Дата',
             'l_link' => 'Л ссылка',
@@ -137,6 +155,14 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getE()
+    {
+        return $this->hasOne(ElizeProduct::className(), ['id' => 'e_id']);
+    }
+
+    /**
      * @param $condition
      * @param bool|false $matching
      *
@@ -149,7 +175,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('brand')->all();
@@ -168,7 +194,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('sub_brand')->all();
@@ -187,7 +213,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('line')->all();
@@ -206,7 +232,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('detail')->all();
@@ -225,7 +251,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('sub_category')->all();
@@ -244,7 +270,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('category')->all();
@@ -263,7 +289,7 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         if ($matching) {
-            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null)');
+            $result->andWhere(' (r_id is not null or l_id is not null or i_id is not null or e_id is not null)');
         }
 
         return $result->orderBy('group')->all();
@@ -324,11 +350,14 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
                 rp.blue_price r_blue_price,
                 rp.gold_price r_gold_price,
                 ip.old_price i_old_price,
-                ip.new_price i_new_price
+                ip.new_price i_new_price,
+                ep.old_price e_old_price,
+                ep.new_price e_new_price
                 FROM podruzka_product pp
                 LEFT JOIN (select AVG(old_price) old_price, AVG(new_price) new_price, brand from letual_product GROUP BY brand) lp on lp.brand = pp.brand
                 LEFT JOIN (select AVG(price) price, AVG(blue_price) blue_price, AVG(gold_price) gold_price, brand from rivegauche_product GROUP BY brand) rp on rp.brand = pp.brand
                 LEFT JOIN (select AVG(new_price) new_price, AVG(old_price) old_price, brand from iledebeaute_product GROUP BY brand) ip on ip.brand = pp.brand
+                LEFT JOIN (select AVG(new_price) new_price, AVG(old_price) old_price, brand from elize_product GROUP BY brand) ep on ep.brand = pp.brand
                 where arrival="Разрешен"
                 group by brand;';
         return $db->createCommand($sql)->queryAll();
@@ -351,11 +380,14 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
                 AVG(rp.blue_price) r_blue_price,
                 AVG(rp.gold_price) r_gold_price,
                 AVG(ip.old_price) i_old_price,
-                AVG(ip.new_price) i_new_price
+                AVG(ip.new_price) i_new_price,
+                AVG(ep.old_price) e_old_price,
+                AVG(ep.new_price) e_new_price
                 FROM podruzka_product pp
                 LEFT JOIN letual_product lp on lp.id = pp.l_id
                 LEFT JOIN rivegauche_product rp on rp.id = pp.r_id
                 LEFT JOIN iledebeaute_product ip on ip.id = pp.i_id
+                LEFT JOIN elize_product ep on ip.id = pp.e_id
                 WHERE arrival="Разрешен"
                 group by pp.category';
         return $db->createCommand($sql)->queryAll();
@@ -378,11 +410,14 @@ class PodruzkaProduct extends \yii\db\ActiveRecord
                 AVG(rp.blue_price) r_blue_price,
                 AVG(rp.gold_price) r_gold_price,
                 AVG(ip.old_price) i_old_price,
-                AVG(ip.new_price) i_new_price
+                AVG(ip.new_price) i_new_price,
+                AVG(ep.old_price) e_old_price,
+                AVG(ep.new_price) e_new_price
                 FROM podruzka_product pp
                 LEFT JOIN letual_product lp on lp.id = pp.l_id
                 LEFT JOIN rivegauche_product rp on rp.id = pp.r_id
                 LEFT JOIN iledebeaute_product ip on ip.id = pp.i_id
+                LEFT JOIN elize_product ep on ip.id = pp.e_id
                 WHERE arrival="Разрешен"
                 group by pp.brand, pp.category';
         return $db->createCommand($sql)->queryAll();

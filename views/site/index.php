@@ -32,6 +32,12 @@ $this->title = 'Добро пожаловать в систему монитор
                         </tr>
                         <tr>
                             <td>3.</td>
+                            <td>Элизэ</td>
+                            <td><?= $eli_count; ?></td>
+                            <td><span class="badge bg-green"><?= $eli_compare ?></span></td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
                             <td>Иль Де Ботте</td>
                             <td><?= $ile_count; ?></td>
                             <td><span class="badge bg-green"><?= $ile_compare ?></span></td>
@@ -69,6 +75,13 @@ $this->title = 'Добро пожаловать в систему монитор
                             <td><?= number_format($riv_avg->price, 2, ',', ' '); ?></td>
                             <td><?= number_format($riv_avg_brand->price, 2, ',', ' '); ?></td>
                             <td><span class="badge bg-green"><?= $riv_update ?></span></td>
+                        </tr>
+                        <tr>
+                            <td style="color: #000000;background-color: #111111"><a href="https://elize.ru/"><img src="https://elize.ru/img/logo.png"  width="120px;"></a></td>
+                            <td>Элизэ</td>
+                            <td><?= number_format($eli_avg->old_price, 2, ',', ' '); ?></td>
+                            <td><?= number_format($eli_avg_brand->old_price, 2, ',', ' '); ?></td>
+                            <td><span class="badge bg-green"><?= $eli_update ?></span></td>
                         </tr>
                         <tr>
                             <td style="color: #000000;background-color: #111111"><a href="http://iledebeaute.ru/shop/"><img src="http://static.iledebeaute.ru/@/css/logo_idb.png"  width="120px;"></a></td>

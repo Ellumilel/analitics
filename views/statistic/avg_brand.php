@@ -27,6 +27,8 @@
                         <th>r_price</th>
                         <th>r_blue_price</th>
                         <th>r_gold_price</th>
+                        <th>e_old_price</th>
+                        <th>e_new_price</th>
                         <th>i_old_price</th>
                         <th>i_new_price</th>
                     </tr>
@@ -67,6 +69,16 @@
                             <?php endif; ?>
                             <?php if(!empty($brand['r_gold_price']) && $brand['r_gold_price'] !=0): ?>
                                 <td><?= number_format($brand['r_gold_price'], 0, ',', ' '); ?></td>
+                            <?php else: ?>
+                                <td>0</td>
+                            <?php endif; ?>
+                            <?php if(!empty($brand['e_old_price']) && $brand['e_old_price'] !=0): ?>
+                                <td><?= number_format($brand['e_old_price'], 0, ',', ' '); ?></td>
+                            <?php else: ?>
+                                <td>0</td>
+                            <?php endif; ?>
+                            <?php if(!empty($brand['e_new_price']) && $brand['e_new_price'] !=0): ?>
+                                <td><?= number_format($brand['e_new_price'], 0, ',', ' '); ?></td>
                             <?php else: ?>
                                 <td>0</td>
                             <?php endif; ?>

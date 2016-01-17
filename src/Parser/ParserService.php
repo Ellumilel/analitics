@@ -2,12 +2,14 @@
 
 namespace app\src\Parser;
 
+use app\src\Parser\Request\Link\Elize;
 use app\src\Parser\Request\Link\Iledebeute;
 use app\src\Parser\Request\Link\Letual;
 use app\src\Parser\Request\Link\Rivegauche;
 use app\src\Parser\Request\RequestInterface;
 use app\src\Parser\Response\Link\LinkParser;
 use app\src\Parser\Response\ParserInterface;
+use app\src\Parser\Response\Product\ElizeParser;
 use app\src\Parser\Response\Product\IledebeauteParser;
 use app\src\Parser\Response\Product\LetualParser;
 use app\src\Parser\Response\Product\RivegaucheParser;
@@ -24,6 +26,7 @@ class ParserService implements ConfigInterface
     const LET = 'letual';
     const RIV = 'rivegauche';
     const ILE = 'iledebeaute';
+    const ELI = 'elize';
 
     /** @var Client */
     private $client;
@@ -75,6 +78,15 @@ class ParserService implements ConfigInterface
                     $attributes['link']
                 );
                 break;
+            case $this::ELI:
+                $parser = new ElizeParser(
+                    $data,
+                    $attributes['category'],
+                    $attributes['sub_category'],
+                    $attributes['group'],
+                    $attributes['link']
+                );
+                break;
             case $this::RIV:
                 $parser = new RivegaucheParser(
                     $data,
@@ -110,6 +122,22 @@ class ParserService implements ConfigInterface
         $response = $this->request($request);
 
         return $this->linkParser->convertLLink($response);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return array
+     */
+    public function collectELinkData($url)
+    {
+        $request = new Elize();
+        $request->setUrl($url);
+
+        $request = $this->prepareRequest($request);
+        $response = $this->request($request);
+
+        return $this->linkParser->convertELink($response);
     }
 
     /**
@@ -179,8 +207,7 @@ class ParserService implements ConfigInterface
      */
     private function prepareRequest(RequestInterface $request)
     {
-        $request
-            ->setMethod($this->getMethod());
+        $request->setMethod($this->getMethod());
 
         return $request;
     }
