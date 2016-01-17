@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\helpers\ExcelComponent;
 use app\helpers\ExportExcel;
+use app\models\ElizeProduct;
 use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\LetualProductSearch;
@@ -74,6 +75,10 @@ class DownloadController extends Controller
         } elseif ($request['company'] == 'ile') {
             $command = Yii::$app->getDb()->createCommand('SELECT * FROM iledebeaute_product');
             $attr = new IledebeauteProduct();
+            $reader = $command->query();
+        } elseif ($request['company'] == 'eli') {
+            $command = Yii::$app->getDb()->createCommand('SELECT * FROM elize_product');
+            $attr = new ElizeProduct();
             $reader = $command->query();
         } else {
             $let = [];

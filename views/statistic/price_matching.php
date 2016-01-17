@@ -156,6 +156,30 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 [
+                    'attribute' => 'e_old_price',
+                    'label' => 'eli.old_price',
+                    'format' => 'raw',
+                    'value' => function ($data) {
+                        return (!empty($data->e->old_price)) ? TextHelper::getPriceMatchLink(
+                            $data->price,
+                            $data->e->old_price,
+                            $data->e->link
+                        ) : '';
+                    },
+                ],
+                [
+                    'attribute' => 'e_new_price',
+                    'label' => 'eli.new_price',
+                    'format' => 'raw',
+                    'value' => function ($data) {
+                        return (!empty($data->e->new_price)) ? TextHelper::getPriceMatchLink(
+                            $data->price,
+                            $data->e->new_price,
+                            $data->e->link
+                        ) : '';
+                    },
+                ],
+                [
                     'attribute' => 'i_old_price',
                     'label' => 'ile.old_price',
                     'format' => 'raw',

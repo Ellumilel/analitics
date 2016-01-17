@@ -2,6 +2,7 @@
 
 namespace app\helpers;
 
+use app\models\ElizeProduct;
 use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\RivegaucheProduct;
@@ -68,6 +69,7 @@ class TextHelper
 
     /**
      * Возвращаем объект картинку для отображения в grid
+     *
      * @param string $imgLink
      *
      * @return string
@@ -89,10 +91,18 @@ class TextHelper
      */
     public static function getImageLink($imgLink, $link)
     {
-        $result = sprintf('<a href="%s" target="_blank">%s</a>', $link, Html::img($imgLink, [
-            'height' => '130px;',
-            'width' => '100px;',
-        ]));
+        $result = sprintf(
+            '<a href="%s" target="_blank">%s</a>',
+            $link,
+            Html::img(
+                $imgLink,
+                [
+                    'height' => '130px;',
+                    'width' => '100px;',
+                ]
+            )
+        );
+
         return $result;
     }
 
@@ -106,19 +116,36 @@ class TextHelper
     public static function getArticleMatchingForm($model)
     {
         $result = Html::activeLabel($model, 'l_id');
-        $result .= Html::input('', 'l_id',
+        $result .= Html::input(
+            '',
+            'l_id',
             (!empty($lp = LetualProduct::find()->where(['id' => $model->l_id])->one())) ? $lp->article : '',
-            ['class' => 'kv-editable-input form-control']);
+            ['class' => 'kv-editable-input form-control']
+        );
 
         $result .= Html::activeLabel($model, 'r_id');
-        $result .= Html::input('', 'r_id',
+        $result .= Html::input(
+            '',
+            'r_id',
             (!empty($lp = RivegaucheProduct::find()->where(['id' => $model->r_id])->one())) ? $lp->article : '',
-            ['class' => 'kv-editable-input form-control']);
+            ['class' => 'kv-editable-input form-control']
+        );
+
+        $result .= Html::activeLabel($model, 'e_id');
+        $result .= Html::input(
+            '',
+            'e_id',
+            (!empty($ep = ElizeProduct::find()->where(['id' => $model->e_id])->one())) ? $ep->article : '',
+            ['class' => 'kv-editable-input form-control']
+        );
 
         $result .= Html::activeLabel($model, 'i_id');
-        $result .= Html::input('', 'i_id',
+        $result .= Html::input(
+            '',
+            'i_id',
             (!empty($lp = IledebeauteProduct::find()->where(['id' => $model->i_id])->one())) ? $lp->article : '',
-            ['class' => 'kv-editable-input form-control']);
+            ['class' => 'kv-editable-input form-control']
+        );
 
         return $result;
     }

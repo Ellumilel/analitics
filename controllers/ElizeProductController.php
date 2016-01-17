@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\ElizeCategory;
-use app\models\ElizeCategorySearch;
+use app\models\ElizeProduct;
+use app\models\ElizeProductSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ElizeCategoryController implements the CRUD actions for ElizeCategory model.
+ * ElizeController implements the CRUD actions for ElizeProduct model.
  */
-class ElizeCategoryController extends Controller
+class ElizeProductController extends Controller
 {
     public function behaviors()
     {
@@ -44,22 +44,40 @@ class ElizeCategoryController extends Controller
     }
 
     /**
-     * Lists all ElizeCategory models.
+     * Lists all ElizeProduct models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ElizeCategorySearch();
+        $searchModel = new ElizeProductSearch();
+        $condition = [];
+        if (isset(Yii::$app->request->queryParams['ElizeProductSearch'])) {
+            $params = Yii::$app->request->queryParams['ElizeProductSearch'];
+
+            if ($params['group']) {
+                $condition['group'] = $params['group'];
+            }
+            if ($params['category']) {
+                $condition['category'] = $params['category'];
+            }
+            if ($params['sub_category']) {
+                $condition['sub_category'] = $params['sub_category'];
+            }
+            if ($params['brand']) {
+                $condition['brand'] = $params['brand'];
+            }
+        }
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'condition' => $condition,
         ]);
     }
 
     /**
-     * Displays a single ElizeCategory model.
+     * Displays a single ElizeProduct model.
      * @param integer $id
      * @return mixed
      */
@@ -71,16 +89,16 @@ class ElizeCategoryController extends Controller
     }
 
     /**
-     * Creates a new ElizeCategory model.
+     * Creates a new ElizeProduct model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ElizeCategory();
+        $model = new ElizeProduct();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -89,7 +107,7 @@ class ElizeCategoryController extends Controller
     }
 
     /**
-     * Updates an existing ElizeCategory model.
+     * Updates an existing ElizeProduct model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -99,7 +117,7 @@ class ElizeCategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -108,7 +126,7 @@ class ElizeCategoryController extends Controller
     }
 
     /**
-     * Deletes an existing ElizeCategory model.
+     * Deletes an existing ElizeProduct model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -121,17 +139,15 @@ class ElizeCategoryController extends Controller
     }
 
     /**
-     * Finds the ElizeCategory model based on its primary key value.
+     * Finds the ElizeProduct model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     *
-*@param integer $id
-     *
-*@return ElizeCategory the loaded model
+     * @param integer $id
+     * @return ElizeProduct the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ElizeCategory::findOne($id)) !== null) {
+        if (($model = ElizeProduct::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

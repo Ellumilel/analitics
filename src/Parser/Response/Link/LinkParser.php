@@ -1,4 +1,5 @@
 <?php
+
 namespace app\src\Parser\Response\Link;
 
 use Symfony\Component\DomCrawler\Crawler;
@@ -21,6 +22,25 @@ class LinkParser
             function ($node) {
                 $href = $node->attr('href');
                 $url = sprintf('http://www.letu.ru%s', substr($href, 0, strpos($href, ";")));
+
+                return $url;
+            }
+        );
+
+        return $urls;
+    }
+
+    /**
+     * @param Crawler $response
+     *
+     * @return array
+     */
+    public function convertELink(Crawler $response)
+    {
+        $urls = $response->filter('div.productBlock div.product_item a.type')->each(
+            function ($node) {
+                $href = $node->attr('href');
+                $url = sprintf('https://elize.ru/%s', $href);
 
                 return $url;
             }

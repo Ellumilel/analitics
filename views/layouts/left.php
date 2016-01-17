@@ -110,6 +110,11 @@ use yii\helpers\Html;
                                                 'url' => ['/rivegauche-product/index'],
                                         ],
                                         [
+                                            'label' => 'Элизэ',
+                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'url' => ['/elize-product/index'],
+                                        ],
+                                        [
                                                 'label' => 'ИльДеБоте',
                                                 'icon' => 'fa fa-circle-o text-aqua',
                                                 'url' => ['/iledebeaute-product/index'],

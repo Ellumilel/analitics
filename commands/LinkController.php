@@ -2,6 +2,8 @@
 
 namespace app\commands;
 
+use app\models\ElizeCategory;
+use app\models\ElizeLink;
 use app\models\IledebeauteCategory;
 use app\models\IledebeauteLink;
 use app\models\LetualCategory;
@@ -9,6 +11,7 @@ use app\models\LetualLink;
 use app\models\RivegaucheCategory;
 use app\models\RivegaucheLink;
 use app\src\Parser\ParserService;
+use app\src\Parser\Request\Link\Elize;
 use yii\console\Controller;
 use yii\db\ActiveRecord;
 
@@ -24,6 +27,12 @@ class LinkController extends Controller
     public function actionLetual()
     {
         $entity = new LetualCategory();
+        $this->parseLinkData($entity);
+    }
+
+    public function actionElize()
+    {
+        $entity = new ElizeCategory();
         $this->parseLinkData($entity);
     }
 
@@ -47,13 +56,14 @@ class LinkController extends Controller
     private function parseLinkData(ActiveRecord $category)
     {
         $offset = 0; // начало отсчета
-
         if ($category instanceof LetualCategory) {
             $linkEntity = new LetualLink();
         } elseif ($category instanceof RivegaucheCategory) {
             $linkEntity = new RivegaucheLink();
         } elseif ($category instanceof IledebeauteCategory) {
             $linkEntity = new IledebeauteLink();
+        } elseif ($category instanceof ElizeCategory) {
+            $linkEntity = new ElizeLink();
         } else {
             return 0;
         }
@@ -69,6 +79,8 @@ class LinkController extends Controller
                         $urls = $service->collectRLinkData($link->link);
                     } elseif ($linkEntity instanceof IledebeauteLink) {
                         $urls = $service->collectILinkData($link->link);
+                    } elseif ($linkEntity instanceof ElizeLink) {
+                        $urls = $service->collectELinkData($link->link);
                     } else {
                         $urls = [];
                     }

@@ -45,6 +45,7 @@ class RivegaucheCategorySearch extends RivegaucheCategory
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 50],
         ]);
 
         $this->load($params);
