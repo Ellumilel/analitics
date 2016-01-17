@@ -40,12 +40,12 @@ class LinkParser
         $urls = $response->filter('div.productBlock div.product_item a.type')->each(
             function ($node) {
                 $href = $node->attr('href');
-                $url = sprintf('https://elize.ru/%s', substr($href, 0, strpos($href, ";")));
+                $url = sprintf('https://elize.ru/%s', $href);
 
                 return $url;
             }
         );
-        print_r($urls);die;
+
         return $urls;
     }
 

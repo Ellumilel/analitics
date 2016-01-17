@@ -320,8 +320,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'pjax' => true,
         'pjaxSettings' => [
             'neverTimeout' => true,
-            'beforeGrid' => 'My fancy content before.',
-            'afterGrid' => 'My fancy content after.',
+            //'beforeGrid' => 'My fancy content before.',
+            //e'afterGrid' => 'My fancy content after.',
         ]
     ]); ?>
 </div>
