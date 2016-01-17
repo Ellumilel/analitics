@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use app\models\ElizeLink;
 use app\models\LetualLink;
 use app\models\LetualPrice;
 use app\models\LetualProduct;
@@ -33,6 +34,68 @@ class ProductParserController extends Controller
     public function actionLetual($offset, $total)
     {
         $entity = new LetualLink();
+        do {
+            $links = $entity->getLinks($offset, 20);
+
+            if (!empty($links) && $offset < $total) {
+                foreach ($links as $link) {
+                    \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
+                    $crawler = $this->getData($link->link);
+                    if (!$crawler) {
+                        \Yii::error(
+                            sprintf('Не удалось получить страницу: %s ', $link->link),
+                            'cron'
+                        );
+                        continue;
+                    }
+                    $attributes = [
+                        'link' => $link->link,
+                        'group' => $link->group,
+                        'category' => $link->category,
+                        'sub_category' => $link->sub_category,
+                    ];
+
+                    $service = new ParserService();
+                    $result = $service->productParse($crawler, ParserService::LET, $attributes);
+
+                    foreach ($result as $res) {
+                        if ($res instanceof Response) {
+                            if (empty($res->getPrice()) || empty($res->getTitle())) {
+                                \Yii::error(
+                                    sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
+                                    'cron'
+                                );
+                            } else {
+                                $this->saveLetualResult($res);
+                            }
+                        }
+                    }
+                    unset($result);
+                }
+
+                $z = 1;
+                $offset += 20;
+                unset($links);
+                unset($client);
+            } else {
+                $z = 0;
+            }
+        } while ($z > 0);
+
+        return 0;
+    }
+
+    /**
+     * Метод запускается по крон собирает данные по Элизэ
+     *
+     * @param $offset
+     * @param $total
+     *
+     * @return int
+     */
+    public function actionElize($offset, $total)
+    {
+        $entity = new ElizeLink();
         do {
             $links = $entity->getLinks($offset, 20);
 
