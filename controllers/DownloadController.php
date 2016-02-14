@@ -248,12 +248,19 @@ class DownloadController extends Controller
             ip.`showcases_best` as `ile.showcases_best`,
             ip.`new_price` as `ile.new_price`,
             ip.`old_price` as `ile.old_price`,
-            ip.`updated_at` as `ile.date`
+            ip.`updated_at` as `ile.date`,
+            ep.`article` as `eli.article`,
+            ep.`title` as `eli.title`,
+            ep.`link` as `eli.link`,
+            ep.`new_price` as `eli.new_price`,
+            ep.`old_price` as `eli.old_price`,
+            ep.`updated_at` as `eli.date`
             FROM podruzka_product pp
             LEFT JOIN letual_product lp on pp.l_id = lp.id
             LEFT JOIN rivegauche_product rp on pp.r_id = rp.id
             LEFT JOIN iledebeaute_product ip on pp.i_id = ip.id
-            WHERE l_id is not null or r_id is not null or i_id is not null';
+            LEFT JOIN elize_product ep on pp.e_id = ep.id
+            WHERE l_id is not null or r_id is not null or i_id is not null or e_id is not null';
         $command = Yii::$app->getDb()->createCommand($sql);
         $reader = $command->query();
         $attr = [
@@ -294,6 +301,12 @@ class DownloadController extends Controller
             'ile.old_price',
             'ile.new_price',
             'ile.date',
+            'eli.article',
+            'eli.title',
+            'eli.link',
+            'eli.old_price',
+            'eli.new_price',
+            'eli.date',
         ];
         $xls = new ExcelXML();
 
@@ -412,6 +425,12 @@ class DownloadController extends Controller
                 'ile.old_price' => (float)sprintf("%8.2f", trim($row['ile.old_price'])),
                 'ile.new_price' =>(float)sprintf("%8.2f", trim($row['ile.new_price'])),
                 'ile.date' =>(string) $row['ile.date'],
+                'eli.article' =>(string) $row['eli.article'],
+                'eli.title' =>(string) $row['eli.title'],
+                'eli.link' =>(string) $row['eli.link'],
+                'eli.old_price' => (float)sprintf("%8.2f", trim($row['eli.old_price'])),
+                'eli.new_price' =>(float)sprintf("%8.2f", trim($row['eli.new_price'])),
+                'eli.date' =>(string) $row['eli.date'],
             ];
             //var_dump($data);die;
             $xls->add_row($data);
