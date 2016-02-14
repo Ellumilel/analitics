@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b3c797d17f8ddbc4c0801d6d6fd8a082",
-    "content-hash": "b77efd706f83e552e27c194de902e046",
+    "hash": "0c8abc8d2d250b73e26bf2767e0a076b",
+    "content-hash": "bd83350975263c9ef4e5dc37bb12d708",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -135,16 +135,16 @@
         },
         {
             "name": "bower-asset/free-jqgrid",
-            "version": "v4.12.0",
+            "version": "v4.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/free-jqgrid/jqGrid.git",
-                "reference": "20735073ab8a57017496e854bf1095bb1c0943bb"
+                "reference": "c45db3ee4b00167fb71a5e570ac79192d323880d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/free-jqgrid/jqGrid/zipball/20735073ab8a57017496e854bf1095bb1c0943bb",
-                "reference": "20735073ab8a57017496e854bf1095bb1c0943bb",
+                "url": "https://api.github.com/repos/free-jqgrid/jqGrid/zipball/c45db3ee4b00167fb71a5e570ac79192d323880d",
+                "reference": "c45db3ee4b00167fb71a5e570ac79192d323880d",
                 "shasum": ""
             },
             "require": {
@@ -886,19 +886,24 @@
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
-            "version": "v4.2.8",
+            "version": "v4.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "6ba4295298ee3abe26171b4e2078c27a2f3b35b0"
+                "reference": "728f6a94cc2a6ea5350b8733835cf444516e40e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/6ba4295298ee3abe26171b4e2078c27a2f3b35b0",
-                "reference": "6ba4295298ee3abe26171b4e2078c27a2f3b35b0",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/728f6a94cc2a6ea5350b8733835cf444516e40e1",
+                "reference": "728f6a94cc2a6ea5350b8733835cf444516e40e1",
                 "shasum": ""
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "kartik\\plugins\\fileinput\\": ""
@@ -930,7 +935,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2015-11-18 17:56:04"
+            "time": "2016-01-21 19:35:12"
         },
         {
             "name": "kartik-v/bootstrap-popover-x",
@@ -978,19 +983,24 @@
         },
         {
             "name": "kartik-v/bootstrap-star-rating",
-            "version": "v3.5.6",
+            "version": "v3.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-star-rating.git",
-                "reference": "3c9b6d685c23acccec1c85df4bf4e02b536714ea"
+                "reference": "83d9f4ca10b0e74c66b94aeadf7681e6ab90059a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-star-rating/zipball/3c9b6d685c23acccec1c85df4bf4e02b536714ea",
-                "reference": "3c9b6d685c23acccec1c85df4bf4e02b536714ea",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-star-rating/zipball/83d9f4ca10b0e74c66b94aeadf7681e6ab90059a",
+                "reference": "83d9f4ca10b0e74c66b94aeadf7681e6ab90059a",
                 "shasum": ""
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.5.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "kartik\\plugins\\rating\\": ""
@@ -1015,7 +1025,7 @@
                 "jquery",
                 "star"
             ],
-            "time": "2015-12-29 05:44:07"
+            "time": "2016-01-21 19:25:04"
         },
         {
             "name": "kartik-v/dependent-dropdown",
@@ -1148,6 +1158,61 @@
                 "yii2"
             ],
             "time": "2014-12-08 04:31:32"
+        },
+        {
+            "name": "kartik-v/yii2-dynagrid",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-dynagrid.git",
+                "reference": "a5c476e600842b3636ab7893feaac3c750b0652f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-dynagrid/zipball/a5c476e600842b3636ab7893feaac3c750b0652f",
+                "reference": "a5c476e600842b3636ab7893feaac3c750b0652f",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-grid": "~3.0",
+                "kartik-v/yii2-sortable": "~1.2",
+                "kartik-v/yii2-widget-activeform": "~1.4",
+                "kartik-v/yii2-widget-select2": "~2.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\dynagrid\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Turbo charge the Yii 2 GridView with personalized columns, page size, and themes.",
+            "homepage": "https://github.com/kartik-v/yii2-dynagrid",
+            "keywords": [
+                "columns",
+                "dynamic",
+                "extension",
+                "grid",
+                "hide",
+                "order",
+                "reorder",
+                "show",
+                "sort",
+                "visibility",
+                "widget",
+                "yii2"
+            ],
+            "time": "2015-10-16 17:40:58"
         },
         {
             "name": "kartik-v/yii2-editable",
@@ -1487,6 +1552,53 @@
                 "popover-x"
             ],
             "time": "2016-01-12 16:59:09"
+        },
+        {
+            "name": "kartik-v/yii2-sortable",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-sortable.git",
+                "reference": "650dfd6876115fbb996eb6eb8f1d5d13ddb69285"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-sortable/zipball/650dfd6876115fbb996eb6eb8f1d5d13ddb69285",
+                "reference": "650dfd6876115fbb996eb6eb8f1d5d13ddb69285",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": "~1.7"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\sortable\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Create sortable lists and grids using HTML5 drag and drop API for Yii 2.0.",
+            "homepage": "https://github.com/kartik-v/yii2-sortable",
+            "keywords": [
+                "bootstrap",
+                "extension",
+                "jquery",
+                "range",
+                "sortable",
+                "widget",
+                "yii2"
+            ],
+            "time": "2015-06-17 17:34:48"
         },
         {
             "name": "kartik-v/yii2-widget-activeform",
@@ -3604,6 +3716,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "kartik-v/yii2-grid": 20,
+        "kartik-v/yii2-dynagrid": 20,
         "kartik-v/yii2-mpdf": 20,
         "kartik-v/yii2-widgets": 20,
         "perminder-klair/yii2-dropzone": 20

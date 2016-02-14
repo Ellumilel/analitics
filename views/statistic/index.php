@@ -8,6 +8,82 @@
 $this->title = 'Статистика сбора данных по новинкам';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="box box-solid box-info">
+            <div class="box-header">
+                <h3 class="box-title">Иль де боте всего: <?= (new \app\models\IledebeauteProduct)->find()->count() ?>
+                    <?php
+                    /* echo \yii\helpers\Html::a('Выгрузить в excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+                         'title' => Yii::t('yii', 'Загрузить'),
+                         'onclick'=>"
+                          $.ajax({
+                             type     :'POST',
+                             cache    : false,
+                             url  : '".\Yii::$app->getUrlManager()->createUrl(['upload/cmd'])."',
+                             success  : function(response) {
+
+                             }
+                         });return false;",
+                                         ]);
+                    */
+                    ?>
+                </h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <?=
+                \yii\widgets\ListView::widget([
+                    'dataProvider' => $listDataProvider,
+                    'options' => [
+                        'tag' => 'div',
+                        'class' => 'list-wrapper',
+                        'id' => 'list-wrapper',
+                    ],
+                    'layout' => "{items}\n{summary}\n{pager}",
+                    'itemView' => function ($model, $key, $index, $widget) {
+                        return $this->render('_list_item', ['model' => $model]);
+                    },
+                    'itemOptions' => [
+                        'tag' => false,
+                    ],
+                    'pager' => [
+                        'nextPageLabel' => 'next',
+                        'prevPageLabel' => 'previous',
+                        'maxButtonCount' => 3,
+                    ],
+                ]);
+                ?>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div>
+    <div class="col-md-4">
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
+        <?php
+        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+            'title' => Yii::t('yii', 'Загрузить'),
+            'id' => 'download',
+            'class' => 'btn btn-primary',
+            'onclick'=>"
+              $.ajax({
+                 type :'POST',
+                 cache : false,
+                 data : {'letual':'123'},
+                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
+                 beforeSend: function(){
+                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
+                    \$('#download').attr('disabled', 'disabled');
+                 },
+                 success  : function(response) {
+                    $(\"#analytic_link\").html(response);
+                    \$('#download').attr('disabled', '');
+                 }
+             });return false;",
+        ]);
+        */
+        ?>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-4">
         <div class="box box-solid box-info">
@@ -66,6 +142,91 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="col-md-4">
         <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
+        <?php
+        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+            'title' => Yii::t('yii', 'Загрузить'),
+            'id' => 'download',
+            'class' => 'btn btn-primary',
+            'onclick'=>"
+              $.ajax({
+                 type :'POST',
+                 cache : false,
+                 data : {'letual':'123'},
+                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
+                 beforeSend: function(){
+                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
+                    \$('#download').attr('disabled', 'disabled');
+                 },
+                 success  : function(response) {
+                    $(\"#analytic_link\").html(response);
+                    \$('#download').attr('disabled', '');
+                 }
+             });return false;",
+        ]);
+        */
+        ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="box box-solid box-info">
+            <div class="box-header">
+                <h3 class="box-title">Элизэ всего: <?= (new \app\models\ElizeProduct)->find()->count() ?>
+                    <?php
+                    /* echo \yii\helpers\Html::a('Выгрузить в excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
+                         'title' => Yii::t('yii', 'Загрузить'),
+                         'onclick'=>"
+                          $.ajax({
+                             type     :'POST',
+                             cache    : false,
+                             url  : '".\Yii::$app->getUrlManager()->createUrl(['upload/cmd'])."',
+                             success  : function(response) {
+
+                             }
+                         });return false;",
+                                         ]);
+                    */
+                    ?>
+                </h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <?php
+                $model = \app\models\ElizeProduct::getStatistic();
+                ?>
+                <?php $countLast = (new \app\models\ElizeProduct)->find()->count(); ?>
+                <?php foreach ($model as $row): ?>
+                    <?php $countNew = $row['counts']; ?>
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <?php if($countLast == 0): ?>
+                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
+                            <?php else: ?>
+                                <?php if($countNew * 100 / $countLast > 0): ?>
+                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
+                                <?php elseif($countNew * 100 / $countLast < 0): ?>
+                                    <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
+                                <?php else: ?>
+                                    <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <h5 class="description-header">
+                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
+                                    ['statistic/new-product', 'partner'=>'eli', 'date' => $row['dates']]
+                                ); ?>">
+                                    <?=$row['counts']?>
+                                </a>
+                            </h5>
+                            <span class="description-text"><?= $row['dates'] ?></span>
+                        </div><!-- /.description-block -->
+                    </div>
+                <?php endforeach; ?>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div>
+    <div class="col-md-4">
+        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'eli']); ?>" class="btn btn-primary" >
+            <i class="fa fa-download"></i> Выгрузка Элизэ
+        </a>
         <?php
         /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
             'title' => Yii::t('yii', 'Загрузить'),

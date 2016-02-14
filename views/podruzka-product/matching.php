@@ -192,6 +192,26 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
+                'attribute' => 'e_old_price',
+                'value' => function ($data) {
+                    return (!empty($data->e->old_price)) ? $data->e->old_price : '';
+                },
+                'format' => 'raw',
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                ],
+            ],
+            [
+                'attribute' => 'e_new_price',
+                'value' => function ($data) {
+                    return (!empty($data->e->new_price)) ? $data->e->new_price : '';
+                },
+                'format' => 'raw',
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                ],
+            ],
+            [
                 'attribute' => 'i_old_price',
                 'value' => function ($data) {
                     return (!empty($data->i->old_price)) ? $data->i->old_price : '';

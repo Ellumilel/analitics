@@ -2,12 +2,10 @@
 
 namespace app\controllers;
 
-use app\helpers\ExcelComponent;
 use app\models\ElizeProduct;
 use app\models\IledebeauteProduct;
 use app\models\LetualProduct;
 use app\models\PodruzkaProduct;
-use app\models\ProductLink;
 use app\models\RivegaucheProduct;
 use Yii;
 use yii\filters\AccessControl;
@@ -15,7 +13,6 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use Goutte\Client;
 
 class SiteController extends Controller
 {
@@ -100,6 +97,7 @@ class SiteController extends Controller
                     $emptyLArt = [];
                     $emptyRArt = [];
                     $emptyIArt = [];
+                    $emptyEArt = [];
                     //внутренний цикл по строкам
                     for ($i = $startRow; $i < $startRow + 20000; $i++) {
                         //получаем первое знаение в строке
@@ -130,6 +128,12 @@ class SiteController extends Controller
                                 $emptyIArt[] = (string)$objWorksheet->getCellByColumnAndRow(3, $i)->getValue();
                             }
 
+                            if ($elize = ElizeProduct::findOne(['article' => (string)$objWorksheet->getCellByColumnAndRow(4, $i)->getValue()])) {
+                                $product->e_id = $elize->id;
+                            } else {
+                                $emptyEArt[] = (string)$objWorksheet->getCellByColumnAndRow(4, $i)->getValue();
+                            }
+
                             if($product instanceof PodruzkaProduct ) {
                                 $product->save();
                             }
@@ -142,6 +146,7 @@ class SiteController extends Controller
                         'emptyLArt' => $emptyLArt,
                         'emptyRArt' => $emptyRArt,
                         'emptyIArt' => $emptyIArt,
+                        'emptyEArt' => $emptyEArt,
                     ];
                     $objPHPExcel->disconnectWorksheets(); //чистим
                     unset($objPHPExcel); //память
@@ -235,24 +240,5 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
-    }
-
-    public function actionCheck()
-    {
-        $client = new Client();
-        $crawler = $client->request('GET', 'http://www.letu.ru/parfyumeriya/zhenskaya-parfyumeriya');
-
-        $crawler->filter('div.productItemDescription h3.title a')->each(function ($node) {
-            $links = new ProductLink();
-            $links->link = $node->attr('href');
-            $links->validate();
-            $links->save();
-        });
-        $crawler->filter('td.price p.new_price')->each(function ($node) {
-           // print "Новая цена: ".$node->text()."\n";
-        });
-        $crawler->filter('td.item p.article')->each(function ($node) {
-           // print "Артикул: ".$node->text()."\n";
-        });
     }
 }

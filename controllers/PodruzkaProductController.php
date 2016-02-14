@@ -13,6 +13,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use himiklab\jqgrid\actions\JqGridActiveAction;
 
 /**
  * PodruzkaProductController implements the CRUD actions for PodruzkaProduct model.
@@ -32,7 +33,17 @@ class PodruzkaProductController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index', 'matching', 'view', 'create', 'update', 'delete', 'article-update'],
+                        'actions' => [
+                            'index',
+                            'matching',
+                            'matchings',
+                            'view',
+                            'create',
+                            'update',
+                            'delete',
+                            'jqgrid',
+                            'article-update',
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -43,6 +54,35 @@ class PodruzkaProductController extends Controller
                 'actions' => [
                     'delete' => ['post'],
                 ],
+            ],
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'jqgrid' => [
+                'class' => JqGridActiveAction::className(),
+                'model' => PodruzkaProductSearch::className(),
+                'scope' => function ($query) {
+                    /** @var \yii\db\ActiveQuery $query */
+                    $query->select(
+                        [
+                            'article',
+                            'title',
+                            'arrival',
+                            'group',
+                            'category',
+                            'sub_category',
+                            'detail',
+                            'brand',
+                            'sub_brand',
+                            'line',
+                            'l_id',
+                            'l_id',
+                        ]
+                    );
+                },
             ],
         ];
     }
@@ -130,6 +170,49 @@ class PodruzkaProductController extends Controller
             'condition' => $condition,
         ]);
     }
+
+    /**
+     * Lists all PodruzkaProduct models.
+     * @return mixed
+     */
+    public function actionMatchings()
+    {
+        $searchModel = new PodruzkaProductSearch();
+        $condition = [];
+        if (isset(Yii::$app->request->queryParams['PodruzkaProductSearch'])) {
+            $params = Yii::$app->request->queryParams['PodruzkaProductSearch'];
+
+            if ($params['group']) {
+                $condition['group'] = $params['group'];
+            }
+            if ($params['category']) {
+                $condition['category'] = $params['category'];
+            }
+            if ($params['sub_category']) {
+                $condition['sub_category'] = $params['sub_category'];
+            }
+            if ($params['detail']) {
+                $condition['detail'] = $params['detail'];
+            }
+            if ($params['brand']) {
+                $condition['brand'] = $params['brand'];
+            }
+            if ($params['sub_brand']) {
+                $condition['sub_brand'] = $params['sub_brand'];
+            }
+            if ($params['line']) {
+                $condition['line'] = $params['line'];
+            }
+        }
+        $dataProvider = $searchModel->searchMatching(Yii::$app->request->queryParams);
+
+        return $this->render('matchings', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'condition' => $condition,
+        ]);
+    }
+
     /**
      * Displays a single PodruzkaProduct model.
      * @param integer $id

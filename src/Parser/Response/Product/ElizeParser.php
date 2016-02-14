@@ -346,9 +346,9 @@ class ElizeParser implements ParserInterface
             $oldPrice = str_replace('*', '', $oldPrice);
             $oldPrice = str_replace('\r', '', $oldPrice);
             $oldPrice = str_replace('\n', '', $oldPrice);
-            if (empty($oldPrice)) {
+            /*if (empty($oldPrice)) {
                 $oldPrice = $newPrice;
-            }
+            }*/
             return [
                 'oldPrice' => $oldPrice,
                 'newPrice' => $newPrice,

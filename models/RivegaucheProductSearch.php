@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\RivegaucheProduct;
+use yii\data\SqlDataProvider;
 
 /**
  * RivegaucheProductSearch represents the model behind the search form about `app\models\RivegaucheProduct`.
@@ -173,6 +174,24 @@ class RivegaucheProductSearch extends RivegaucheProduct
             ->andFilterWhere(['like', 'blue_price', $this->blue_price])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'image_link', $this->image_link]);
+        return $dataProvider;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatistics()
+    {
+        $sql = "SELECT count(id) as counts, DATE_FORMAT(created_at,  \"%Y-%m-%d\") as dates from rivegauche_product GROUP BY DATE_FORMAT(created_at,  \"%Y-%m-%d\") ";
+        $totalCount = \Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) as a")->queryScalar();
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => $sql . ' ORDER BY created_at desc',
+            'totalCount' => (int)$totalCount,
+            'pagination' => [
+                'pageSize' => 4,
+            ],
+        ]);
         return $dataProvider;
     }
 }

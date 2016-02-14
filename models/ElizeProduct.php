@@ -236,4 +236,19 @@ class ElizeProduct extends \yii\db\ActiveRecord
 
         return $result->orderBy('brand')->all();
     }
+
+    /**
+     * @return array
+     */
+    public static function getStatistic()
+    {
+        $rows = (new \yii\db\Query())
+            ->select(['count(id) as counts', 'DATE_FORMAT(created_at,  "%Y-%m-%d") as dates'])
+            ->from('elize_product')
+            ->groupBy(['DATE_FORMAT(created_at,  "%Y-%m-%d")'])
+            ->orderBy('created_at')
+            ->all();
+
+        return $rows;
+    }
 }

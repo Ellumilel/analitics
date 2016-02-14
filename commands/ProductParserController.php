@@ -125,7 +125,7 @@ class ProductParserController extends Controller
 
                     foreach ($result as $res) {
                         if ($res instanceof Response) {
-                            if (empty($res->getNewPrice()) || empty($res->getTitle())) {
+                            if (empty($res->getTitle())) {
                                 \Yii::error(
                                     sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                                     'cron'
@@ -340,25 +340,17 @@ class ProductParserController extends Controller
             $product = new ElizeProduct();
         }
         $product->attributes = $result->toArray();
-        $product->new_price = $result->getNewPrice();
-        $product->old_price = $result->getPrice();
+        $product->new_price = !empty($result->getNewPrice()) ? $result->getNewPrice() : null;
+        $product->old_price = !empty($result->getPrice()) ? $result->getPrice() : null;
 
         try {
             $ePrice = new ElizePrice();
             $ePrice->article = $result->getArticle();
-
-            if ($result->getPrice()) {
-                $ePrice->old_price = $result->getPrice();
-            }
-
-            if ($result->getNewPrice()) {
-                $ePrice->new_price = $result->getNewPrice();
-            }
+            $ePrice->old_price = $product->old_price;
+            $ePrice->new_price = $product->new_price;
 
             if ($product->save()) {
-                if (!empty($ePrice->new_price) || !empty($ePrice->new_price)) {
                     $ePrice->save();
-                }
             } else {
                 \Yii::error(
                     sprintf(
