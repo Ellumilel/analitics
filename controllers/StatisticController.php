@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ElizeProductSearch;
 use app\models\IledebeauteProduct;
 use app\models\IledebeauteProductSearch;
 use app\models\LetualProduct;
@@ -57,7 +58,9 @@ class StatisticController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $dataProvider = RivegaucheProductSearch::getStatistics();
+
+        return $this->render('index', ['listDataProvider' => $dataProvider]);
     }
 
     /**

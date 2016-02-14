@@ -83,4 +83,21 @@ class ElizeProductSearch extends ElizeProduct
 
         return $dataProvider;
     }
+
+    /**
+     * @return array
+     */
+    public static function getStatistics()
+    {
+        $query = ElizeProduct::find();
+        $query->select(['count(id) as counts', 'DATE_FORMAT(created_at,  "%Y-%m-%d") as dates']);
+        $query->groupBy(['DATE_FORMAT(created_at,  "%Y-%m-%d")']);
+        $query->orderBy('created_at');
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 50],
+        ]);
+
+        return $dataProvider;
+    }
 }
