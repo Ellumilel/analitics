@@ -189,7 +189,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
             'sql' => $sql . ' ORDER BY created_at desc',
             'totalCount' => (int)$totalCount,
             'pagination' => [
-                'pageSize' => 4,
+                'pageSize' => 8,
             ],
         ]);
         return $dataProvider;

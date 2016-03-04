@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ElizeProduct;
 use app\models\ElizeProductSearch;
 use app\models\IledebeauteProduct;
 use app\models\IledebeauteProductSearch;
@@ -58,9 +59,20 @@ class StatisticController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = RivegaucheProductSearch::getStatistics();
+        $rivegaucheDataProvider = RivegaucheProductSearch::getStatistics();
+        $iledebeauteDataProvider = IledebeauteProductSearch::getStatistics();
+        $letualDataProvider = LetualProductSearch::getStatistics();
+        $elizeDataProvider = ElizeProductSearch::getNewStatistics();
 
-        return $this->render('index', ['listDataProvider' => $dataProvider]);
+        return $this->render(
+            'index',
+            [
+                'rivegaucheDataProvider' => $rivegaucheDataProvider,
+                'iledebeauteDataProvider' => $iledebeauteDataProvider,
+                'letualDataProvider' => $letualDataProvider,
+                'elizeDataProvider' => $elizeDataProvider,
+            ]
+        );
     }
 
     /**
@@ -133,6 +145,7 @@ class StatisticController extends Controller
 
     public function actionNewProduct()
     {
+
         // параметры по умолчанию
         $params = Yii::$app->request->queryParams;
         $condition = [];
@@ -177,6 +190,18 @@ class StatisticController extends Controller
                     $price = ['new_price', 'old_price'];
                     $model = new LetualProduct();
                     $partner = 'Летуаль';
+                    break;
+                case 'eli':
+                    $searchModel = new ElizeProductSearch();
+                    if (!empty($params['ElizeProductSearch'])) {
+                        $condition = $params['ElizeProductSearch'];
+                    }
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['new_price', 'old_price'];
+                    $model = new ElizeProduct();
+                    $partner = 'Элизэ';
                     break;
             }
         }
