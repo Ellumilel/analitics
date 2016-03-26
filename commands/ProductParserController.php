@@ -13,6 +13,7 @@ use app\models\RivegauchePrice;
 use app\models\RivegaucheProduct;
 use app\src\Parser\ParserService;
 use app\src\Parser\Response\Response;
+use Faker\Provider\DateTime;
 use yii\console\Controller;
 use Goutte\Client;
 
@@ -63,6 +64,7 @@ class ProductParserController extends Controller
                     foreach ($result as $res) {
                         if ($res instanceof Response) {
                             if (empty($res->getPrice()) || empty($res->getTitle())) {
+                                $this->setDeleted($res, new LetualProduct);
                                 \Yii::error(
                                     sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                                     'cron'
@@ -100,11 +102,8 @@ class ProductParserController extends Controller
         $entity = new ElizeLink();
         do {
             $links = $entity->getLinks($offset, 20);
-
             if (!empty($links) && $offset < $total) {
                 foreach ($links as $link) {
-                    \Yii::info(sprintf('Обработка: %s ', $link->link), 'cron');
-
                     $crawler = $this->getData($link->link);
                     if (!$crawler) {
                         \Yii::error(
@@ -126,6 +125,7 @@ class ProductParserController extends Controller
                     foreach ($result as $res) {
                         if ($res instanceof Response) {
                             if (empty($res->getTitle())) {
+                                $this->setDeleted($res, new ElizeProduct);
                                 \Yii::error(
                                     sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                                     'cron'
@@ -181,6 +181,7 @@ class ProductParserController extends Controller
                     $result = $service->productParse($crawler, ParserService::RIV, $attributes);
 
                     if (empty($result->getPrice()) || empty($result->getTitle())) {
+                        $this->setDeleted($result, new RivegaucheProduct);
                         \Yii::error(
                             sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
                             'cron'
@@ -202,7 +203,12 @@ class ProductParserController extends Controller
                         if ($crawler) {
                             $service = new ParserService();
                             $result = $service->productParse($crawler, ParserService::RIV, $attributes);
-                            $this->saveResult($result);
+
+                            if (empty($result->getPrice()) || empty($result->getTitle())) {
+                                $this->setDeleted($result, new RivegaucheProduct);
+                            } else {
+                                $this->saveResult($result);
+                            }
                         }
                     }
                     unset($node);
@@ -248,7 +254,7 @@ class ProductParserController extends Controller
             if ($result->getPrice()) {
                 $rPrice->price = $result->getPrice();
             }
-
+            $product->deleted_at = '0000-00-00 00:00:00';
             if ($product->save()) {
                 if (!empty($rPrice->price) || !empty($rPrice->blue_price) || !empty($rPrice->gold_price)) {
                     $rPrice->save();
@@ -302,6 +308,8 @@ class ProductParserController extends Controller
                 $lPrice->new_price = $result->getNewPrice();
             }
 
+            $product->deleted_at = '0000-00-00 00:00:00';
+
             if ($product->save()) {
                 if (!empty($lPrice->new_price) || !empty($lPrice->new_price)) {
                     $lPrice->save();
@@ -342,7 +350,7 @@ class ProductParserController extends Controller
         $product->attributes = $result->toArray();
         $product->new_price = !empty($result->getNewPrice()) ? $result->getNewPrice() : null;
         $product->old_price = !empty($result->getPrice()) ? $result->getPrice() : null;
-
+        $product->deleted_at = '0000-00-00 00:00:00';
         try {
             $ePrice = new ElizePrice();
             $ePrice->article = $result->getArticle();
@@ -399,5 +407,23 @@ class ProductParserController extends Controller
         }
 
         return $crawler;
+    }
+
+    /**
+     * @param Response $result
+     * @param \yii\db\ActiveRecord $entity
+     */
+    private function setDeleted(Response $result, \yii\db\ActiveRecord $entity)
+    {
+        $product = $entity::findOne(['article' => $result->getArticle()]);
+
+        if (!$product) {
+            return;
+        } else {
+            $product->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
+            $product->save();
+        }
+
+        return;
     }
 }

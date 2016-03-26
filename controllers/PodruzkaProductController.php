@@ -322,7 +322,7 @@ class PodruzkaProductController extends Controller
                     $pp->i_id = null;
                 }
 
-                if (!empty($_POST['i_id'])) {
+                if (!empty($_POST['e_id'])) {
                     if ($ep = ElizeProduct::find()->where(['article' => $_POST['e_id']])->one()) {
                         $pp->e_id = $ep->id;
                     }
