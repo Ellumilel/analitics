@@ -1,5 +1,4 @@
 <?php
-
 use yii\widgets\Pjax;
 use yii\grid\GridView;
 use app\helpers\TextHelper;
@@ -12,6 +11,7 @@ use yii\helpers\ArrayHelper;
 
 $this->title = 'Статистика сбора данных по новинкам: '. $partner;
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="box-body">
     <a href="<?= \Yii::$app->getUrlManager()->createUrl(['/statistic/index']); ?>">

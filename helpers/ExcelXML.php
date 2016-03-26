@@ -14,17 +14,24 @@ use yii\helpers\Url;
 class ExcelXML
 {
     var $xml_data;
-    var $nl;
-    var $tab;
-    var $cols;
-    var $rows;
-    var $worksheets;
-    var $counters;
-    var $xml;
+    private $nl;
+    private $tab;
+    private $cols;
+    private $rows;
+    private $worksheets;
+    private $counters;
+    private $xml;
+
+    /** @var array */
+    private $styles = [];
+    /** @var bool */
+    public $debug = false;
+
     /**
      * Constructor
      */
-    public function __construct(){
+    public function __construct()
+    {
         $this->column_width = 150;
         $this->debug        = false;
         $this->cols         = array();
@@ -35,23 +42,26 @@ class ExcelXML
         $this->nl           = "\n";
         $this->tab          = "\t";
     }
+
     /**
      * Set debug
      */
-    function debug() {
+    public function debug()
+    {
         $this->debug = true;
     }
     /**
      * Generate xml
      * @returns string
      */
-    function generate() {
+    public function generate()
+    {
         // Create header
-        $xml = $this->create_header().$this->nl;
+        $xml = $this->createHeader().$this->nl;
         // Put all worksheets
         $xml .= join('', $this->worksheets).$this->nl;
         // Finish with a footer
-        $xml .= $this->create_footer();
+        $xml .= $this->createFooter();
         $this->xml = $xml;
         return $this->xml;
     }
@@ -60,9 +70,10 @@ class ExcelXML
      * Uppon creating a worksheet, delete counters
      * @param string $worksheet_name: name of the worksheet
      */
-    function create_worksheet($worksheet_name) {
+    public function createWorksheet($worksheet_name)
+    {
         $worksheet = '<Worksheet ss:Name="'.$worksheet_name.'">';
-        $worksheet .= $this->create_table();
+        $worksheet .= $this->createTable();
         $worksheet .= '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
         <ProtectObjects>False</ProtectObjects>
         <ProtectScenarios>False</ProtectScenarios>
@@ -79,11 +90,19 @@ class ExcelXML
      * Create table
      * @returns string
      */
-    function create_table() {
+    public function createTable()
+    {
         // Create rows with the method that automaticaly sets counters for number of columns and rows
-        $rows = $this->create_rows();
+        $rows = $this->createRows();
         // Table header
-        $table = '<Table ss:ExpandedColumnCount="'.$this->counters['cols'].'" ss:ExpandedRowCount="'.$this->counters['rows'].'" x:FullColumns="1" x:FullRows="1">'.$this->nl;
+        $table = sprintf(
+            '<Table ss:ExpandedColumnCount="%s" ss:ExpandedRowCount="%s" x:FullColumns="1" x:FullRows="1">%s',
+            $this->counters['cols'],
+            $this->counters['rows'],
+            $this->nl
+        );
+        //$table = '<Table ss:ExpandedColumnCount="'.$this->counters['cols'].'" ss:ExpandedRowCount="'.
+        //$this->counters['rows'].'" x:FullColumns="1" x:FullRows="1">'.$this->nl;
         // Columns data (width mainly)
         for ($i = 1; $i <= $this->counters['cols']; $i++) {
             $table .= '<Column ss:Index="'.$i.'" ss:Width="'.$this->column_width.'" />'.$this->nl;
@@ -99,7 +118,8 @@ class ExcelXML
      * @param mixed $array: array with row cells
      * @param mixed $style: default null, if set, adds style to the array
      */
-    function add_row($array, $style = null) {
+    public function addRow($array, $style = null)
+    {
         if (!is_array($array)) {
             // Asume the delimiter is , or ;
             $array = str_replace(',', ';', $array);
@@ -111,17 +131,20 @@ class ExcelXML
         }
         $this->row_array[] = $array;
     }
+
     /**
      * Create rows
-     * @returns array
+     *
+     * @return array|void
      */
-    function create_rows() {
+    public function createRows()
+    {
         $row_array = $this->row_array;
         if (!is_array($row_array)) {
             return;
         }
         $cnt = 0;
-        $row_cell = array();
+        $row_cell = [];
         foreach ($row_array as $row_data) {
             $cnt++;
             // See if there are styles attached
@@ -136,7 +159,7 @@ class ExcelXML
             $cell_cnt = 0;
             foreach ($row_data as $key => $cell_data) {
                 $cell_cnt++;
-                $cells .= $this->nl.$this->prepare_cell($cell_data, $style);
+                $cells .= $this->nl.$this->prepareCell($cell_data, $style);
             }
             // Store the number of cells in row
             $row_cell[$cnt][] = $cell_cnt;
@@ -147,12 +170,17 @@ class ExcelXML
         $this->counters['cols'] = $max_cells[0];
         return $this->rows;
     }
+
     /**
      * Prepare cell
+     *
      * @param string $cell_data: string for a row cell
-     * @returns string
+     * @param null $style
+     *
+     * @return string
      */
-    function prepare_cell($cell_data, $style = null) {
+    public function prepareCell($cell_data, $style = null)
+    {
         $type = null;
         if (gettype($cell_data) == 'double') {
             $type = 'Number';
@@ -181,18 +209,22 @@ class ExcelXML
         if ($type == 'Number') {
             return '<Cell ss:StyleID="s66"'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
         } else {
-            if (!empty($str) && substr($str, 0, 7) == 'http://') {
+            if (!empty($str) && (substr($str, 0, 7) == 'http://' || substr($str, 0, 8) == 'https://')) {
+                $str = urldecode(iconv("utf-8", "windows-1251", $str));
                 return '<Cell ss:HRef="'.$str.'"'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
             } else {
                 return '<Cell'.$style.$merge.'><Data ss:Type="'.$type.'">'.$str.'</Data></Cell>';
             }
         }
     }
+
     /**
      * Create header
+     *
      * @returns string
      */
-    function create_header() {
+    public function createHeader()
+    {
         if (is_array($this->styles)) {
             $styles = join('', $this->styles);
         }
@@ -237,12 +269,17 @@ xmlns:html="http://www.w3.org/TR/REC-html40">
 EOF;
         return $header;
     }
+
     /**
      * Add style to the header
      * @param string $style_id: id of the style the cells will reference to
      * @param array $parameters: array with parameters
      */
-    function add_style($style_id, $parameters) {
+    public function addStyle($style_id, $parameters)
+    {
+        $interior = '';
+        $font = '';
+
         foreach ($parameters as $param => $data) {
             switch ($param) {
                 case 'size':
@@ -269,36 +306,41 @@ EOF;
                     break;
             }
         }
-        if (is_array($interior)) {
+
+        if (!empty($interior) && is_array($interior)) {
             $interiors = '';
             foreach ($interior as $param => $value) {
                 $interiors .= ' '.$param.'="'.$value.'"';
             }
             $interior = '<Interior ss:Pattern="Solid"'.$interiors.' />'.$this->nl;
         }
-        if (is_array($font)) {
+
+        if (!empty($font) && is_array($font)) {
             $fonts = '';
             foreach ($font as $param => $value) {
                 $fonts .= ' '.$param.'="'.$value.'"';
             }
             $font = '<Font'.$fonts.' />'.$this->nl;
         }
-        $this->styles[] = '
-        <Style ss:ID="'.$style_id.'">
-            '.$interior.$font.'
-        </Style>';
+
+        $this->styles[] = sprintf('<Style ss:ID="%s">%s%S</Style>', $style_id, $interior, $font);
     }
     /**
      * Create footer
      * @returns string
      */
-    function create_footer() {
+    public function createFooter()
+    {
         return '</Workbook>';
     }
+
     /**
      * Output as download
+     *
+     * @param $filename
      */
-    function download($filename) {
+    public function download($filename)
+    {
         if (!strlen($this->xml)) {
             $this->generate();
         }
@@ -315,6 +357,12 @@ EOF;
         print $this->xml;
         exit;
     }
+
+    /**
+     * @param $filename
+     *
+     * @throws Exception
+     */
     public function sendWorkbook($filename)
     {
         if (!preg_match('/\.(xml|xls)$/', $filename)):

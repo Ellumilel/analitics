@@ -4,174 +4,61 @@
 /* @var $searchModel app\models\PodruzkaProductSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $product array */
+/* @var $rivegaucheDataProvider \app\models\RivegaucheProductSearch */
+/* @var $iledebeauteDataProvider \app\models\IledebeauteProductSearch */
+/* @var $letualDataProvider \app\models\LetualProductSearch */
+/* @var $elizeDataProvider \app\models\ElizeProductSearch */
 
 $this->title = 'Статистика сбора данных по новинкам';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <div class="row">
-    <div class="col-md-4">
-        <div class="box box-solid box-info">
+    <div class="col-md-2">
+        <div class="box box-solid box-primary">
             <div class="box-header">
-                <h3 class="box-title">Иль де боте всего: <?= (new \app\models\IledebeauteProduct)->find()->count() ?>
-                    <?php
-                    /* echo \yii\helpers\Html::a('Выгрузить в excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-                         'title' => Yii::t('yii', 'Загрузить'),
-                         'onclick'=>"
-                          $.ajax({
-                             type     :'POST',
-                             cache    : false,
-                             url  : '".\Yii::$app->getUrlManager()->createUrl(['upload/cmd'])."',
-                             success  : function(response) {
-
-                             }
-                         });return false;",
-                                         ]);
-                    */
-                    ?>
+                <h3 class="box-title">РивГош всего: <?= (new \app\models\RivegaucheProduct)->find()->count() ?>
                 </h3>
+                <a title="Выгрузка таблицы сбора"
+                   href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'rive']); ?>"
+                   class="btn btn-sm btn-default btn-flat pull-right"><i class="fa fa-download"></i></a>
             </div><!-- /.box-header -->
             <div class="box-body">
+                <?php \yii\widgets\Pjax::begin(['id' => 'riv_list_wrapper']) ?>
                 <?=
-                \yii\widgets\ListView::widget([
-                    'dataProvider' => $listDataProvider,
-                    'options' => [
-                        'tag' => 'div',
-                        'class' => 'list-wrapper',
-                        'id' => 'list-wrapper',
-                    ],
-                    'layout' => "{items}\n{summary}\n{pager}",
-                    'itemView' => function ($model, $key, $index, $widget) {
-                        return $this->render('_list_item', ['model' => $model]);
-                    },
-                    'itemOptions' => [
-                        'tag' => false,
-                    ],
-                    'pager' => [
-                        'nextPageLabel' => 'next',
-                        'prevPageLabel' => 'previous',
-                        'maxButtonCount' => 3,
-                    ],
-                ]);
+                \yii\widgets\ListView::widget(
+                    [
+                        'dataProvider' => $rivegaucheDataProvider,
+                        'options' => [
+                            'tag' => 'div',
+                            'class' => 'riv-list-wrapper',
+                            'id' => 'riv-list-wrapper',
+                        ],
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'itemView' => function ($model, $key, $index, $widget) {
+                            return $this->render('_list_item', ['model' => $model, 'link' => 'riv']);
+                        },
+                        'itemOptions' => [
+                            'tag' => false,
+                        ],
+                        'pager' => [
+                            'nextPageLabel' => 'вперед',
+                            'prevPageLabel' => 'назад',
+                            'maxButtonCount' => 4,
+                        ],
+                    ]
+                );
                 ?>
+                <?php \yii\widgets\Pjax::end() ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
-        <?php
-        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-            'title' => Yii::t('yii', 'Загрузить'),
-            'id' => 'download',
-            'class' => 'btn btn-primary',
-            'onclick'=>"
-              $.ajax({
-                 type :'POST',
-                 cache : false,
-                 data : {'letual':'123'},
-                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
-                 beforeSend: function(){
-                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
-                    \$('#download').attr('disabled', 'disabled');
-                 },
-                 success  : function(response) {
-                    $(\"#analytic_link\").html(response);
-                    \$('#download').attr('disabled', '');
-                 }
-             });return false;",
-        ]);
-        */
-        ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="box box-solid box-info">
+    <div class="col-md-2">
+        <div class="box box-solid box-primary">
             <div class="box-header">
+                <a title="Выгрузка таблицы сбора"
+                   href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'ile']); ?>"
+                   class="btn btn-sm btn-default btn-flat pull-right"><i class="fa fa-download"></i></a>
                 <h3 class="box-title">Иль де боте всего: <?= (new \app\models\IledebeauteProduct)->find()->count() ?>
-                    <?php
-                   /* echo \yii\helpers\Html::a('Выгрузить в excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-                        'title' => Yii::t('yii', 'Загрузить'),
-                        'onclick'=>"
-                         $.ajax({
-                            type     :'POST',
-                            cache    : false,
-                            url  : '".\Yii::$app->getUrlManager()->createUrl(['upload/cmd'])."',
-                            success  : function(response) {
-
-                            }
-                        });return false;",
-                                        ]);
-                   */
-                    ?>
-                </h3>
-            </div><!-- /.box-header -->
-            <div class="box-body">
-                <?php
-                    $model = \app\models\IledebeauteProduct::getStatistic();
-                ?>
-                <?php $countLast = (new \app\models\IledebeauteProduct)->find()->count(); ?>
-                <?php foreach ($model as $row): ?>
-                    <?php $countNew = $row['counts']; ?>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="description-block border-right">
-                            <?php if($countLast == 0): ?>
-                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <?php else: ?>
-                                <?php if($countNew * 100 / $countLast > 0): ?>
-                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php elseif($countNew * 100 / $countLast < 0): ?>
-                                    <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php else: ?>
-                                    <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <h5 class="description-header">
-                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
-                                        ['statistic/new-product', 'partner'=>'ile', 'date' => $row['dates']]
-                                ); ?>">
-                                    <?=$row['counts']?>
-                                </a>
-                            </h5>
-                            <span class="description-text"><?= $row['dates'] ?></span>
-                        </div><!-- /.description-block -->
-                    </div>
-                <?php endforeach; ?>
-            </div><!-- /.box-body -->
-        </div><!-- /.box -->
-    </div>
-    <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
-        <?php
-        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-            'title' => Yii::t('yii', 'Загрузить'),
-            'id' => 'download',
-            'class' => 'btn btn-primary',
-            'onclick'=>"
-              $.ajax({
-                 type :'POST',
-                 cache : false,
-                 data : {'letual':'123'},
-                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
-                 beforeSend: function(){
-                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
-                    \$('#download').attr('disabled', 'disabled');
-                 },
-                 success  : function(response) {
-                    $(\"#analytic_link\").html(response);
-                    \$('#download').attr('disabled', '');
-                 }
-             });return false;",
-        ]);
-        */
-        ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="box box-solid box-info">
-            <div class="box-header">
-                <h3 class="box-title">Элизэ всего: <?= (new \app\models\ElizeProduct)->find()->count() ?>
                     <?php
                     /* echo \yii\helpers\Html::a('Выгрузить в excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
                          'title' => Yii::t('yii', 'Загрузить'),
@@ -190,217 +77,112 @@ $this->params['breadcrumbs'][] = $this->title;
                 </h3>
             </div><!-- /.box-header -->
             <div class="box-body">
-                <?php
-                $model = \app\models\ElizeProduct::getStatistic();
+                <?php \yii\widgets\Pjax::begin(['id' => 'ile_list_wrapper']) ?>
+                <?=
+                \yii\widgets\ListView::widget(
+                    [
+                        'dataProvider' => $iledebeauteDataProvider,
+                        'options' => [
+                            'tag' => 'div',
+                            'class' => 'ile-list-wrapper',
+                            'id' => 'ile-list-wrapper',
+                        ],
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'itemView' => function ($model, $key, $index, $widget) {
+                            return $this->render('_list_item', ['model' => $model, 'link' => 'ile']);
+                        },
+                        'itemOptions' => [
+                            'tag' => false,
+                        ],
+                        'pager' => [
+                            'nextPageLabel' => 'вперед',
+                            'prevPageLabel' => 'назад',
+                            'maxButtonCount' => 4,
+                        ],
+                    ]
+                );
                 ?>
-                <?php $countLast = (new \app\models\ElizeProduct)->find()->count(); ?>
-                <?php foreach ($model as $row): ?>
-                    <?php $countNew = $row['counts']; ?>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="description-block border-right">
-                            <?php if($countLast == 0): ?>
-                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <?php else: ?>
-                                <?php if($countNew * 100 / $countLast > 0): ?>
-                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php elseif($countNew * 100 / $countLast < 0): ?>
-                                    <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php else: ?>
-                                    <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <h5 class="description-header">
-                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
-                                    ['statistic/new-product', 'partner'=>'eli', 'date' => $row['dates']]
-                                ); ?>">
-                                    <?=$row['counts']?>
-                                </a>
-                            </h5>
-                            <span class="description-text"><?= $row['dates'] ?></span>
-                        </div><!-- /.description-block -->
-                    </div>
-                <?php endforeach; ?>
+                <?php \yii\widgets\Pjax::end() ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'eli']); ?>" class="btn btn-primary" >
-            <i class="fa fa-download"></i> Выгрузка Элизэ
-        </a>
-        <?php
-        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-            'title' => Yii::t('yii', 'Загрузить'),
-            'id' => 'download',
-            'class' => 'btn btn-primary',
-            'onclick'=>"
-              $.ajax({
-                 type :'POST',
-                 cache : false,
-                 data : {'letual':'123'},
-                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
-                 beforeSend: function(){
-                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
-                    \$('#download').attr('disabled', 'disabled');
-                 },
-                 success  : function(response) {
-                    $(\"#analytic_link\").html(response);
-                    \$('#download').attr('disabled', '');
-                 }
-             });return false;",
-        ]);
-        */
-        ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="box box-solid box-info">
+    <div class="col-md-2">
+        <div class="box box-solid box-primary">
             <div class="box-header">
-                <h3 class="box-title">Рив Гош всего: <?= (new \app\models\RivegaucheProduct)->find()->count() ?> </h3>
+                <a title="Выгрузка таблицы сбора"
+                   href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'eli']); ?>"
+                   class="btn btn-sm btn-default btn-flat pull-right">
+                    <i class="fa fa-download"></i>
+                </a>
+                <h3 class="box-title">Элизэ всего: <?= (new \app\models\ElizeProduct)->find()->count() ?></h3>
             </div><!-- /.box-header -->
             <div class="box-body">
-                <?php
-                    $model = \app\models\RivegaucheProduct::getStatistic();
+                <?php \yii\widgets\Pjax::begin(['id' => 'eli_list_wrapper']) ?>
+                <?=
+                \yii\widgets\ListView::widget(
+                    [
+                        'dataProvider' => $elizeDataProvider,
+                        'options' => [
+                            'tag' => 'div',
+                            'class' => 'eli-list-wrapper',
+                            'id' => 'eli-list-wrapper',
+                        ],
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'itemView' => function ($model, $key, $index, $widget) {
+                            return $this->render('_list_item', ['model' => $model, 'link' => 'eli']);
+                        },
+                        'itemOptions' => [
+                            'tag' => false,
+                        ],
+                        'pager' => [
+                            'nextPageLabel' => 'вперед',
+                            'prevPageLabel' => 'назад',
+                            'maxButtonCount' => 4,
+                        ],
+                    ]
+                );
                 ?>
-                <?php $countLast = (new \app\models\RivegaucheProduct)->find()->count(); ?>
-                <?php foreach ($model as $row): ?>
-                    <?php $countNew = $row['counts']; ?>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="description-block border-right">
-                            <?php if($countLast == 0): ?>
-                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <?php else: ?>
-                                <?php if($countNew * 100 / $countLast > 0): ?>
-                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php elseif($countNew * 100 / $countLast < 0): ?>
-                                    <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php else: ?>
-                                    <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <h5 class="description-header">
-                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
-                                        ['statistic/new-product', 'partner'=>'riv', 'date' => $row['dates']]
-                                ); ?>">
-                                    <?=$row['counts']?>
-                                </a>
-                            </h5>
-                            <span class="description-text"><?=$row['dates']?></span>
-                        </div><!-- /.description-block -->
-                    </div>
-                <?php endforeach; ?>
+                <?php \yii\widgets\Pjax::end() ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'rive']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка РивГош</a>
-        <?php
-        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-            'title' => Yii::t('yii', 'Загрузить'),
-            'id' => 'download',
-            'class' => 'btn btn-primary',
-            'onclick'=>"
-              $.ajax({
-                 type :'POST',
-                 cache : false,
-                 data : {'letual':'123'},
-                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
-                 beforeSend: function(){
-                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
-                    \$('#download').attr('disabled', 'disabled');
-                 },
-                 success  : function(response) {
-                    $(\"#analytic_link\").html(response);
-                    \$('#download').attr('disabled', '');
-                 }
-             });return false;",
-        ]);
-        */
-        ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="box box-solid box-info">
+    <div class="col-md-2">
+        <div class="box box-solid box-primary">
             <div class="box-header">
+                <a title="Выгрузка таблицы сбора"
+                   href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'letual']); ?>"
+                   class="btn btn-sm btn-default btn-flat pull-right"><i class="fa fa-download"></i></a>
                 <h3 class="box-title">Летуаль всего: <?= (new \app\models\LetualProduct)->find()->count() ?></h3>
             </div><!-- /.box-header -->
             <div class="box-body">
-                <?php
-                $model = \app\models\LetualProduct::getStatistic();
-
-                /*echo \yii\widgets\DetailView::widget([
-                    'model' => $model,
-                    'attributes' => [
-                        [                      // the owner name of the model
-                            'label' => 'Количество позиций',
-                            'value' => $model['counts'],
+                <?php \yii\widgets\Pjax::begin(['id' => 'let_list_wrapper']) ?>
+                <?=
+                \yii\widgets\ListView::widget(
+                    [
+                        'dataProvider' => $letualDataProvider,
+                        'options' => [
+                            'tag' => 'div',
+                            'class' => 'let-list-wrapper',
+                            'id' => 'let-list-wrapper',
                         ],
-                        [                      // the owner name of the model
-                            'label' => 'Дата обновления',
-                            'value' => $model['dates'],
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'itemView' => function ($model, $key, $index, $widget) {
+                            return $this->render('_list_item', ['model' => $model, 'link' => 'let']);
+                        },
+                        'itemOptions' => [
+                            'tag' => false,
                         ],
-                        //'dates:datetime', // creation date formatted as datetime
-                    ],
-                ]);*/
+                        'pager' => [
+                            'nextPageLabel' => 'вперед',
+                            'prevPageLabel' => 'назад',
+                            'maxButtonCount' => 4,
+                        ],
+                    ]
+                );
                 ?>
-                <?php $countLast = (new \app\models\LetualProduct)->find()->count(); ?>
-                <?php foreach ($model as $row): ?>
-                    <?php $countNew = $row['counts']; ?>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="description-block border-right">
-                            <?php if($countLast == 0): ?>
-                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                            <?php else: ?>
-                                <?php if($countNew * 100 / $countLast > 0): ?>
-                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php elseif($countNew * 100 / $countLast < 0): ?>
-                                    <span class="description-percentage text-red"><i class="fa fa-caret-down"></i><?= round($countNew * 100 / $countLast, 2)?>%</span>
-                                <?php else: ?>
-                                    <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <h5 class="description-header">
-                                <a href="<?= \Yii::$app->getUrlManager()->createUrl(
-                                        ['statistic/new-product', 'partner'=>'let', 'date' => $row['dates']]
-                                ); ?>">
-                                    <?=$row['counts']?>
-                                </a>
-                            </h5>
-                            <span class="description-text"><?=$row['dates']?></span>
-                        </div><!-- /.description-block -->
-                    </div>
-                <?php endforeach; ?>
+                <?php \yii\widgets\Pjax::end() ?>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-
-    <div class="col-md-4">
-        <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'letual']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Летуаль</a>
-        <?php
-        /*echo \yii\helpers\Html::a('Выгрузить в Excel',\Yii::$app->getUrlManager()->createUrl(['upload/cmd']), [
-            'title' => Yii::t('yii', 'Загрузить'),
-            'id' => 'download',
-            'class' => 'btn btn-primary',
-            'onclick'=>"
-              $.ajax({
-                 type :'POST',
-                 cache : false,
-                 data : {'letual':'123'},
-                 url : '".\Yii::$app->getUrlManager()->createUrl(['download/download'])."',
-                 beforeSend: function(){
-                    \$('#analytic_link').html('<div id=\"pre_loader\"></div>');
-                    \$('#download').attr('disabled', 'disabled');
-                 },
-                 success  : function(response) {
-                    $(\"#analytic_link\").html(response);
-                    \$('#download').attr('disabled', '');
-                 }
-             });return false;",
-        ]);
-        */
-        ?>
-    </div>
 </div>
-
 
