@@ -43,7 +43,7 @@ class IledebeauteProductController extends Controller
 
                     //TODO Обработка
                     if (empty($head) || empty($body)) {
-                       //todo логирование
+                        //todo
                     } else {
                         $result = $head + $body;
                     }
@@ -604,7 +604,6 @@ class IledebeauteProductController extends Controller
     {
         foreach ($result['items'] as $item) {
             if (!empty($item['article'])) {
-
                 $product = IledebeauteProduct::findOne(['article' => $item['article']]);
                 if (!$product) {
                     $product = new IledebeauteProduct();
@@ -626,6 +625,7 @@ class IledebeauteProductController extends Controller
                 $product->sub_category = $link['sub_category'];
                 $product->image_link = $item['image'];
                 $product->description = $item['description'];
+                $product->deleted_at = '0000-00-00 00:00:00';
 
                 $price = new IledebeautePrice();
                 $price->article = $item['article'];
