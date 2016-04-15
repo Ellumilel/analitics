@@ -9,12 +9,12 @@ use yii\helpers\ArrayHelper;
 /* @var $product array */
 /* @var $partner string */
 
-$this->title = 'Статистика сбора данных по новинкам: '.$partner;
+$this->title = 'Статистика удаленных: '.$partner;
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="box-body">
-    <a href="<?= \Yii::$app->getUrlManager()->createUrl(['/statistic/index']); ?>">
+    <a href="<?= \Yii::$app->getUrlManager()->createUrl(['/statistic/index-deleted']); ?>">
         <button class="btn btn-default btn-xs"><i class="fa fa-share"></i> Назад к статистике</button>
     </a>
 </div>
