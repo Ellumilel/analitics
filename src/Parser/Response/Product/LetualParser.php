@@ -330,6 +330,11 @@ class LetualParser implements ParserInterface
                 /** @var Crawler $subsNode */
                 return $subsNode->text();
             });
+
+            $priceNoDiscount = $node->filter('p.price_no_discount')->each(function ($subsNode) {
+                /** @var Crawler $subsNode */
+                return $subsNode->text();
+            });
             $newPrice = $node->filter('p.new_price')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
                 return $subsNode->text();
@@ -346,6 +351,16 @@ class LetualParser implements ParserInterface
             $oldPrice = str_replace('*', '', $oldPrice);
             $oldPrice = str_replace('\r', '', $oldPrice);
             $oldPrice = str_replace('\n', '', $oldPrice);
+
+            if (empty($oldPrice)) {
+                $oldPrice = $priceNoDiscount;
+
+                $oldPrice = trim(reset($oldPrice));
+                $oldPrice = str_replace(' ', '', $oldPrice);
+                $oldPrice = str_replace('*', '', $oldPrice);
+                $oldPrice = str_replace('\r', '', $oldPrice);
+                $oldPrice = str_replace('\n', '', $oldPrice);
+            }
 
             return [
                 'oldPrice' => $oldPrice,

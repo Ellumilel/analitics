@@ -152,6 +152,48 @@ class RivegaucheProductSearch extends RivegaucheProduct
         return $dataProvider;
     }
 
+    /**
+     * @param $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchDeletedProduct($params)
+    {
+        $query = RivegaucheProduct::find();
+        // print_r($params);die;
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 50],
+        ]);
+        $this->load($params);
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
+        ]);
+
+        if (!empty($params['date'])) {
+            $query->where('DATE_FORMAT(deleted_at,  "%Y-%m-%d") = "'.$params['date'].'"');
+        }
+
+        $query->andFilterWhere(['like', 'article', $this->article])
+            ->andFilterWhere(['like', 'link', $this->link])
+            ->andFilterWhere(['like', 'group', $this->group])
+            ->andFilterWhere(['like', 'category', $this->category])
+            ->andFilterWhere(['like', 'sub_category', $this->sub_category])
+            ->andFilterWhere(['like', 'brand', $this->brand])
+            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'gold_price', $this->gold_price])
+            ->andFilterWhere(['like', 'blue_price', $this->blue_price])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'image_link', $this->image_link]);
+
+        return $dataProvider;
+    }
+
     public function searchEmptyBrand($params)
     {
         $query = RivegaucheProduct::find();
@@ -187,6 +229,24 @@ class RivegaucheProductSearch extends RivegaucheProduct
 
         $dataProvider = new SqlDataProvider([
             'sql' => $sql . ' ORDER BY created_at desc',
+            'totalCount' => (int)$totalCount,
+            'pagination' => [
+                'pageSize' => 8,
+            ],
+        ]);
+        return $dataProvider;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatisticsDeleted()
+    {
+        $sql = "SELECT count(id) as counts, DATE_FORMAT(deleted_at,  \"%Y-%m-%d\") as dates from rivegauche_product WHERE deleted_at > 0 GROUP BY DATE_FORMAT(deleted_at,  \"%Y-%m-%d\") ";
+        $totalCount = \Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) as a")->queryScalar();
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => $sql . ' ORDER BY deleted_at desc',
             'totalCount' => (int)$totalCount,
             'pagination' => [
                 'pageSize' => 8,

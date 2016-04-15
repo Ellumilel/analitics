@@ -27,7 +27,7 @@ use Goutte\Client;
 class ProductParserController extends Controller
 {
     /**
-     * Метод запускается по крон собирает данные по РивГош
+     * Метод запускается по крон собирает данные по Летуаль
      *
      * @param $offset
      * @param $total
@@ -86,6 +86,7 @@ class ProductParserController extends Controller
             }
         } while ($z > 0);
 
+        (new LetualProduct())->setDeleted();
         return 0;
     }
 
@@ -146,7 +147,7 @@ class ProductParserController extends Controller
                 $z = 0;
             }
         } while ($z > 0);
-
+        (new ElizeProduct())->setDeleted();
         return 0;
     }
 
@@ -394,6 +395,7 @@ class ProductParserController extends Controller
         //Использование Прокси пока отключено
         //$client->getClient()->setDefaultOption('config/curl/'.CURLOPT_PROXY, 'http://141.101.118.147:80');
         //Максимальное количество секунд выполнения запроса
+        $client->getClient()->setDefaultOption('verify', false);
         $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_TIMEOUT, 10);
         //Ожидание до подключения
         $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_CONNECTTIMEOUT, 15);

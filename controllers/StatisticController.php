@@ -39,6 +39,8 @@ class StatisticController extends Controller
                             'avg-matching',
                             'price-matching',
                             'new-product',
+                            'deleted-product',
+                            'index-deleted',
                         ],
                         'allow' => true,
                         'roles' => ['@'],
@@ -143,9 +145,11 @@ class StatisticController extends Controller
         );
     }
 
+    /**
+     * @return string
+     */
     public function actionNewProduct()
     {
-
         // параметры по умолчанию
         $params = Yii::$app->request->queryParams;
         $condition = [];
@@ -220,5 +224,107 @@ class StatisticController extends Controller
                 ]
             );
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function actionDeletedProduct()
+    {
+        // параметры по умолчанию
+        $params = Yii::$app->request->queryParams;
+        $condition = [];
+        $price = [];
+        $model = new LetualProduct();
+        $partner = '';
+
+        if (!empty($params['partner'])) {
+            switch ($params['partner']) {
+                case 'ile':
+                    $searchModel = new IledebeauteProductSearch();
+                    if (!empty($params['IledebeauteProductSearch'])) {
+                        $condition = $params['IledebeauteProductSearch'];
+                    }
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['new_price', 'old_price'];
+                    $model = new IledebeauteProduct();
+                    $partner = 'Иль Де Ботэ';
+                    break;
+                case 'riv':
+                    $searchModel = new RivegaucheProductSearch();
+                    if (!empty($params['RivegaucheProductSearch'])) {
+                        $condition = $params['RivegaucheProductSearch'];
+                    }
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['price', 'blue_price', 'gold_price'];
+                    $model = new RivegaucheProduct();
+                    $partner = 'РивГош';
+                    break;
+                case 'let':
+                    $searchModel = new LetualProductSearch();
+                    if (!empty($params['LetualProductSearch'])) {
+                        $condition = $params['LetualProductSearch'];
+                    }
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['new_price', 'old_price'];
+                    $model = new LetualProduct();
+                    $partner = 'Летуаль';
+                    break;
+                case 'eli':
+                    $searchModel = new ElizeProductSearch();
+                    if (!empty($params['ElizeProductSearch'])) {
+                        $condition = $params['ElizeProductSearch'];
+                    }
+                    if ($params['date']) {
+                        $condition['created_at'] = $params['date'];
+                    }
+                    $price = ['new_price', 'old_price'];
+                    $model = new ElizeProduct();
+                    $partner = 'Элизэ';
+                    break;
+            }
+        }
+        if (!empty($searchModel)) {
+            $dataProvider = $searchModel->searchDeletedProduct(Yii::$app->request->queryParams);
+
+            return $this->render(
+                'deleted_product',
+                [
+                    'model' => $model,
+                    'partner' => $partner,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'condition' => $condition,
+                    'price' => $price,
+                ]
+            );
+        }
+    }
+    
+    /**
+     * @return string
+     */
+    public function actionIndexDeleted()
+    {
+        $rivegaucheDataProvider = RivegaucheProductSearch::getStatisticsDeleted();
+        $iledebeauteDataProvider = IledebeauteProductSearch::getStatisticsDeleted();
+        $letualDataProvider = LetualProductSearch::getStatisticsDeleted();
+        $elizeDataProvider = ElizeProductSearch::getStatisticsDeleted();
+
+        return $this->render(
+            'index_deleted',
+            [
+                'rivegaucheDataProvider' => $rivegaucheDataProvider,
+                'iledebeauteDataProvider' => $iledebeauteDataProvider,
+                'letualDataProvider' => $letualDataProvider,
+                'elizeDataProvider' => $elizeDataProvider,
+            ]
+        );
     }
 }
