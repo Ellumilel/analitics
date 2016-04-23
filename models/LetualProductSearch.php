@@ -174,19 +174,27 @@ class LetualProductSearch extends LetualProduct
     }
 
     /**
-     * @return array
+     * @param bool $pagination
+     *
+     * @return SqlDataProvider
      */
-    public static function getStatistics()
+    public static function getStatistics($pagination = true)
     {
         $sql = "SELECT count(id) as counts, DATE_FORMAT(created_at,  \"%Y-%m-%d\") as dates from letual_product GROUP BY DATE_FORMAT(created_at,  \"%Y-%m-%d\") ";
         $totalCount = \Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) as a")->queryScalar();
 
+        if ($pagination) {
+            $paging = [
+                'pageSize' => 8,
+            ];
+        } else {
+            $paging = false;
+        }
+
         $dataProvider = new SqlDataProvider([
             'sql' => $sql . ' ORDER BY created_at desc',
             'totalCount' => (int)$totalCount,
-            'pagination' => [
-                'pageSize' => 8,
-            ],
+            'pagination' => $paging,
         ]);
         return $dataProvider;
     }

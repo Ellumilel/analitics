@@ -29,10 +29,11 @@
         "kartik-v/yii2-editable": "*",
         "kartik-v/yii2-widgets": "@dev",
         "PHPOffice/PHPExcel":"1.8.1",
-        "fxp/composer-asset-plugin":"~1.0.3",
+        "fxp/composer-asset-plugin":"^1.1",
         "perminder-klair/yii2-dropzone": "dev-master",
         "dmstr/yii2-adminlte-asset": "2.*",
-        "himiklab/yii2-jqgrid-widget" : "*"
+        "himiklab/yii2-jqgrid-widget" : "*",
+        "miloschuman/yii2-highcharts-widget": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
