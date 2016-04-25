@@ -254,4 +254,18 @@ class LetualProduct extends \yii\db\ActiveRecord
 
         return $result->orderBy('brand')->all();
     }
+
+    /**
+     * @return int
+     *
+     * @throws \yii\db\Exception
+     */
+    public function setDeleted()
+    {
+        $db = Yii::$app->getDb();
+        $sql = 'UPDATE letual_product, (SELECT DISTINCT DATE_FORMAT(updated_at,  "%Y-%m-%d") as date FROM letual_product ORDER BY updated_at desc limit 1) a
+                SET deleted_at = NOW()
+                WHERE updated_at < a.date and DATE_FORMAT(updated_at,  "%Y-%m-%d") = "0000-00-00";';
+        return $db->createCommand($sql)->execute();
+    }
 }

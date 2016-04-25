@@ -45,6 +45,11 @@ use yii\helpers\Html;
                                 'url' => ['/statistic/index']
                         ],
                         [
+                            'label' => 'Статистика удаленные',
+                            'icon' => 'fa fa-book text-aqua',
+                            'url' => ['/statistic/index-deleted']
+                        ],
+                        [
                                 'label' => 'Сопоставление',
                                 'icon' => 'fa fa-files-o text-aqua',
                                 'url' => ['/podruzka-product/matching']

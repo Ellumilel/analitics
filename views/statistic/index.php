@@ -13,7 +13,45 @@ $this->title = 'Статистика сбора данных по новинка
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
+        <div class="box box-solid box-primary">
+            <div class="box-header">
+                <a title="Выгрузка таблицы сбора"
+                   href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'letual']); ?>"
+                   class="btn btn-sm btn-default btn-flat pull-right"><i class="fa fa-download"></i></a>
+                <h3 class="box-title">Летуаль всего: <?= (new \app\models\LetualProduct)->find()->count() ?></h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <?php \yii\widgets\Pjax::begin(['id' => 'let_list_wrapper']) ?>
+                <?=
+                \yii\widgets\ListView::widget(
+                    [
+                        'dataProvider' => $letualDataProvider,
+                        'options' => [
+                            'tag' => 'div',
+                            'class' => 'let-list-wrapper',
+                            'id' => 'let-list-wrapper',
+                        ],
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'itemView' => function ($model, $key, $index, $widget) {
+                            return $this->render('_list_item', ['model' => $model, 'link' => 'let']);
+                        },
+                        'itemOptions' => [
+                            'tag' => false,
+                        ],
+                        'pager' => [
+                            'nextPageLabel' => 'вперед',
+                            'prevPageLabel' => 'назад',
+                            'maxButtonCount' => 4,
+                        ],
+                    ]
+                );
+                ?>
+                <?php \yii\widgets\Pjax::end() ?>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div>
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <h3 class="box-title">РивГош всего: <?= (new \app\models\RivegaucheProduct)->find()->count() ?>
@@ -52,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <a title="Выгрузка таблицы сбора"
@@ -106,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <a title="Выгрузка таблицы сбора"
@@ -130,44 +168,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         'layout' => "{items}\n{summary}\n{pager}",
                         'itemView' => function ($model, $key, $index, $widget) {
                             return $this->render('_list_item', ['model' => $model, 'link' => 'eli']);
-                        },
-                        'itemOptions' => [
-                            'tag' => false,
-                        ],
-                        'pager' => [
-                            'nextPageLabel' => 'вперед',
-                            'prevPageLabel' => 'назад',
-                            'maxButtonCount' => 4,
-                        ],
-                    ]
-                );
-                ?>
-                <?php \yii\widgets\Pjax::end() ?>
-            </div><!-- /.box-body -->
-        </div><!-- /.box -->
-    </div>
-    <div class="col-md-2">
-        <div class="box box-solid box-primary">
-            <div class="box-header">
-                <a title="Выгрузка таблицы сбора"
-                   href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'letual']); ?>"
-                   class="btn btn-sm btn-default btn-flat pull-right"><i class="fa fa-download"></i></a>
-                <h3 class="box-title">Летуаль всего: <?= (new \app\models\LetualProduct)->find()->count() ?></h3>
-            </div><!-- /.box-header -->
-            <div class="box-body">
-                <?php \yii\widgets\Pjax::begin(['id' => 'let_list_wrapper']) ?>
-                <?=
-                \yii\widgets\ListView::widget(
-                    [
-                        'dataProvider' => $letualDataProvider,
-                        'options' => [
-                            'tag' => 'div',
-                            'class' => 'let-list-wrapper',
-                            'id' => 'let-list-wrapper',
-                        ],
-                        'layout' => "{items}\n{summary}\n{pager}",
-                        'itemView' => function ($model, $key, $index, $widget) {
-                            return $this->render('_list_item', ['model' => $model, 'link' => 'let']);
                         },
                         'itemOptions' => [
                             'tag' => false,

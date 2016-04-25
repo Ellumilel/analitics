@@ -425,6 +425,7 @@ class RivegaucheParser implements ParserInterface
      */
     public function getPrice()
     {
+        //print_r(123);die;
         $price = $this->response->filter('div.es_product div.prod_add_to_cart')->each(function ($node) {
             /** @var Crawler $node */
             $goldPrice = $node->filter('span.gold_price')->each(function ($subNode) {
@@ -463,12 +464,48 @@ class RivegaucheParser implements ParserInterface
         if (empty($priceBase['price'])) {
             $price = $this->response->filter('div.es_product div.product-price')->each(function ($node) {
                 /** @var Crawler $node */
-                $price = str_replace('Цена:', '', $node->text());
-                $price = trim($price);
-                $price = $this->clearPrice($price);
+                $goldPrice = $node->filter('span.gold_price')->each(function ($subNode) {
+                    /** @var Crawler $subNode */
+                    return $this->clearPrice($subNode->text());
+                });
+                $bluePrice = $node->filter('span.blue_price')->each(function ($subNode) {
+                    /** @var Crawler $subNode */
+                    return $this->clearPrice($subNode->text());
+                });
+                $price = $node->filter('div.card-price span.price')->each(function ($subNode) {
+                    /** @var Crawler $subNode */
+                    return $this->clearPrice($subNode->text());
+                });
 
+                if (empty(reset($price))) {
+                    $price = $node->filter('span.price')->each(function ($subNode) {
+                        /** @var Crawler $subNode */
+                        return $this->clearPrice($subNode->text());
+                    });
+                }
+
+                if (empty(reset($price))) {
+                    /** @var Crawler $node */
+                    $price = str_replace('Цена:', '', $node->text());
+                    $price = trim($price);
+                    $price = $this->clearPrice($price);
+                }
+                if (empty(reset($price))) {
+                    $fixPrice = $node->filter('div.fix-price')->each(
+                        function ($subNode) {
+                            /** @var Crawler $subNode */
+                            return $this->clearPrice($subNode->text());
+                        }
+                    );
+                    $goldPrice = $node->filter('div.base-price')->each(function ($subNode) {
+                        /** @var Crawler $subNode */
+                        return $this->clearPrice($subNode->text());
+                    });
+                }
                 return [
-                    'price' => $price,
+                    'gold_price' => reset($goldPrice),
+                    'blue_price' => reset($bluePrice),
+                    'price' => (!empty(reset($price))) ? reset($price) : reset($fixPrice),
                 ];
             });
         }
