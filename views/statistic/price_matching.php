@@ -1,37 +1,144 @@
 <?php
 
-use yii\widgets\Pjax;
-use app\helpers\TextHelper;
-use yii\helpers\ArrayHelper;
-use kartik\grid\GridView;
-use app\models\PodruzkaProduct;
+    use yii\widgets\Pjax;
+    use app\helpers\TextHelper;
+    use yii\helpers\ArrayHelper;
+    use kartik\grid\GridView;
+    use app\models\PodruzkaProduct;
 
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\PodruzkaProductSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $product array */
+    /* @var $this yii\web\View */
+    /* @var $searchModel app\models\PodruzkaProductSearch */
+    /* @var $dataProvider yii\data\ActiveDataProvider */
+    /* @var $product array */
 
-$this->title = 'Сравнение цен по сопоставленным артикулам';
-$this->params['breadcrumbs'][] = $this->title;
+    $this->title = 'Сравнение цен по сопоставленным артикулам';
+    $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-md-4">
-        <div>
-            <ul>
-                <li><a href="#">Цена Подружки выше на <span class="pull text-red">   <i class="fa fa-angle-up"></i> 123</span></a>
-                </li>
-                <li><a href="#">Цена Подружки ниже на<span class="pull text-green">   <i class="fa fa-angle-down"></i> 123</span></a>
-                </li>
-                <li><a href="#">Цены одинаковые <span class="pull text-yellow">   <i
-                                class="fa fa-angle-left"></i> 0</span></a></li>
-            </ul>
+    <div class="col-md-5">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Фильтры</h3>
+            </div>
+            <div class="box-body table-responsive pad">
+                <table class="table table-bordered text-center">
+                    <tbody>
+                    <tr>
+                        <th></th>
+                        <th>Летуаль</th>
+                        <th>Элизе</th>
+                        <th>РивГош</th>
+                        <th>ИльДеБотте</th>
+                    </tr>
+                    <!-- Default -->
+                    <tr>
+                        <td>
+                            <div class="btn-group-vertical">
+                                Цена подружки
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="btn-group-vertical">
+                                Цена подружки
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="btn-group-vertical">
+                                Цены
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- /.success -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
         </div>
     </div>
 </div>
 <div class="podruzka-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <?= GridView::widget([
+    <?= GridView::widget(
+        [
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'resizableColumns' => true,
@@ -44,7 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $(this).addClass("success");
             } else {
                 $(this).removeClass("success");
-            }'
+            }',
                 ];
             },
             'columns' => [
@@ -69,15 +176,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'action' => \Yii::$app->getUrlManager()->createUrl(['podruzka-product/article-update']),
                             ],
                         ];
-                    }
+                    },
                 ],
                 'title',
                 [
                     'filterInputOptions' => ['placeholder' => ''],
                     'attribute' => 'arrival',
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ArrayHelper::map((new PodruzkaProduct)->getListArrival($condition), 'arrival',
-                        'arrival'),
+                    'filter' => ArrayHelper::map(
+                        (new PodruzkaProduct)->getListArrival($condition),
+                        'arrival',
+                        'arrival'
+                    ),
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true, 'width' => '90px'],
                     ],
@@ -87,8 +197,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterInputOptions' => ['placeholder' => ''],
                     'attribute' => 'category',
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ArrayHelper::map((new PodruzkaProduct)->getListCategory($condition, true), 'category',
-                        'category'),
+                    'filter' => ArrayHelper::map(
+                        (new PodruzkaProduct)->getListCategory($condition, true),
+                        'category',
+                        'category'
+                    ),
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true, 'width' => '190px'],
                     ],
@@ -98,8 +211,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterInputOptions' => ['placeholder' => ''],
                     'attribute' => 'brand',
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ArrayHelper::map((new PodruzkaProduct)->getListBrand($condition, true), 'brand',
-                        'brand'),
+                    'filter' => ArrayHelper::map(
+                        (new PodruzkaProduct)->getListBrand($condition, true),
+                        'brand',
+                        'brand'
+                    ),
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true, 'width' => '120px'],
                     ],
@@ -212,7 +328,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'neverTimeout' => true,
                 'beforeGrid' => 'My fancy content before.',
                 'afterGrid' => 'My fancy content after.',
-            ]
+            ],
         ]
     ); ?>
 </div>
