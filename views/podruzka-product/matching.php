@@ -12,6 +12,7 @@ use \app\helpers\TextHelper;
 
 $this->title = 'Сопоставление';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/matching']); ?>" class="btn btn-primary"><i
         class="fa fa-download"></i> Выгрузить в Excel</a>
@@ -33,18 +34,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'format' => 'raw',
-                'class' => 'kartik\grid\EditableColumn',
+                //'class' => 'kartik\grid\EditableColumn',
                 'attribute' => 'article',
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
                 'value' => function ($model, $key, $index, $widget) {
                     return $model->article;
                 },
-                'editableOptions' => function ($model, $key, $index) {
+                /*'editableOptions' => function ($model, $key, $index) {
                     return [
                         'header' => 'l_id',
-                        'size' => 'md',
+                        'size' => 'sm',
+                        'format' => 'link',
+                        'asPopover' => true,
+                        //'placement' => 'left',
                         'afterInput' => function ($form, $widget) use ($model, $index) {
                             return TextHelper::getArticleMatchingForm($model);
                         },
@@ -52,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'action' => \Yii::$app->getUrlManager()->createUrl(['podruzka-product/article-update']),
                         ],
                     ];
-                }
+                },*/
             ],
             'title',
             [
@@ -241,20 +245,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (!empty($data->l->description)) {
                         $text .= ' ' . $data->l->description;
                     }
-                    return $text;
-                },
-                'format' => 'raw',
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
-                ],
-            ],
-            [
-                'attribute' => 'l_link',
-                'value' => function ($data) {
-                    if (!empty($data->l->link)) {
-                        return '<a href="' . $data->l->link . '" target="_blank">ссылка</a>';
+
+                    if (!empty($data->l->link) && !empty($text)) {
+                        return '<a href="'.$data->l->link.'" target="_blank">'.$text.'</a>';
                     } else {
-                        return '';
+                        return $text;
                     }
                 },
                 'format' => 'raw',
@@ -272,20 +267,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (!empty($data->r->description)) {
                         $text .= ' ' . $data->r->description;
                     }
-                    return $text;
-                },
-                'format' => 'raw',
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
-                ],
-            ],
-            [
-                'attribute' => 'r_link',
-                'value' => function ($data) {
-                    if (!empty($data->r->link)) {
-                        return '<a href="' . $data->r->link . '" target="_blank">ссылка</a>';
+                    if (!empty($data->r->link) && !empty($text)) {
+                        return '<a href="'.$data->r->link.'" target="_blank">'.$text.'</a>';
                     } else {
-                        return '';
+                        return $text;
                     }
                 },
                 'format' => 'raw',
@@ -303,20 +288,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (!empty($data->i->description)) {
                         $text .= ' ' . $data->i->description;
                     }
-                    return $text;
-                },
-                'format' => 'raw',
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
-                ],
-            ],
-            [
-                'attribute' => 'r_link',
-                'value' => function ($data) {
-                    if (!empty($data->i->link)) {
-                        return '<a href="' . $data->i->link . '" target="_blank">ссылка</a>';
+
+                    if (!empty($data->i->link) && !empty($text)) {
+                        return '<a href="'.$data->i->link.'" target="_blank">'.$text.'</a>';
                     } else {
-                        return '';
+                        return $text;
                     }
                 },
                 'format' => 'raw',
@@ -325,6 +301,28 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
+                'attribute' => 'e_title',
+                'value' => function ($data) {
+                    $text = '';
+                    if (!empty($data->e->title)) {
+                        $text .= $data->e->title;
+                    }
+                    if (!empty($data->e->description)) {
+                        $text .= ' ' . $data->e->description;
+                    }
+
+                    if (!empty($data->e->link) && !empty($text)) {
+                        return '<a href="'.$data->e->link.'" target="_blank">'.$text.'</a>';
+                    } else {
+                        return $text;
+                    }
+                },
+                'format' => 'raw',
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                ],
+            ],
+            /*[
                 'attribute' => 'l_date',
                 'value' => function ($data) {
                     if (!empty($data->l->updated_at)) {
@@ -333,15 +331,27 @@ $this->params['breadcrumbs'][] = $this->title;
                         return null;
                     }
                 }
-            ],
+            ],*/
         ],
         'responsive' => true,
         'hover' => true,
         'pjax' => true,
+        'export'=>false,
+        'toolbar' => false,
+        'floatHeader' => true,
+        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+        'panel'=>[
+            'type'=>GridView::TYPE_PRIMARY,
+            'heading'=> 'Сопоставление',
+        ],
+        //'floatHeaderOptions' => ['scrollingTop' => '180'],
+        'floatOverflowContainer' => true,
+        'id' => 'matching',
         'pjaxSettings' => [
             'neverTimeout' => true,
-            //'beforeGrid' => 'My fancy content before.',
-            //e'afterGrid' => 'My fancy content after.',
+            'options'=>[
+                'id'=>'matching',
+            ]
         ]
     ]); ?>
 </div>

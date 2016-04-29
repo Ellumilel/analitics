@@ -1,26 +1,22 @@
 <?php
 
-    use yii\widgets\Pjax;
-    use app\helpers\TextHelper;
-    use yii\helpers\ArrayHelper;
-    use kartik\grid\GridView;
-    use app\models\PodruzkaProduct;
+use app\helpers\TextHelper;
+use yii\helpers\ArrayHelper;
+use kartik\grid\GridView;
+use app\models\PodruzkaProduct;
 
 
-    /* @var $this yii\web\View */
-    /* @var $searchModel app\models\PodruzkaProductSearch */
-    /* @var $dataProvider yii\data\ActiveDataProvider */
-    /* @var $product array */
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\PodruzkaProductSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $product array */
 
-    $this->title = 'Сравнение цен по сопоставленным артикулам';
-    $this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Сравнение цен по сопоставленным артикулам';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-3">
         <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">Фильтры</h3>
-            </div>
             <div class="box-body table-responsive pad">
                 <table class="table table-bordered text-center">
                     <tbody>
@@ -40,25 +36,25 @@
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
                                         class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
                                         class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
                                         class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше<span
+                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
                                         class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
                             </div>
                         </td>
@@ -71,25 +67,25 @@
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
                                         class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
                                         class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
                                         class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже<span
+                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
                                         class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
                             </div>
                         </td>
@@ -102,27 +98,27 @@
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
                                         class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
-                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
-
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
                                         class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
 
                             </div>
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">одинаковые<span
+                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
+                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
                                         class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
                             </div>
                         </td>
@@ -147,11 +143,11 @@
                 return [
                     'id' => $model['id'],
                     'onclick' => '
-            if ( !$(this).hasClass("success") ) {
-                $(this).addClass("success");
-            } else {
-                $(this).removeClass("success");
-            }',
+        if ( !$(this).hasClass("success") ) {
+            $(this).addClass("success");
+        } else {
+            $(this).removeClass("success");
+        }',
                 ];
             },
             'columns' => [
@@ -324,11 +320,27 @@
             'responsive' => true,
             'hover' => true,
             'pjax' => true,
+            'floatHeader' => true,
+            //'htmlOptions' => ['class' => 'table-matching'],
+            'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+            'panel'=>[
+                'type'=>GridView::TYPE_PRIMARY,
+                'heading'=> 'Сравнение цен по сопоставленным артикулам ',
+            ],
+            //'floatHeaderOptions' => ['scrollingTop' => '180'],
+            'floatOverflowContainer' => true,
+            'export'=>false,
+            'toolbar' => false,
+            'id' => 'price-matching',
             'pjaxSettings' => [
                 'neverTimeout' => true,
-                'beforeGrid' => 'My fancy content before.',
-                'afterGrid' => 'My fancy content after.',
+                'options'=>[
+                    'id'=>'price-matching',
+                ]
+            //'beforeGrid' => 'My fancy content before.',
+                //'afterGrid' => 'My fancy content after.',
             ],
         ]
-    ); ?>
+    );
+    ?>
 </div>

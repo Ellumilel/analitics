@@ -20,7 +20,7 @@ use \yii\helpers\ArrayHelper;
 use \app\models\PodruzkaProduct;
 use \kartik\grid\GridView;
 
-
+/*
 $columns = [
     [
         'format' => 'raw',
@@ -353,7 +353,7 @@ echo DynaGrid::widget([
     ],
     'options'=>['id'=>'dynagrid-1'] // a unique identifier is important
 ]);
-/*
+*/
 echo JqGridWidget::widget([
     'requestUrl' => Url::to('jqgrid'),
     'gridSettings' => [
@@ -418,5 +418,5 @@ echo JqGridWidget::widget([
     ],
     'enableFilterToolbar' => true,
     'enableColumnChooser' => true,
-]);*/
+]);
 ?>
