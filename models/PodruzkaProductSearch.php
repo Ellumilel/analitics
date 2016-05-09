@@ -27,6 +27,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
     public $i_desc;
     public $i_old_price;
     public $i_new_price;
+    public $e_title;
     public $e_old_price;
     public $e_new_price;
 
@@ -38,13 +39,12 @@ class PodruzkaProductSearch extends PodruzkaProduct
         return [
             [['id', 'i_id', 'r_id', 'l_id'], 'integer'],
             [['article', 'title', 'group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand',
-                'line', 'arrival', 'ile_id', 'rive_id', 'letu_id', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['price', 'ma_price'], 'number'],
-            [[
+                'line', 'arrival', 'ile_id', 'rive_id', 'letu_id', 'created_at', 'updated_at', 'deleted_at',
                 'l_title','l_article','l_desc','l_old_price','l_new_price',
                 'r_title','r_article','r_desc','r_price','r_blue_price','r_gold_price',
-                'i_title','i_article','i_desc','i_old_price','i_new_price','e_old_price','e_new_price',
+                'i_title','i_article','i_desc','i_old_price','i_new_price','e_title','e_old_price','e_new_price',
             ], 'safe'],
+            [['price', 'ma_price'], 'number'],
         ];
     }
 
@@ -206,6 +206,10 @@ class PodruzkaProductSearch extends PodruzkaProduct
             'asc' => ['iledebeaute_product.description' => SORT_ASC],
             'desc' => ['iledebeaute_product.description' => SORT_DESC],
         ];
+        $dataProvider->sort->attributes['e_title'] = [
+            'asc' => ['elize_product.title' => SORT_ASC],
+            'desc' => ['elize_product.title' => SORT_DESC],
+        ];
         $dataProvider->sort->attributes['e_old_price'] = [
             'asc' => ['elize_product.old_price' => SORT_ASC],
             'desc' => ['elize_product.old_price' => SORT_DESC],
@@ -243,6 +247,7 @@ class PodruzkaProductSearch extends PodruzkaProduct
             ->andFilterWhere(['like', 'iledebeaute_product.description', $this->i_desc])
             ->andFilterWhere(['like', 'iledebeaute_product.old_price', $this->i_old_price])
             ->andFilterWhere(['like', 'iledebeaute_product.new_price', $this->i_new_price])
+            ->andFilterWhere(['like', 'elize_product.title', $this->e_title])
             ->andFilterWhere(['like', 'elize_product.old_price', $this->e_old_price])
             ->andFilterWhere(['like', 'elize_product.new_price', $this->e_new_price])
             ->andWhere('l_id is not null or r_id is not null or i_id is not null or e_id is not null');
