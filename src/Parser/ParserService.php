@@ -107,7 +107,29 @@ class ParserService implements ConfigInterface
             return $parser->getResponse();
         }
     }
+    
+    /**
+     * @param Crawler $data
+     * @param string $partner
+     *
+     * @return Response\Response|null
+     */
+    public function checkProduct(Crawler $data, $partner)
+    {
+        $parser = null;
+        switch ($partner) {
+            case $this::RIV:
+                $parser = new RivegaucheParser($data, '', '', '', '', '');
+                break;
+        }
 
+        if (null === $parser && $parser instanceof ParserInterface) {
+            return null;
+        } else {
+            return $parser->getReason();
+        }
+    }
+    
     /**
      * @param string $url
      *

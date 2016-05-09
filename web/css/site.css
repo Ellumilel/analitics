@@ -111,3 +111,12 @@ a.desc:after {
     height:24px;
     background: url('../image/p_24.GIF') repeat-x scroll 0 0 transparent;
 }
+
+#price-matching-container
+{
+    min-height: 600px;
+}
+#matching-container
+{
+    min-height: 800px;
+}

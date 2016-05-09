@@ -3,10 +3,12 @@
         white-space: nowrap; /* Запрещаем перенос строк */
         overflow: hidden; /* Обрезаем все, что не помещается в область */
         max-width: 180px; /* Ширина*/
-        height: 50px; /* Высота/
-background: #fc0; /* Цвет фона */
+        height: 50px;
+        /* Высота/
+       background: #fc0; /* Цвет фона */
         text-overflow: ellipsis; /* Добавляем многоточие */
     }
+
     .size:hover {
         white-space: normal; /* Обычный перенос текста */
     }
@@ -20,7 +22,7 @@ use \yii\helpers\ArrayHelper;
 use \app\models\PodruzkaProduct;
 use \kartik\grid\GridView;
 
-
+/*
 $columns = [
     [
         'format' => 'raw',
@@ -353,70 +355,96 @@ echo DynaGrid::widget([
     ],
     'options'=>['id'=>'dynagrid-1'] // a unique identifier is important
 ]);
-/*
-echo JqGridWidget::widget([
-    'requestUrl' => Url::to('jqgrid'),
-    'gridSettings' => [
-        'colNames' => [
-            'article',
-            'title',
-            'arrival',
-            'group',
-            'category',
-            'sub_category',
-            'detail',
-            'brand',
-            'sub_brand',
-            'line',
-            'l_id',
-            'l_id',
-        ],
-        'colModel' => [
-            ['name' => 'article', 'index' => 'article', 'width' => 50, 'align' => "center"],
-            ['name' => 'title', 'index' => 'title', 'width' => 450],
-            [
-                'name' => 'arrival',
-                'index' => 'arrival',
-                'editable' => false,
-                'width' => 80,
-                "template" => "booleanCheckboxFa",
+*/
+echo JqGridWidget::widget(
+    [
+        'requestUrl' => Url::to('jqgrid'),
+        'gridSettings' => [
+            'colNames' => [
+                'Артикул',
+                'Наименование',
+                'Приход',
+                'Группа',
+                'Категория',
+                'Подкатегория',
+                'Детализация',
+                'Бренд',
+                'Подбренд',
+                'Линейка',
+                'Цена',
+                'МА цена',
+                'Наименование Летуаль',
+                'Артикул Летуаль',
+                'Описание Летуаль',
+                'Цена Летуаль',
+                'Новая цена Летуаль',
+                'l_id',
+                'e_id',
+                'r_id',
+                'i_id',
             ],
-            ['name' => 'group', 'index' => 'group', 'editable' => false, 'width' => 150],
-            ['name' => 'category', 'index' => 'category', 'editable' => false, 'width' => 150],
-            ['name' => 'sub_category', 'index' => 'sub_category', 'editable' => false, 'width' => 150],
-            ['name' => 'detail', 'index' => 'detail', 'editable' => false, 'width' => 150],
-            [
-                'name' => 'brand',
-                'index' => 'brand',
-                'editable' => false,
-                'width' => 150,
-                'stype' => 'select',
-                'searchoptions' => [
-                    'sopt' => ["eq", "ne"],
-                    'value'  => ":Любой;standard:standard;static:static;static-this-grid:static-this-grid"
-                ]
+            'colModel' => [
+                ['name' => 'article', 'index' => 'article', 'width' => 50, 'align' => "center"],
+                ['name' => 'title', 'index' => 'title', 'width' => 450],
+                [
+                    'name' => 'arrival',
+                    'index' => 'arrival',
+                    'width' => 80,
+                    "template" => "booleanCheckboxFa",
+                    'searchoptions' => [
+
+                        "value" => ":Любой;1:Разрешен;0:Запрещен",
+                    ],
+
+                ],
+                ['name' => 'group', 'index' => 'group', 'editable' => false, 'width' => 150],
+                ['name' => 'category', 'index' => 'category', 'editable' => false, 'width' => 150],
+                ['name' => 'sub_category', 'index' => 'sub_category', 'editable' => false, 'width' => 150],
+                ['name' => 'detail', 'index' => 'detail', 'editable' => false, 'width' => 150],
+                [
+                    'name' => 'brand',
+                    'index' => 'brand',
+                    'editable' => false,
+                    'width' => 150,
+                    'stype' => 'select',
+                    'searchoptions' => [
+                        'sopt' => ["eq", "ne"],
+                        'value' => ":Любой;standard:standard;static:static;static-this-grid:static-this-grid",
+                    ],
+                ],
+                ['name' => 'sub_brand', 'index' => 'sub_brand', 'editable' => false, 'width' => 150],
+                ['name' => 'line', 'index' => 'line', 'editable' => false, 'width' => 150],
+                ['name' => 'price', 'index' => 'price', 'editable' => false, 'width' => 150],
+                ['name' => 'ma_price', 'index' => 'ma_price', 'editable' => false, 'width' => 150],
+                ['name' => 'l.title', 'index' => 'l.title', 'editable' => false, 'width' => 150],
+                ['name' => 'l.article', 'index' => 'l.article', 'editable' => false, 'width' => 150],
+                ['name' => 'l.description', 'index' => 'l.description', 'editable' => false, 'width' => 150],
+                ['name' => 'l.old_price', 'index' => 'l.old_price', 'editable' => false, 'width' => 150],
+                ['name' => 'l.new_price', 'index' => 'l.new_price', 'editable' => false, 'width' => 150],
+                ['name' => 'l_id', 'index' => 'l_id', 'editable' => false, 'width' => 150],
+                ['name' => 'e_id', 'index' => 'e_id', 'editable' => false, 'width' => 150],
+                ['name' => 'r_id', 'index' => 'r_id', 'editable' => false, 'width' => 150],
+                ['name' => 'i_id', 'index' => 'i_id', 'editable' => false, 'width' => 150],
             ],
-            ['name' => 'sub_brand', 'index' => 'brand', 'editable' => false, 'width' => 150],
-            ['name' => 'line', 'index' => 'brand', 'editable' => false, 'width' => 150],
-            ['name' => 'l_id', 'index' => 'brand', 'editable' => false, 'width' => 150],
-            ['name' => 'l_id', 'index' => 'brand', 'editable' => false, 'width' => 150],
+            'multiSort' => true,
+            'iconSet' => 'fontAwesome',
+            'gridview' => true,
+            'rowNum' => 80,
+            //'loadonce' => true, //сохраняет фильтр
+            //'autowidth' => true,
+            'autowidth' => true,
+            'height' => '70vh',
+            'caption' => "Таблица сопоставления",
         ],
-        'multiSort' => true,
-        'iconSet' => 'fontAwesome',
-        'gridview' => true,
-        'rowNum' => 40,
-        //'autowidth' => true,
-        'autowidth' => true,
-        'height' => 'auto',
-        'caption' => "Таблица сопоставления",
-    ],
-    'pagerSettings' => [
-        'edit' => false,
-        'add' => false,
-        'del' => false,
-        'search' => ['multipleSearch' => true]
-    ],
-    'enableFilterToolbar' => true,
-    'enableColumnChooser' => true,
-]);*/
+        'pagerSettings' => [
+            'edit' => false,
+            'add' => false,
+            'del' => false,
+            'search' => ['multipleSearch' => true],
+        ],
+        'filterToolbarSettings' => ['stringResult' => true, 'autosearch' => true],
+        'enableFilterToolbar' => true,
+        'enableColumnChooser' => true,
+    ]
+);
 ?>

@@ -68,20 +68,34 @@ class PodruzkaProductController extends Controller
                     /** @var \yii\db\ActiveQuery $query */
                     $query->select(
                         [
-                            'article',
-                            'title',
-                            'arrival',
-                            'group',
-                            'category',
-                            'sub_category',
-                            'detail',
-                            'brand',
-                            'sub_brand',
-                            'line',
+                            'podruzka_product.article as article',
+                            'podruzka_product.title as title',
+                            'podruzka_product.arrival',
+                            'podruzka_product.group',
+                            'podruzka_product.category',
+                            'podruzka_product.sub_category',
+                            'podruzka_product.detail',
+                            'podruzka_product.brand',
+                            'podruzka_product.sub_brand',
+                            'podruzka_product.line',
+                            'podruzka_product.price',
+                            'podruzka_product.ma_price',
+                            'letual_product.title as l_title',
+                            'letual_product.article as l_article',
+                            'letual_product.description as l_description',
+                            'letual_product.old_price as l_old_price',
+                            'letual_product.new_price as l_new_price',
                             'l_id',
-                            'l_id',
+                            'e_id',
+                            'r_id',
+                            'i_id',
                         ]
-                    );
+                    )
+                        ->joinWith('l', true, 'LEFT JOIN')
+                        ->joinWith('r', true, 'LEFT JOIN')
+                        ->joinWith('i', true, 'LEFT JOIN')
+                        ->joinWith('e', true, 'LEFT JOIN')
+                    ;
                 },
             ],
         ];
@@ -89,6 +103,7 @@ class PodruzkaProductController extends Controller
 
     /**
      * Lists all PodruzkaProduct models.
+     *
      * @return mixed
      */
     public function actionIndex()
@@ -122,15 +137,19 @@ class PodruzkaProductController extends Controller
         }
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'condition' => $condition,
-        ]);
+        return $this->render(
+            'index',
+            [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'condition' => $condition,
+            ]
+        );
     }
 
     /**
      * Lists all PodruzkaProduct models.
+     *
      * @return mixed
      */
     public function actionMatching()
@@ -164,15 +183,19 @@ class PodruzkaProductController extends Controller
         }
         $dataProvider = $searchModel->searchMatching(Yii::$app->request->queryParams);
 
-        return $this->render('matching', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'condition' => $condition,
-        ]);
+        return $this->render(
+            'matching',
+            [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'condition' => $condition,
+            ]
+        );
     }
 
     /**
      * Lists all PodruzkaProduct models.
+     *
      * @return mixed
      */
     public function actionMatchings()
@@ -206,28 +229,37 @@ class PodruzkaProductController extends Controller
         }
         $dataProvider = $searchModel->searchMatching(Yii::$app->request->queryParams);
 
-        return $this->render('matchings', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'condition' => $condition,
-        ]);
+        return $this->render(
+            'matchings',
+            [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'condition' => $condition,
+            ]
+        );
     }
 
     /**
      * Displays a single PodruzkaProduct model.
+     *
      * @param integer $id
+     *
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        return $this->render(
+            'view',
+            [
+                'model' => $this->findModel($id),
+            ]
+        );
     }
 
     /**
      * Creates a new PodruzkaProduct model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     *
      * @return mixed
      */
     public function actionCreate()
@@ -237,16 +269,21 @@ class PodruzkaProductController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            return $this->render(
+                'create',
+                [
+                    'model' => $model,
+                ]
+            );
         }
     }
 
     /**
      * Updates an existing PodruzkaProduct model.
      * If update is successful, the browser will be redirected to the 'view' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      */
     public function actionUpdate($id)
@@ -256,16 +293,21 @@ class PodruzkaProductController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->render(
+                'update',
+                [
+                    'model' => $model,
+                ]
+            );
         }
     }
 
     /**
      * Deletes an existing PodruzkaProduct model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      */
     public function actionDelete($id)
@@ -278,7 +320,9 @@ class PodruzkaProductController extends Controller
     /**
      * Finds the PodruzkaProduct model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
+     *
      * @param integer $id
+     *
      * @return PodruzkaProduct the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
