@@ -5,6 +5,7 @@ namespace app\commands;
 use app\models\ElizeLink;
 use app\models\ElizePrice;
 use app\models\ElizeProduct;
+use app\models\ErrorProcessing;
 use app\models\LetualLink;
 use app\models\LetualPrice;
 use app\models\LetualProduct;
@@ -181,13 +182,33 @@ class ProductParserController extends Controller
                     $service = new ParserService();
                     $result = $service->productParse($crawler, ParserService::RIV, $attributes);
 
-                    if (empty($result->getPrice()) || empty($result->getTitle())) {
+                    if (empty($result->getArticle()) ||
+                        empty($result->getPrice()) ||
+                        empty($result->getTitle())
+                    ) {
                         $this->setDeleted($result, new RivegaucheProduct);
-                        \Yii::error(
-                            sprintf('Ошибка обработки: %s : цена или заголовок не найдены', $link->link),
-                            'cron'
-                        );
-                        continue;
+
+                        $errorPr = ErrorProcessing::findOne(['link' => $link->link]);
+                        if (!$errorPr) {
+                            $errorPr = new ErrorProcessing();
+                        }
+
+                        $errorPr->competitor = ErrorProcessing::RIVE;
+                        $errorPr->link = $link->link;
+                        $errorPr->processing = 0;
+                        $errorPr->comment = null;
+                        $errorPr->error = 'Ошибка обработки:';
+                        if (empty($result->getArticle())) {
+                            $errorPr->error .= ' артикул';
+                        }
+                        if (empty($result->getPrice())) {
+                            $errorPr->error .= ' цена';
+                        }
+                        if (empty($result->getTitle())) {
+                            $errorPr->error .= ' заголовок';
+                        }
+                        $errorPr->error .= ' не найдены';
+                        $errorPr->save();
                     } else {
                         $this->saveResult($result);
                     }
@@ -205,8 +226,33 @@ class ProductParserController extends Controller
                             $service = new ParserService();
                             $result = $service->productParse($crawler, ParserService::RIV, $attributes);
 
-                            if (empty($result->getPrice()) || empty($result->getTitle())) {
+                            if (empty($result->getArticle()) ||
+                                empty($result->getPrice()) ||
+                                empty($result->getTitle())
+                            ) {
                                 $this->setDeleted($result, new RivegaucheProduct);
+
+                                $errorProcess = ErrorProcessing::findOne(['link' => $url]);
+                                if (!$errorProcess) {
+                                    $errorProcess = new ErrorProcessing();
+                                }
+
+                                $errorProcess->competitor = ErrorProcessing::RIVE;
+                                $errorProcess->link = $url;
+                                $errorProcess->processing = 0;
+                                $errorProcess->comment = null;
+                                $errorProcess->error = 'Ошибка обработки:';
+                                if (empty($result->getArticle())) {
+                                    $errorProcess->error .= ' артикул';
+                                }
+                                if (empty($result->getPrice())) {
+                                    $errorProcess->error .= ' цена';
+                                }
+                                if (empty($result->getTitle())) {
+                                    $errorProcess->error .= ' заголовок';
+                                }
+                                $errorProcess->error .= ' не найдены';
+                                $errorProcess->save();
                             } else {
                                 $this->saveResult($result);
                             }
@@ -216,6 +262,52 @@ class ProductParserController extends Controller
                     unset($service);
                     unset($result);
                     unset($head);
+                }
+                $z = 1;
+                $offset += 20;
+                unset($links);
+                unset($client);
+            } else {
+                $z = 0;
+            }
+        } while ($z > 0);
+
+        return 0;
+    }
+
+    /**
+     * Метод проверяет собранные артикула
+     */
+    public function actionErrorProcessing()
+    {
+        $offset = 0;
+        /** @var $entity ErrorProcessing */
+        $entity = new ErrorProcessing();
+        do {
+            $links = $entity->getLinks($offset, 20);
+            if (!empty($links)) {
+                foreach ($links as $link) {
+                    if (!$link->processing) {
+                        $crawler = $this->getData($link->link);
+
+                        if (!$crawler) {
+                            continue;
+                        }
+
+                        $service = new ParserService();
+                        $result = $service->checkProduct($crawler, ParserService::RIV);
+
+                        if (!empty($result)) {
+                            $errorProcess = ErrorProcessing::findOne(['link' => $link->link]);
+                            $errorProcess->comment = $result;
+                            $errorProcess->processing = 1;
+                            $errorProcess->save();
+                        }
+                    }
+                    //print_r($link->link);
+                    unset($node);
+                    unset($service);
+                    unset($result);
                 }
                 $z = 1;
                 $offset += 20;

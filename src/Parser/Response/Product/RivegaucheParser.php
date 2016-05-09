@@ -40,6 +40,19 @@ class RivegaucheParser implements ParserInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getReason()
+    {
+        $errorReason = $this->response->filter('div.productIsDeleted')->each(function ($node) {
+            /** @var Crawler $node */
+            return $node->text();
+        });
+
+        return reset($errorReason);
+    }
+
+    /**
      * Метод получения объекта Response с данными извлеченными после парсинга
      *
      * @return Response
@@ -483,29 +496,32 @@ class RivegaucheParser implements ParserInterface
                         return $this->clearPrice($subNode->text());
                     });
                 }
-
+                /*
                 if (empty(reset($price))) {
-                    /** @var Crawler $node */
+
                     $price = str_replace('Цена:', '', $node->text());
                     $price = trim($price);
                     $price = $this->clearPrice($price);
                 }
-                if (empty(reset($price))) {
+
+                if (empty($price) || (is_array($price) && empty(reset($price)))) {
                     $fixPrice = $node->filter('div.fix-price')->each(
                         function ($subNode) {
-                            /** @var Crawler $subNode */
+
                             return $this->clearPrice($subNode->text());
                         }
                     );
                     $goldPrice = $node->filter('div.base-price')->each(function ($subNode) {
-                        /** @var Crawler $subNode */
+
                         return $this->clearPrice($subNode->text());
                     });
-                }
+                }*/
+
                 return [
                     'gold_price' => reset($goldPrice),
                     'blue_price' => reset($bluePrice),
-                    'price' => (!empty(reset($price))) ? reset($price) : reset($fixPrice),
+                    'price' => reset($price),
+                    //'price' => (!empty(reset($price))) ? reset($price) : reset($fixPrice),
                 ];
             });
         }

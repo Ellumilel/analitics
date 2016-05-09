@@ -39,13 +39,12 @@ class PodruzkaProductSearch extends PodruzkaProduct
         return [
             [['id', 'i_id', 'r_id', 'l_id'], 'integer'],
             [['article', 'title', 'group', 'category', 'sub_category', 'detail', 'brand', 'sub_brand',
-                'line', 'arrival', 'ile_id', 'rive_id', 'letu_id', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['price', 'ma_price'], 'number'],
-            [[
+                'line', 'arrival', 'ile_id', 'rive_id', 'letu_id', 'created_at', 'updated_at', 'deleted_at',
                 'l_title','l_article','l_desc','l_old_price','l_new_price',
                 'r_title','r_article','r_desc','r_price','r_blue_price','r_gold_price',
                 'i_title','i_article','i_desc','i_old_price','i_new_price','e_title','e_old_price','e_new_price',
             ], 'safe'],
+            [['price', 'ma_price'], 'number'],
         ];
     }
 
