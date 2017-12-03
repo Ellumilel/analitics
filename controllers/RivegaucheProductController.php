@@ -35,6 +35,8 @@ class RivegaucheProductController extends Controller
                             'create',
                             'update',
                             'delete',
+                            'empty-category',
+                            'empty-category-update',
                             'empty-brand',
                             'empty-brand-update',
                             'brand-update',
@@ -167,6 +169,20 @@ class RivegaucheProductController extends Controller
     /**
      * @return string
      */
+    public function actionEmptyCategory()
+    {
+        $searchModel = new RivegaucheProductSearch();
+        $dataProvider = $searchModel->searchEmptyCategory(Yii::$app->request->queryParams);
+
+        return $this->render('empty_category', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * @return string
+     */
     public function actionEmptyBrand()
     {
         $searchModel = new RivegaucheProductSearch();
@@ -192,6 +208,23 @@ class RivegaucheProductController extends Controller
             return $this->redirect(['empty-brand']);
         } else {
             return $this->render('empty_brand_update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function actionEmptyCategoryUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
+
+        if ($model->load($post) && $model->save(true)) {
+            return $this->redirect(['empty-category']);
+        } else {
+            return $this->render('empty_category_update', [
                 'model' => $model,
             ]);
         }

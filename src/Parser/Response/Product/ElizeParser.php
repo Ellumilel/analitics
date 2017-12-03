@@ -24,6 +24,8 @@ class ElizeParser implements ParserInterface
     private $group;
     /** @var string */
     private $link;
+    /** @var Crawler $node */
+    private $labels;
 
     /**
      * @param Crawler $response
@@ -40,6 +42,7 @@ class ElizeParser implements ParserInterface
         $this->subCategory = $subCategory;
         $this->group = $group;
         $this->link = $link;
+        $this->labels = $link;
     }
 
     /**
@@ -49,51 +52,72 @@ class ElizeParser implements ParserInterface
      */
     public function getResponse()
     {
-        $result[] = $this->response->filter('div.itemViewBox div.row')->each(function ($node) {
-            $this->subResponse = $node;
-            $result = (new Response())
-                ->setTitle($this->getTitle())
-                ->setArticle($this->getArticle())
-                ->setBrand($this->getBrand())
-                ->setDescription($this->getDescription())
-                ->setImageLink($this->getImageLink())
-                ->setShowcasesNew($this->getShowcasesNew())
-                ->setShowcasesBest($this->getShowcasesBest())
-                ->setShowcasesBestsellers($this->getShowcasesBestsellers())
-                ->setShowcasesCompliment($this->getShowcasesCompliment())
-                ->setShowcasesExclusive($this->getShowcasesExclusive())
-                ->setShowcasesExpertiza($this->getShowcasesExpertiza())
-                ->setShowcasesLimit($this->getShowcasesLimit())
-                ->setShowcasesOffer($this->getShowcasesOffer())
-                ->setShowcasesSale($this->getShowcasesSale())
-                ->setUrls($this->getUrls())
-                ->setCategory($this->category)
-                ->setSubCategory($this->subCategory)
-                ->setGroup($this->group)
-                ->setLink($this->link)
-            ;
-            $price = $this->getPrice();
+        $brand = $this->response->filter('div.section div.item-info p.modal-heading__title a')->each(function ($node) {
+            /** @var Crawler $node */
+            $brand = $node->text();
+            $brand = trim($brand);
 
-            if (!empty($price['newPrice'])) {
-                $result->setNewPrice($price['newPrice']);
-            }
-
-            if (!empty($price['oldPrice'])) {
-                $result->setPrice($price['oldPrice']);
-            }
-
-            if (!empty($result->getArticle())) {
-                return $result;
-            } else {
-                \Yii::error(
-                    sprintf('Ошибка обработки Result Article пустой: %s ', $this->link),
-                    'cron'
-                );
-                return [];
-            }
+            return $this->clearBrand($brand);
         });
 
-        return reset($result);
+        $this->labels = $this->response->filter('div.section div.labels');
+
+        $result[] = $this->response->filter('div.section--item-subsection div.list-product')->each(
+            function ($node) use ($brand) {
+                $this->subResponse = $node;
+                $result = (new Response())
+                    ->setTitle($this->getTitle())
+                    ->setArticle($this->getArticle())
+                    ->setBrand($this->getBrand())
+                    ->setDescription($this->getDescription())
+                    ->setImageLink($this->getImageLink())
+                    ->setShowcasesNew($this->getShowcasesNew())
+                    ->setShowcasesBest($this->getShowcasesBest())
+                    ->setShowcasesBestsellers($this->getShowcasesBestsellers())
+                    ->setShowcasesCompliment($this->getShowcasesCompliment())
+                    ->setShowcasesExclusive($this->getShowcasesExclusive())
+                    ->setShowcasesExpertiza($this->getShowcasesExpertiza())
+                    ->setShowcasesLimit($this->getShowcasesLimit())
+                    ->setShowcasesOffer($this->getShowcasesOffer())
+                    ->setShowcasesSale($this->getShowcasesSale())
+                    ->setUrls($this->getUrls())
+                    ->setCategory($this->category)
+                    ->setSubCategory($this->subCategory)
+                    ->setGroup($this->group)
+                    ->setLink($this->link);
+
+                if (!$result->getBrand() && is_array($brand)) {
+                    $result->setBrand(reset($brand));
+                }
+
+                $price = $this->getPrice();
+
+                if (!empty($price['newPrice'])) {
+                    $result->setNewPrice($price['newPrice']);
+                }
+
+                if (!empty($price['oldPrice'])) {
+                    $result->setPrice($price['oldPrice']);
+                }
+                //print_r($result);die;
+                if (!empty($result->getArticle()) && !empty($this->getTitle())) {
+                    return $result;
+                } else {
+                    return [];
+                }
+            }
+        );
+
+        $result = reset($result);
+
+        $result = array_filter(
+            $result,
+            function ($data) {
+                return !empty($data);
+            }
+        );
+
+        return $result;
     }
 
     /**
@@ -103,9 +127,13 @@ class ElizeParser implements ParserInterface
      */
     public function getTitle()
     {
-        $title = $this->subResponse->filter('div.name')->each(function ($node) {
+        $title = $this->subResponse->filter('span.list-product__title')->each(function ($node) {
             /** @var Crawler $node */
             $title = trim($node->text());
+            $title = preg_replace('|\s+|', ' ', $title);
+            $title = preg_replace('+ Остаток этого товара в данное время [0-9] шт.+', ' ', $title);
+            $title = preg_replace('+ Остаток этого товара в данное время [0-9][0-9] шт.+', ' ', $title);
+            $title = trim($title);
             return $title;
         });
 
@@ -119,9 +147,10 @@ class ElizeParser implements ParserInterface
      */
     public function getArticle()
     {
-        $article = $this->subResponse->filter('div#count_products input')->each(function ($node) {
+        $article = $this->subResponse->filter('div.quantity')->each(function ($node) {
             /** @var Crawler $node */
-            $article = $node->attr('name');
+
+            $article = $node->attr('data-id');
             $article = trim($article);
             return $article;
         });
@@ -154,7 +183,7 @@ class ElizeParser implements ParserInterface
      */
     public function getDescription()
     {
-        $description = $this->subResponse->filter('td p.description')->each(function ($node) {
+        $description = $this->subResponse->filter('span.list-product__discount')->each(function ($node) {
             /** @var Crawler $node */
             $description = trim($node->text());
             return $description;
@@ -170,7 +199,7 @@ class ElizeParser implements ParserInterface
      */
     public function getImageLink()
     {
-        $imageLink = $this->subResponse->filter('div.image img')->each(function ($node) {
+        $imageLink = $this->subResponse->filter('div.list-product__img img')->each(function ($node) {
             /** @var Crawler $node */
             return 'http://elize.ru/'.$node->attr('src');
         });
@@ -184,13 +213,16 @@ class ElizeParser implements ParserInterface
      */
     public function getShowcasesNew()
     {
-        $showcasesNew = $this->subResponse->filter('td ul.markers li img')->each(
+        $showcasesNew = $this->labels->each(
             function ($node) {
                 /** @var Crawler $node */
-                if ($node->attr('alt') == 'Новенькое') {
-                    return $node->attr('alt');
-                }
-                return '';
+                $data = $node->filter('span.label--green')->each(
+                    function ($subNode) {
+                        return true;
+                    }
+                );
+
+                return reset($data);
             }
         );
 
@@ -216,17 +248,20 @@ class ElizeParser implements ParserInterface
      */
     public function getShowcasesBestsellers()
     {
-        $showcasesBestsellers = $this->subResponse->filter('td ul.markers li img')->each(
+        $showcasesBestsellers = $this->labels->each(
             function ($node) {
                 /** @var Crawler $node */
-                if ($node->attr('alt') == 'Бестселлеры') {
-                    return $node->attr('alt');
-                }
-                return '';
+                $data = $node->filter('span.label--orange')->each(
+                    function ($subNode) {
+                        return true;
+                    }
+                );
+
+                return reset($data);
             }
         );
 
-        return empty(reset($showcasesBestsellers)) ? false : true;
+        return reset($showcasesBestsellers) ? true : false;
     }
 
     /**
@@ -324,15 +359,16 @@ class ElizeParser implements ParserInterface
      */
     public function getPrice()
     {
-        $price = $this->subResponse->filter('div.price')->each(function ($node) {
+        $price = $this->subResponse->filter('div.list-product__price')->each(function ($node) {
+
             /** @var Crawler $node */
-            $oldPrice = $node->filter('p.old span')->each(function ($subsNode) {
+            $oldPrice = $node->filter('div.price--old')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
-                return $subsNode->text();
+                return $subsNode->attr('data-price_old');
             });
-            $newPrice = $node->filter('p span.real_price')->each(function ($subsNode) {
+            $newPrice = $node->filter('div.price')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
-                return $subsNode->text();
+                return $subsNode->attr('data-price');
             });
 
             $newPrice = trim(reset($newPrice));

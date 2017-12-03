@@ -5,6 +5,8 @@ namespace app\commands;
 use app\models\IledebeauteLink;
 use app\models\IledebeautePrice;
 use app\models\IledebeauteProduct;
+use app\models\ParsingStatus;
+use app\models\PodruzkaProduct;
 use Symfony\Component\DomCrawler\Crawler;
 use yii\console\Controller;
 use Goutte\Client;
@@ -29,7 +31,8 @@ class IledebeauteProductController extends Controller
         /** @var $entity IledebeauteLink */
         $entity = new IledebeauteLink();
         $offset = 0;
-
+        $parsingStatus = new ParsingStatus();
+        $parsingStatus->start('iledebeaute');
         do {
             $links = $entity->getLinks($offset, 20);
 
@@ -66,6 +69,10 @@ class IledebeauteProductController extends Controller
                 $z = 0;
             }
         } while ($z > 0);
+
+        $parsingStatus->end('iledebeaute');
+        (new IledebeauteProduct())->setDeleted();
+        PodruzkaProduct::updatePriceDiff();
 
         return 0;
     }

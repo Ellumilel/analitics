@@ -18,10 +18,15 @@ class LinkParser
      */
     public function convertLLink(Crawler $response)
     {
-        $urls = $response->filter('div.productItemDescription h3.title a')->each(
+        $urls = $response->filter('div#atg_store_prodList div.productItem div.productItemDescription a')->each(
             function ($node) {
                 $href = $node->attr('href');
-                $url = sprintf('http://www.letu.ru%s', substr($href, 0, strpos($href, ";")));
+
+                if (!empty(strpos($href, ";"))) {
+                    $url = sprintf('http://www.letu.ru%s', substr($href, 0, strpos($href, ";")));
+                } else {
+                    $url = sprintf('http://www.letu.ru%s', str_replace('?navAction=push', '', $href));
+                }
 
                 return $url;
             }
@@ -37,7 +42,7 @@ class LinkParser
      */
     public function convertELink(Crawler $response)
     {
-        $urls = $response->filter('div.productBlock div.product_item a.type')->each(
+        $urls = $response->filter('div.product-wrapper div.product a.product__description-wrapper')->each(
             function ($node) {
                 $href = $node->attr('href');
                 $url = sprintf('https://elize.ru/%s', $href);

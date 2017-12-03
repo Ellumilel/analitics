@@ -11,6 +11,7 @@ use app\models\LetualProductSearch;
 use app\helpers\ExcelXML;
 use app\models\PodruzkaProduct;
 use app\models\RivegaucheProduct;
+use Ellumilel\ExcelWriter;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -63,7 +64,7 @@ class DownloadController extends Controller
     public function actionDownload()
     {
         $request = Yii::$app->getRequest()->get();
-
+        $header = [];
         if ($request['company'] == 'letual') {
             $command = Yii::$app->getDb()->createCommand('SELECT * FROM letual_product');
             $attr = new LetualProduct();
@@ -80,55 +81,67 @@ class DownloadController extends Controller
             $command = Yii::$app->getDb()->createCommand('SELECT * FROM elize_product');
             $attr = new ElizeProduct();
             $reader = $command->query();
-        } else {
-            $let = [];
         }
-
-        $filename = sprintf('%s_%s.xls', $request['company'], date_format(new \DateTime(), 'Y-m-d'));
-
-        $export = new ExportExcel($filename, count($attr->getAttributes()), $reader->count() + 1);
-
-        $export->openWriter();
-        $export->openWorkbook();
-
-        $export->writeDocumentProperties();
-        $export->writeStyles();
-        $export->openWorksheet();
-
-        //title row
-        $export->resetRow();
-        $export->openRow(true);
-
-        foreach ($attr->getAttributes() as $code => $format) {
-            $export->appendCellString($attr->getAttributeLabel($code));
+        if (empty($attr) && empty($reader)) {
+            return false;
         }
-        $export->closeRow();
-        $export->flushRow();
-
-        while ($row = $reader->read()) {
-            $export->resetRow();
-            $export->openRow();
-            foreach ($attr->getAttributes() as $code => $format) {
-                $export->appendCellString($row[$code]);
+        $wExcel = new ExcelWriter();
+        foreach ($attr->getAttributes() as $key => $attribute) {
+            if ($key == 'old_price' ||
+                $key == 'new_price' ||
+                $key == 'gold_price' ||
+                $key == 'blue_price' ||
+                $key == 'special_price' ||
+                $key == 'price'
+            ) {
+                $header[$key] = '#,##0';
+            } elseif ($key == 'showcases_new' ||
+                $key == 'showcases_exclusive' ||
+                $key == 'showcases_bestsellers' ||
+                $key == 'showcases_limit' ||
+                $key == 'showcases_sale' ||
+                $key == 'showcases_compliment' ||
+                $key == 'showcases_offer' ||
+                $key == 'showcases_expertiza' ||
+                $key == 'showcases_best'
+            ) {
+                $header[$key] = 'integer';
+            } elseif ($key == 'created_at' || $key == 'updated_at' || $key == 'deleted_at') {
+                $header[$key] = 'DD.MM.YYYY';
+            } else {
+                $header[$key] = 'string';
             }
-            $export->closeRow();
-            $export->flushRow();
         }
-        //close all
-        $export->closeWorksheet();
-        $export->closeWorkbook();
-        $export->closeWriter();
 
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($filename));
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: '.filesize($export->getBaseFullFileName()));
+        $wExcel->setTmpDir(__DIR__.'/../web/files');
+        $wExcel->writeSheetHeader('Sheet1', $header);
+        $wExcel->setAuthor('Downloader');
+        $wExcel->setFileName(sprintf('%s_%s.xlsx', $request['company'], date_format(new \DateTime(), 'Y-m-d')));
+        while ($row = $reader->read()) {
+            if ($row['created_at'] == '0000-00-00 00:00:00') {
+                $row['created_at'] = '';
+            }
+            if ($row['updated_at'] == '0000-00-00 00:00:00') {
+                $row['updated_at'] = '';
+            }
+            if ($row['deleted_at'] == '0000-00-00 00:00:00') {
+                $row['deleted_at'] = '';
+            }
 
-        readfile($export->getBaseFullFileName());
+            if (!empty($row['link'])) {
+                if (strlen(urldecode($row['link'])) < 255) {
+                    $row['link'] = '=HYPERLINK("'.urldecode(str_replace('"', '', $row['link'])).'")';
+                }
+            }
+
+            if (!empty($row['image_link'])) {
+                $row['image_link'] = '=HYPERLINK("'.urldecode(str_replace('"', '', $row['image_link'])).'")';
+            }
+
+            $wExcel->writeSheetRow('Sheet1', $row);
+        }
+        $wExcel->writeToStdOut();
+        return true;
     }
 
     /**
@@ -138,7 +151,7 @@ class DownloadController extends Controller
      */
     public function actionInformProduct()
     {
-        $downloadAttr = [];
+        $downloadAttr = $header = [];
         $command = Yii::$app->getDb()->createCommand(
             '
         SELECT
@@ -154,7 +167,11 @@ class DownloadController extends Controller
             `line`,
             `price`,
             `ma_price`,
-            `arrival`
+            `arrival`,
+            `let_comment`,
+            `riv_comment`,
+            `ile_comment`,
+            `eli_comment`
         FROM podruzka_product
         '
         );
@@ -162,47 +179,73 @@ class DownloadController extends Controller
         foreach ($attr->attributes() as $att) {
             if ($att != 'l_id' && $att != 'r_id' && $att != 'i_id' && $att != 'ile_id' && $att != 'rive_id'
                 && $att != 'letu_id' && $att != 'updated_at' && $att != 'created_at' && $att != 'deleted_at'
+            && $att != 'l_d_price'
+            && $att != 'l_d_new_price'
+            && $att != 'r_d_price'
+            && $att != 'r_d_gold_price'
+            && $att != 'e_d_price'
+            && $att != 'e_d_new_pric'
+            && $att != 'i_d_price'
+            && $att != 'i_d_new_price'
+            && $att != 'e_d_new_price'
+            && $att != 'e_id'
             ) {
                 $downloadAttr[] = $att;
             }
         }
-        $reader = $command->query();
 
-        if (!empty($reader) && !empty($attr)) {
-            $filename = sprintf('%s.csv', date_format(new \DateTime(), 'Y-m-d'));
-            $now = gmdate("D, d M Y H:i:s");
-            header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-            header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-            header("Last-Modified: {$now} GMT");
-
-            // force download
-            header("Content-Type: application/force-download");
-            header("Content-Type: application/octet-stream");
-            header("Content-Type: application/download");
-            header('Content-Type: text/csv; charset=windows-1251');
-            // disposition / encoding on response body
-            header("Content-Disposition: attachment;filename={$filename}");
-            header("Content-Transfer-Encoding: binary");
-
-            ob_start();
-            $df = fopen("php://output", 'w');
-            fputcsv($df, $downloadAttr, ';');
-            while ($row = $reader->read()) {
-                foreach ($row as $r) {
-                    $data[] = iconv('utf-8', 'windows-1251', $r);
-                }
-                fputcsv($df, $data, ';');
-                unset($row);
-                unset($data);
+        $wExcel = new ExcelWriter();
+        foreach ($downloadAttr as $key => $attribute) {
+            if ($attribute == 'old_price' ||
+                $attribute == 'new_price' ||
+                $attribute == 'gold_price' ||
+                $attribute == 'blue_price' ||
+                $attribute == 'ma_price' ||
+                $attribute == 'price'
+            ) {
+                $header[$attribute] = '#,##0';
+            } elseif ($attribute == 'showcases_new' ||
+                $attribute == 'showcases_exclusive' ||
+                $attribute == 'showcases_bestsellers' ||
+                $attribute == 'showcases_limit' ||
+                $attribute == 'showcases_sale' ||
+                $attribute == 'showcases_compliment' ||
+                $attribute == 'showcases_offer' ||
+                $attribute == 'showcases_expertiza' ||
+                $attribute == 'showcases_best'
+            ) {
+                $header[$attribute] = 'integer';
+            } elseif ($attribute == 'created_at' || $attribute == 'updated_at' || $attribute == 'deleted_at') {
+                $header[$attribute] = 'DD.MM.YYYY';
+            } elseif ($attribute == 'article') {
+                $header[$attribute] = 'text';
+            } else {
+                $header[$attribute] = 'string';
             }
-            fclose($df);
-            echo ob_get_clean();
         }
+
+        //print_r($header);die;
+        $wExcel->setTmpDir(__DIR__.'/../web/files');
+        $wExcel->writeSheetHeader('Sheet1', $header);
+        $wExcel->setAuthor('Downloader');
+        $wExcel->setFileName(sprintf('%s.xlsx', date_format(new \DateTime(), 'Y-m-d')));
+        $reader = $command->query();
+        while ($row = $reader->read()) {
+            if (!empty($row['link']) && strlen($row['link']) < 255) {
+                $row['link'] = str_replace('"', '', $row['link']);
+                $row['link'] = '=HYPERLINK("'.$row['link'].'")';
+            }
+            if (!empty($row['image_link']) && strlen($row['image_link']) < 255) {
+                $row['image_link'] = str_replace('"', '', $row['image_link']);
+                $row['image_link'] = '=HYPERLINK("'.$row['image_link'].'")';
+            }
+            $wExcel->writeSheetRow('Sheet1', $row);
+        }
+        $wExcel->writeToStdOut();
     }
 
     public function actionMatching()
     {
-        $request = Yii::$app->getRequest()->get();
         $sql = 'Select
             pp.article,
             pp.title,
@@ -216,6 +259,10 @@ class DownloadController extends Controller
             pp.line,
             pp.price,
             pp.ma_price,
+            pp.let_comment,
+            pp.riv_comment,
+            pp.eli_comment,
+            pp.ile_comment,
             lp.`article` as `let.article`,
             lp.`title` as`let.title`,
             lp.`description` as `let.desc`,
@@ -224,9 +271,11 @@ class DownloadController extends Controller
             lp.`showcases_exclusive` as `let.showcases_exclusive`,
             lp.`showcases_bestsellers` as `let.showcases_bestsellers`,
             lp.`showcases_limit` as `let.showcases_limit`,
+            lp.`showcases_promotext` as `let.showcases_promotext`,
             lp.`new_price` as `let.new_price`,
             lp.`old_price` as `let.old_price`,
             lp.`updated_at` as `let.date`,
+            lp.`deleted_at` as `let.deleted_at`,
             rp.`article` as `rive.article`,
             rp.`title` as `rive.title`,
             rp.`description` as `rive.description`,
@@ -239,7 +288,17 @@ class DownloadController extends Controller
             rp.`gold_price` as `rive.gold_price`,
             rp.`blue_price` as `rive.blue_price`,
             rp.`price` as `rive.price`,
+            rp.`special_price` as `rive.special_price`,
             rp.`updated_at` as `rive.date`,
+            rp.`deleted_at` as `rive.deleted_at`,
+            ep.`article` as `eli.article`,
+            ep.`title` as `eli.title`,
+            ep.`description` as `eli.description`,
+            ep.`link` as `eli.link`,
+            ep.`new_price` as `eli.new_price`,
+            ep.`old_price` as `eli.old_price`,
+            ep.`updated_at` as `eli.date`,
+            ep.`deleted_at` as `eli.deleted_at`,
             ip.`article` as `ile.article`,
             ip.`title` as `ile.title`,
             ip.`description` as `ile.description`,
@@ -252,12 +311,7 @@ class DownloadController extends Controller
             ip.`new_price` as `ile.new_price`,
             ip.`old_price` as `ile.old_price`,
             ip.`updated_at` as `ile.date`,
-            ep.`article` as `eli.article`,
-            ep.`title` as `eli.title`,
-            ep.`link` as `eli.link`,
-            ep.`new_price` as `eli.new_price`,
-            ep.`old_price` as `eli.old_price`,
-            ep.`updated_at` as `eli.date`
+            ip.`deleted_at` as `ile.deleted_at`
             FROM podruzka_product pp
             LEFT JOIN letual_product lp on pp.l_id = lp.id
             LEFT JOIN rivegauche_product rp on pp.r_id = rp.id
@@ -267,61 +321,65 @@ class DownloadController extends Controller
         $command = Yii::$app->getDb()->createCommand($sql);
         $reader = $command->query();
         $attr = [
-            'article',
-            'title',
-            'arrival',
-            'group',
-            'category',
-            'sub_category',
-            'detail',
-            'brand',
-            'sub_brand',
-            'line',
-            'price',
-            'ma_price',
-            'let.article',
-            'let.title',
-            'let.desc',
-            'let.link',
-            'let.promo',
-            'let.old_price',
-            'let.new_price',
-            'let.date',
-            'rive.article',
-            'rive.title',
-            'rive.description',
-            'rive.link',
-            'rive.promo',
-            'rive.price',
-            'rive.blue_price',
-            'rive.gold_price',
-            'rive.date',
-            'ile.article',
-            'ile.title',
-            'ile.description',
-            'ile.link',
-            'ile.promo',
-            'ile.old_price',
-            'ile.new_price',
-            'ile.date',
-            'eli.article',
-            'eli.title',
-            'eli.link',
-            'eli.old_price',
-            'eli.new_price',
-            'eli.date',
+            'article' => 'text',
+            'title' => 'string',
+            'arrival' => 'string',
+            'group' => 'string',
+            'category' => 'string',
+            'sub_category' => 'string',
+            'detail' => 'string',
+            'brand' => 'string',
+            'sub_brand' => 'string',
+            'line' => 'string',
+            'price' => '#,##0',
+            'ma_price' => '#,##0',
+            'let_comment' => 'string',
+            'riv_comment' => 'string',
+            'eli_comment' => 'string',
+            'ile_comment' => 'string',
+            'let.article' => 'string',
+            'let.title' => 'string',
+            'let.desc' => 'string',
+            'let.link' => 'string',
+            'let.promo' => 'string',
+            'let.old_price' => '#,##0',
+            'let.new_price' => '#,##0',
+            'let.date' => 'DD.MM.YYYY',
+            'let.deleted_at' => 'DD.MM.YYYY',
+            'rive.article' => 'string',
+            'rive.title' => 'string',
+            'rive.description' => 'string',
+            'rive.link' => 'string',
+            'rive.promo' => 'string',
+            'rive.price' => '#,##0',
+            'rive.special_price' => '#,##0',
+            'rive.blue_price' => '#,##0',
+            'rive.gold_price' => '#,##0',
+            'rive.date' => 'DD.MM.YYYY',
+            'rive.deleted_at' => 'DD.MM.YYYY',
+            'eli.article' => 'string',
+            'eli.title' => 'string',
+            'eli.description' => 'string',
+            'eli.link' => 'string',
+            'eli.old_price' => '#,##0',
+            'eli.new_price' => '#,##0',
+            'eli.date' => 'DD.MM.YYYY',
+            'eli.deleted_at' => 'DD.MM.YYYY',
+            'ile.article' => 'string',
+            'ile.title' => 'string',
+            'ile.description' => 'string',
+            'ile.link' => 'string',
+            'ile.promo' => 'string',
+            'ile.old_price' => '#,##0',
+            'ile.new_price' => '#,##0',
+            'ile.date' => 'DD.MM.YYYY',
+            'ile.deleted_at' => 'DD.MM.YYYY',
         ];
-        $xls = new ExcelXML();
+        $xls = new ExcelWriter();
 
-        $header_style = [
-            'bold' => 1,
-            'size' => '12',
-            'color' => '#FFFFFF',
-            'bgcolor' => '#4F81BD',
-        ];
-
-        $xls->addStyle('header', $header_style);
-        $xls->addRow($attr, 'header');
+        $xls->writeSheetHeader('Sheet1', $attr);
+        $xls->setTmpDir(__DIR__.'/../web/files/');
+        $xls->setFileName(sprintf('matching_%s.xlsx', date_format(new \DateTime(), 'Y-m-d H:i:s')));
 
         while ($row = $reader->read()) {
             $rive_promotion = [];
@@ -385,6 +443,10 @@ class DownloadController extends Controller
                 $let_promotion[] = 'Лимитированный выпуск';
                 unset($row['let.showcases_limit']);
             }
+            if ($row['let.showcases_promotext']) {
+                $let_promotion[] = $row['let.showcases_promotext'];
+                unset($row['let.showcases_promotext']);
+            }
 
             $rpromo = implode(',', $rive_promotion);
             $ipromo = implode(',', $ile_promotion);
@@ -403,43 +465,80 @@ class DownloadController extends Controller
                 'line' => (string)$row['line'],
                 'price' => (float)sprintf("%8.2f", trim($row['price'])),
                 'ma_price' => (float)sprintf("%8.2f", trim($row['ma_price'])),
+                'let_comment' => (string)$row['let_comment'],
+                'riv_comment' => (string)$row['riv_comment'],
+                'eli_comment' => (string)$row['eli_comment'],
+                'ile_comment' => (string)$row['ile_comment'],
                 'let.article' => (string)$row['let.article'],
                 'let.title' => (string)$row['let.title'],
                 'let.desc' => (string)$row['let.desc'],
-                'let.link' => (string)$row['let.link'],
+                'let.link' => (string)$this->getLink($row['let.link']),
                 'let.promo' => (string)$lpromo,
                 'let.old_price' => (float)sprintf("%8.2f", trim($row['let.old_price'])),
                 'let.new_price' => (float)sprintf("%8.2f", trim($row['let.new_price'])),
                 'let.date' => (string)$row['let.date'],
+                'let.deleted_at' => $this->getDeleted($row['let.deleted_at']),
                 'rive.article' => (string)$row['rive.article'],
                 'rive.title' => (string)$row['rive.title'],
                 'rive.description' => (string)$row['rive.description'],
-                'rive.link' => (string)$row['rive.link'],
+                'rive.link' => (string)$this->getLink($row['rive.link']),
                 'rive.promo' => (string)$rpromo,
                 'rive.price' => (float)sprintf("%8.2f", trim($row['rive.price'])),
+                'rive.special_price' => (float)sprintf("%8.2f", trim($row['rive.special_price'])),
                 'rive.blue_price' => (float)sprintf("%8.2f", trim($row['rive.blue_price'])),
                 'rive.gold_price' => (float)sprintf("%8.2f", trim($row['rive.gold_price'])),
                 'rive.date' => (string)$row['rive.date'],
+                'rive.deleted_at' => $this->getDeleted($row['rive.deleted_at']),
+                'eli.article' => (string)$row['eli.article'],
+                'eli.title' => (string)$row['eli.title'],
+                'eli.description' => (string)$row['eli.description'],
+                'eli.link' => (string)$this->getLink($row['eli.link']),
+                'eli.old_price' => (float)sprintf("%8.2f", trim($row['eli.old_price'])),
+                'eli.new_price' => (float)sprintf("%8.2f", trim($row['eli.new_price'])),
+                'eli.date' => (string)$row['eli.date'],
+                'eli.deleted_at' => $this->getDeleted($row['eli.deleted_at']),
                 'ile.article' => (string)$row['ile.article'],
                 'ile.title' => (string)$row['ile.title'],
                 'ile.description' => (string)$row['ile.description'],
-                'ile.link' => (string)$row['ile.link'],
+                'ile.link' => (string)$this->getLink($row['ile.link']),
                 'ile.promo' => (string)$ipromo,
                 'ile.old_price' => (float)sprintf("%8.2f", trim($row['ile.old_price'])),
                 'ile.new_price' => (float)sprintf("%8.2f", trim($row['ile.new_price'])),
                 'ile.date' => (string)$row['ile.date'],
-                'eli.article' => (string)$row['eli.article'],
-                'eli.title' => (string)$row['eli.title'],
-                'eli.link' => (string)$row['eli.link'],
-                'eli.old_price' => (float)sprintf("%8.2f", trim($row['eli.old_price'])),
-                'eli.new_price' => (float)sprintf("%8.2f", trim($row['eli.new_price'])),
-                'eli.date' => (string)$row['eli.date'],
+                'ile.deleted_at' => $this->getDeleted($row['ile.deleted_at']),
             ];
-            //var_dump($data);die;
-            $xls->addRow($data);
+
+            $xls->writeSheetRow('Sheet1', $data);
+        }
+        $xls->writeToStdOut();
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    private function getDeleted($string)
+    {
+        if ($string == '0000-00-00 00:00:00') {
+            return '';
+        } else {
+            return (string)$string;
+        }
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    private function getLink($string)
+    {
+        if (!empty($string) && strlen($string) < 255) {
+            $string = str_replace('"', '', $string);
+            $string = '=HYPERLINK("'.$string.'")';
         }
 
-        $xls->createWorksheet('matching');
-        $xls->download(sprintf('matching_%s.xls', date_format(new \DateTime(), 'Y-m-d H:i:s')));
+        return $string;
     }
 }

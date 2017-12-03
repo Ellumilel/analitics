@@ -95,6 +95,10 @@ class RivegaucheParser implements ParserInterface
             $result->setPrice($price['price']);
         }
 
+        if (!empty($price['new_price'])) {
+            $result->setNewPrice($price['new_price']);
+        }
+
         return $result;
     }
 
@@ -105,8 +109,7 @@ class RivegaucheParser implements ParserInterface
      */
     public function getTitle()
     {
-
-        $title = $this->response->filter('div.es_product div.es_right_full_name h1')->each(function ($node) {
+        $title = $this->response->filter('div.product-card div.product-card__name h1')->each(function ($node) {
             /** @var Crawler $node */
             return $node->text();
         });
@@ -159,7 +162,12 @@ class RivegaucheParser implements ParserInterface
     public function getArticle()
     {
         preg_match('/[0-9]+$/i', $this->link, $data);
-        $article = $data[0];
+
+        if (!empty($data[0])) {
+            $article = $data[0];
+        } else {
+            $article = null;
+        }
 
         return $article;
     }
@@ -189,7 +197,7 @@ class RivegaucheParser implements ParserInterface
      */
     public function getDescription()
     {
-        $description = $this->response->filter('div.es_product div.es_right_param div.es_right_price_type')->each(
+        $description = $this->response->filter('div.product-card div.product-card__name div.product-card__cat')->each(
             function ($node) {
                 /** @var Crawler $node */
                 $node->text();
@@ -205,61 +213,24 @@ class RivegaucheParser implements ParserInterface
             }
         );
 
-        if (empty(reset($description))) {
-            $description = $this->response->filter('div.es_product div.prod_add_to_cart td.leftalign')->each(
-                function ($node) {
-                    /** @var Crawler $node */
-                    $node->text();
-                    $description = trim($node->text());
-                    $description = str_replace(' ', '', $description);
-                    $description = str_replace('*', '', $description);
-                    $description = nl2br($description);
-                    $description = str_replace('<br />', '', $description);
-                    $description = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $description);
-                    $description = str_replace(["\r\n", "\r", "\n", "\t", '  ', '    ', '    '], '', $description);
-
-                    return $description;
-                }
-            );
+        if (!empty($description)) {
+            $description = reset($description);
         }
 
-        if (empty(reset($description))) {
-            $description = $this->response->filter('div.es_product div.es_right_price div.es_right_price_type')->each(
-                function ($node) {
-                    /** @var Crawler $node */
-                    $node->text();
-                    $description = trim($node->text());
-                    $description = str_replace(' ', '', $description);
-                    $description = str_replace('*', '', $description);
-                    $description = nl2br($description);
-                    $description = str_replace('<br />', '', $description);
-                    $description = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $description);
-                    $description = str_replace(["\r\n", "\r", "\n", "\t", '  ', '    ', '    '], '', $description);
+        $descriptionList = $this->response->filter('div.product-card div.product-card__options_items a.active')->each(
+            function ($node) {
+                /** @var Crawler $node */
+                $description = trim($node->attr('title'));
 
-                    return $description;
-                }
-            );
+                return $description;
+            }
+        );
+
+        if (!empty($descriptionList[0])) {
+            $description .= '| '.$descriptionList[0];
         }
 
-        if (empty(reset($description))) {
-            $description = $this->response->filter('div.es_product div.product-col1 div.product-name')->each(
-                function ($node) {
-                    /** @var Crawler $node */
-                    $node->text();
-                    $description = trim($node->text());
-                    $description = str_replace(' ', '', $description);
-                    $description = str_replace('*', '', $description);
-                    $description = nl2br($description);
-                    $description = str_replace('<br />', '', $description);
-                    $description = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $description);
-                    $description = str_replace(["\r\n", "\r", "\n", "\t", '  ', '    ', '    '], '', $description);
-
-                    return $description;
-                }
-            );
-        }
-
-        return reset($description);
+        return $description;
     }
 
     /**
@@ -269,15 +240,15 @@ class RivegaucheParser implements ParserInterface
      */
     public function getImageLink()
     {
-        $imageLink = $this->response->filter('div.es_product div#primary_image img')->each(
+        $imageLink = $this->response->filter('div.product-card a.productImagePrimarySimpleLink img')->each(
             function ($node) {
                 /** @var Crawler $node */
-                return $node->attr('src');
+                return 'https://shop.rivegauche.ru'.$node->attr('src');
             }
         );
-
         return reset($imageLink);
     }
+
     /**
      * Метод возвращает наличие акции
      *
@@ -285,11 +256,11 @@ class RivegaucheParser implements ParserInterface
      */
     public function getShowcasesNew()
     {
-        $showcasesNew = $this->response->filter('div.es_product div.showcases_new')->each(function ($node) {
+        $showcasesNew = $this->response->filter('div.product-card a.showcases_new')->each(function ($node) {
             return $node;
         });
 
-        return empty(reset($showcasesNew)) ? false : true;
+        return empty(reset($showcasesNew)) ? 0 : 1;
     }
 
     /**
@@ -309,13 +280,13 @@ class RivegaucheParser implements ParserInterface
      */
     public function getShowcasesBestsellers()
     {
-        $showcasesBestsellers = $this->response->filter('div.es_product div.showcases_bestsellers')->each(
+        $showcasesBestsellers = $this->response->filter('div.product-card a.showcases_bestsellers')->each(
             function ($node) {
                 return $node;
             }
         );
 
-        return empty(reset($showcasesBestsellers)) ? false : true;
+        return empty(reset($showcasesBestsellers)) ? 0 : 1;
     }
 
     /**
@@ -325,13 +296,13 @@ class RivegaucheParser implements ParserInterface
      */
     public function getShowcasesCompliment()
     {
-        $showcasesCompliment = $this->response->filter('div.es_product div.showcases_compliment')->each(
+        $showcasesCompliment = $this->response->filter('div.product-card a.showcases_compliment')->each(
             function ($node) {
                 return $node;
             }
         );
 
-        return empty(reset($showcasesCompliment)) ? false : true;
+        return empty(reset($showcasesCompliment)) ? 0 : 1;
     }
 
     /**
@@ -341,13 +312,13 @@ class RivegaucheParser implements ParserInterface
      */
     public function getShowcasesExclusive()
     {
-        $showcasesExclusive = $this->response->filter('div.es_product div.showcases_exclusive')->each(
+        $showcasesExclusive = $this->response->filter('div.product-card a.showcases_exclusive')->each(
             function ($node) {
                 return $node;
             }
         );
 
-        return empty(reset($showcasesExclusive)) ? false : true;
+        return empty(reset($showcasesExclusive)) ? 0 : 1;
     }
 
     /**
@@ -357,13 +328,13 @@ class RivegaucheParser implements ParserInterface
      */
     public function getShowcasesExpertiza()
     {
-        $showcasesExpertiza = $this->response->filter('div.es_product div.showcases_expertiza')->each(
+        $showcasesExpertiza = $this->response->filter('div.product-card a.showcases_expertiza')->each(
             function ($node) {
                 return $node;
             }
         );
 
-        return empty(reset($showcasesExpertiza)) ? false : true;
+        return empty(reset($showcasesExpertiza)) ? 0 : 1;
     }
 
     /**
@@ -383,13 +354,13 @@ class RivegaucheParser implements ParserInterface
      */
     public function getShowcasesOffer()
     {
-        $showcasesOffer = $this->response->filter('div.es_product div.showcases_offer')->each(
+        $showcasesOffer = $this->response->filter('div.product-card a.showcases_offer')->each(
             function ($node) {
                 return $node;
             }
         );
 
-        return empty(reset($showcasesOffer)) ? false : true;
+        return empty(reset($showcasesOffer)) ? 0 : 1;
     }
 
     /**
@@ -409,22 +380,22 @@ class RivegaucheParser implements ParserInterface
      */
     public function getUrls()
     {
-        $urls = $this->response->filter('div.es_product div.es_right_price ul a')->each(function ($node) {
+        $urls = $this->response->filter('div.product-card div.product-card__options_items a')->each(function ($node) {
             /** @var Crawler $node */
-            return 'http://shop.rivegauche.ru'.$node->attr('href');
+            return 'https://shop.rivegauche.ru'.$node->attr('href');
         });
 
         if (empty($urls)) {
-            $urls = $this->response->filter('div.es_product div.all-colors ul a')->each(function ($node) {
+            $urls = $this->response->filter('div.product-card div.all-colors ul a')->each(function ($node) {
                 /** @var Crawler $node */
-                return 'http://shop.rivegauche.ru'.$node->attr('href');
+                return 'https://shop.rivegauche.ru'.$node->attr('href');
             });
         }
 
         if (empty($urls)) {
-            $urls = $this->response->filter('div.es_product div.es_right ul a')->each(function ($node) {
+            $urls = $this->response->filter('div.product-card div.es_right ul a')->each(function ($node) {
                 /** @var Crawler $node */
-                return 'http://shop.rivegauche.ru'.$node->attr('href');
+                return 'https://shop.rivegauche.ru'.$node->attr('href');
             });
         }
 
@@ -439,88 +410,50 @@ class RivegaucheParser implements ParserInterface
     public function getPrice()
     {
         //print_r(123);die;
-        $price = $this->response->filter('div.es_product div.prod_add_to_cart')->each(function ($node) {
+        $price = $this->response->filter('div.product-card div.product-card__info')->each(function ($node) {
             /** @var Crawler $node */
-            $goldPrice = $node->filter('span.gold_price')->each(function ($subNode) {
-                /** @var Crawler $subNode */
+            /*$goldPrice = $node->filter('span.discount-gold_price')->each(function ($subNode) {
+
                 return $this->clearPrice($subNode->text());
             });
-            $bluePrice = $node->filter('span.blue_price')->each(function ($subNode) {
-                /** @var Crawler $subNode */
+
+            $bluePrice = $node->filter('span.discount-standard_price')->each(function ($subNode) {
+
                 return $this->clearPrice($subNode->text());
-            });
-            $price = $node->filter('div.card-price span.price')->each(function ($subNode) {
-                /** @var Crawler $subNode */
-                return $this->clearPrice($subNode->text());
-            });
-            $fixPrice = $node->filter('div.fix-price')->each(function ($subNode) {
+            });*/
+            $price = $node->filter('span.product-card__price-box_price')->each(function ($subNode) {
                 /** @var Crawler $subNode */
                 return $this->clearPrice($subNode->text());
             });
 
-            if (empty(reset($price))) {
-                $price = $node->filter('span.price')->each(function ($subNode) {
-                    /** @var Crawler $subNode */
-                    return $this->clearPrice($subNode->text());
-                });
-            }
 
             return [
-                'gold_price' => reset($goldPrice),
-                'blue_price' => reset($bluePrice),
-                'price' => (!empty(reset($price))) ? reset($price) : reset($fixPrice),
+                'gold_price' => !empty($price[0]) ? $price[0] : null,
+                'blue_price' => !empty($price[1]) ? $price[1] : null,
+                'price' => !empty($price[2]) ? $price[2] : null,
             ];
         });
 
         $priceBase = reset($price);
 
         if (empty($priceBase['price'])) {
-            $price = $this->response->filter('div.es_product div.product-price')->each(function ($node) {
+            $price = $this->response->filter('div.product-card div.product-card__info')->each(function ($node) {
                 /** @var Crawler $node */
-                $goldPrice = $node->filter('span.gold_price')->each(function ($subNode) {
-                    /** @var Crawler $subNode */
-                    return $this->clearPrice($subNode->text());
-                });
-                $bluePrice = $node->filter('span.blue_price')->each(function ($subNode) {
-                    /** @var Crawler $subNode */
-                    return $this->clearPrice($subNode->text());
-                });
-                $price = $node->filter('div.card-price span.price')->each(function ($subNode) {
+                $price = $node->filter('div.product-card__price-box div.product-card__price-box_price')->each(function ($subNode) {
                     /** @var Crawler $subNode */
                     return $this->clearPrice($subNode->text());
                 });
 
-                if (empty(reset($price))) {
-                    $price = $node->filter('span.price')->each(function ($subNode) {
-                        /** @var Crawler $subNode */
-                        return $this->clearPrice($subNode->text());
-                    });
-                }
-                /*
-                if (empty(reset($price))) {
-
-                    $price = str_replace('Цена:', '', $node->text());
-                    $price = trim($price);
-                    $price = $this->clearPrice($price);
-                }
-
-                if (empty($price) || (is_array($price) && empty(reset($price)))) {
-                    $fixPrice = $node->filter('div.fix-price')->each(
-                        function ($subNode) {
-
-                            return $this->clearPrice($subNode->text());
-                        }
-                    );
-                    $goldPrice = $node->filter('div.base-price')->each(function ($subNode) {
-
-                        return $this->clearPrice($subNode->text());
-                    });
-                }*/
+                $priceOld = $node->filter('div.product-card__price-box div.product-card__price-box_old-price')->each(function ($subNode) {
+                    /** @var Crawler $subNode */
+                    return $this->clearPrice($subNode->text());
+                });
 
                 return [
-                    'gold_price' => reset($goldPrice),
-                    'blue_price' => reset($bluePrice),
-                    'price' => reset($price),
+                    'gold_price' => 0,
+                    'blue_price' => 0,
+                    'price' => reset($priceOld),
+                    'new_price' => reset($price),
                     //'price' => (!empty(reset($price))) ? reset($price) : reset($fixPrice),
                 ];
             });

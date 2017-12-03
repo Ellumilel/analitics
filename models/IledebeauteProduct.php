@@ -23,6 +23,7 @@ use yii\db\Expression;
  * @property integer $showcases_exclusive
  * @property integer $showcases_limit
  * @property integer $showcases_sale
+ * @property integer $showcases_bestsellers
  * @property integer $showcases_best
  * @property number $new_price
  * @property number $old_price
@@ -57,6 +58,7 @@ class IledebeauteProduct extends \yii\db\ActiveRecord
                     'showcases_exclusive',
                     'showcases_limit',
                     'showcases_sale',
+                    'showcases_bestsellers',
                     'showcases_best',
                 ],
                 'integer',
@@ -87,6 +89,7 @@ class IledebeauteProduct extends \yii\db\ActiveRecord
             'showcases_exclusive' => 'Эксклюзив',
             'showcases_limit' => 'Ограниченная',
             'showcases_sale' => 'Распродажа',
+            'showcases_bestsellers' => 'Бестселлер',
             'showcases_best' => 'Showcases Best',
             'old_price' => 'Старая цена',
             'new_price' => 'Новая цена',
@@ -267,5 +270,19 @@ class IledebeauteProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         return $result->orderBy('brand')->all();
+    }
+
+    /**
+     * @return int
+     *
+     * @throws \yii\db\Exception
+     */
+    public function setDeleted()
+    {
+        $db = Yii::$app->getDb();
+        $sql = 'UPDATE iledebeaute_product, (SELECT MAX(DATE_FORMAT(updated_at,  "%Y-%m-%d")) as date FROM iledebeaute_product) a
+                SET deleted_at = NOW()
+                WHERE updated_at < a.date and DATE_FORMAT(deleted_at,  "%Y-%m-%d") = "0000-00-00"';
+        return $db->createCommand($sql)->execute();
     }
 }

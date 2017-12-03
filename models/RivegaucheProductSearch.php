@@ -48,7 +48,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
                 ],
                 'safe',
             ],
-            [['gold_price', 'blue_price', 'price'], 'number'],
+            [['gold_price', 'blue_price', 'price', 'special_price'], 'number'],
         ];
     }
 
@@ -74,7 +74,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 25],
         ]);
 
         $this->load($params);
@@ -96,6 +96,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
             'gold_price' => $this->gold_price,
             'blue_price' => $this->blue_price,
             'price' => $this->price,
+            'special_price' => $this->special_price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
@@ -120,7 +121,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
         // print_r($params);die;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 20],
         ]);
         $this->load($params);
 
@@ -144,6 +145,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
             ->andFilterWhere(['like', 'brand', $this->brand])
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'special_price', $this->special_price])
             ->andFilterWhere(['like', 'gold_price', $this->gold_price])
             ->andFilterWhere(['like', 'blue_price', $this->blue_price])
             ->andFilterWhere(['like', 'description', $this->description])
@@ -163,7 +165,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
         // print_r($params);die;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 20],
         ]);
         $this->load($params);
 
@@ -186,6 +188,7 @@ class RivegaucheProductSearch extends RivegaucheProduct
             ->andFilterWhere(['like', 'brand', $this->brand])
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'special_price', $this->special_price])
             ->andFilterWhere(['like', 'gold_price', $this->gold_price])
             ->andFilterWhere(['like', 'blue_price', $this->blue_price])
             ->andFilterWhere(['like', 'description', $this->description])
@@ -194,6 +197,11 @@ class RivegaucheProductSearch extends RivegaucheProduct
         return $dataProvider;
     }
 
+    /**
+     * @param $params
+     *
+     * @return ActiveDataProvider
+     */
     public function searchEmptyBrand($params)
     {
         $query = RivegaucheProduct::find();
@@ -212,6 +220,38 @@ class RivegaucheProductSearch extends RivegaucheProduct
             ->andFilterWhere(['like', 'sub_category', $this->sub_category])
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'special_price', $this->special_price])
+            ->andFilterWhere(['like', 'gold_price', $this->gold_price])
+            ->andFilterWhere(['like', 'blue_price', $this->blue_price])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'image_link', $this->image_link]);
+        return $dataProvider;
+    }
+
+    /**
+     * @param $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchEmptyCategory($params)
+    {
+        $query = RivegaucheProduct::find();
+        $dataProvider = new ActiveDataProvider(['query' => $query, 'pagination' => ['pageSize' => 50]]);
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+        $query->where('`group` = "Без категории" or category = "Без категории" or sub_category = "Без категории"');
+
+        $query->andFilterWhere(['like', 'article', $this->article])
+            ->andFilterWhere(['like', 'link', $this->link])
+            ->andFilterWhere(['like', 'group', $this->group])
+            ->andFilterWhere(['like', 'category', $this->category])
+            ->andFilterWhere(['like', 'sub_category', $this->sub_category])
+            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'special_price', $this->special_price])
             ->andFilterWhere(['like', 'gold_price', $this->gold_price])
             ->andFilterWhere(['like', 'blue_price', $this->blue_price])
             ->andFilterWhere(['like', 'description', $this->description])

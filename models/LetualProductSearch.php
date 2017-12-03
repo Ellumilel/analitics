@@ -64,7 +64,7 @@ class LetualProductSearch extends LetualProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 25],
         ]);
 
         $this->load($params);
@@ -108,7 +108,7 @@ class LetualProductSearch extends LetualProduct
         // print_r($params);die;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 20],
         ]);
         $this->load($params);
 
@@ -144,7 +144,7 @@ class LetualProductSearch extends LetualProduct
        // print_r($params);die;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 20],
         ]);
         $this->load($params);
 

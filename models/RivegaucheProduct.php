@@ -28,6 +28,8 @@ use yii\db\Expression;
  * @property string $gold_price
  * @property string $blue_price
  * @property string $price
+ * @property string $special_price
+ * @property integer $has_variant_type
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -52,7 +54,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
         return [
             [['article'], 'required'],
             [['link', 'title', 'image_link'], 'string'],
-            [['gold_price', 'blue_price', 'price'], 'number'],
+            [['gold_price', 'blue_price', 'price', 'special_price'], 'number'],
             [
                 [
                     'showcases_new',
@@ -61,6 +63,7 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
                     'showcases_exclusive',
                     'showcases_bestsellers',
                     'showcases_expertiza',
+                    'has_variant_type',
                 ],
                 'integer',
             ],
@@ -95,6 +98,8 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
             'gold_price' => 'Цена по золотой карте',
             'blue_price' => 'Цена по стандартной карте',
             'price' => 'Полная цена',
+            'special_price' => 'Спец. цена',
+            'has_variant_type' => 'Варианты',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -244,6 +249,28 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
     }
 
     /**
+     * Метод возвращает количество строк с пустыми брендами
+     *
+     * @return null
+     */
+    public static function getEmptyCategory()
+    {
+        $result = null;
+        $rows = (new \yii\db\Query())
+            ->select(['count(*) as counts'])
+            ->from('rivegauche_product')
+            ->where('`group` = "Без категории" or category = "Без категории" or sub_category = "Без категории"')
+            ->orderBy('created_at')
+            ->one();
+
+        if (!empty($rows['counts'])) {
+            $result = $rows['counts'];
+        }
+
+        return $result;
+    }
+
+    /**
      * @param $condition
      *
      * @return array|\yii\db\ActiveRecord[]
@@ -297,5 +324,19 @@ class RivegaucheProduct extends \yii\db\ActiveRecord
             ->where($condition);
 
         return $result->orderBy('brand')->all();
+    }
+
+    /**
+     * @return int
+     *
+     * @throws \yii\db\Exception
+     */
+    public function setDeleted()
+    {
+        $db = Yii::$app->getDb();
+        $sql = 'UPDATE rivegauche_product, (SELECT MAX(DATE_FORMAT(updated_at,  "%Y-%m-%d")) as date FROM rivegauche_product) a
+                SET deleted_at = NOW()
+                WHERE updated_at < a.date and DATE_FORMAT(deleted_at,  "%Y-%m-%d") = "0000-00-00"';
+        return $db->createCommand($sql)->execute();
     }
 }

@@ -5,9 +5,13 @@ use yii\bootstrap\NavBar;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-$lCount =  \app\models\RivegaucheProduct::getEmptyBrand();
+$lCount = \app\models\RivegaucheProduct::getEmptyBrand();
 $count = 0;
 if ($lCount) {
+    $count++;
+}
+$emptyCategory = \app\models\RivegaucheProduct::getEmptyCategory();
+if ($emptyCategory) {
     $count++;
 }
 ?>
@@ -33,31 +37,54 @@ if ($lCount) {
                             <!-- inner menu: contains the actual data -->
                             <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
                                     <li>
-                                        <?php if ($lCount =  \app\models\RivegaucheProduct::getEmptyBrand()) : ?>
+                                        <?php if ($lCount) : ?>
                                         <a href="<?= \yii\helpers\Url::to(['/rivegauche-product/empty-brand']) ?>">
-                                                <i class="fa fa-warning text-red"></i>
-                                                Пустые бренды у РивГош (<?=$lCount?>)
+                                                <i class="fa fa-warning text-yellow"></i>
+                                                Пустые бренды РивГош (<?=$lCount?>)
+                                        </a>
+                                        <?php endif; ?>
+                                    </li>
+                                    <li>
+                                        <?php if ($emptyCategory) : ?>
+                                        <a href="<?= \yii\helpers\Url::to(['/rivegauche-product/empty-category']) ?>">
+                                            <i class="fa fa-envelope-o text-yellow"></i>
+                                            Пустые категории РивГош (<?=$emptyCategory?>)
                                         </a>
                                         <?php endif; ?>
                                     </li>
                                 </ul><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 195.122px;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
                         </li>
-                        <li class="footer">
+                        <!--li class="footer">
                             <a href="#">Данное меню в работе</a>
-                        </li>
+                        </li-->
                     </ul>
                 </li>
-                <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/matching");  ?>">Загрузка сопоставления</a></li>
-                <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/inform");  ?>">Загрузка информ.продукта</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Загрузка<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/inform");  ?>"><i class="fa fa-shopping-cart text-green"></i>Информационный продукт</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/matching");  ?>"><i class="fa fa-files-o text-aqua"></i>Cопоставление</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/brand");  ?>"><i class="fa fa-warning text-yellow"></i>Пустые бренды</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/comment");  ?>"><i class="fa fa-commenting"></i>Комментарии</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/upload/category");  ?>"><i class="fa fa-users text-red"></i>Без категории</a></li>
+                    </ul>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Управление категориями <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/letual-category/index");  ?>">Летуаль</a></li>
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/rivegauche-category/index");  ?>">РивГош</a></li>
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/iledebeaute-category/index");  ?>">ИльДеБоте</a></li>
-                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/elize-category/index");  ?>">Элизэ</a></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/letual-category/index");  ?>"><i class="fa fa-table text-aqua"></i>Летуаль</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/rivegauche-category/index");  ?>"><i class="fa fa-table text-aqua"></i>РивГош</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/iledebeaute-category/index");  ?>"><i class="fa fa-table text-aqua"></i>ИльДеБоте</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= \Yii::$app->getUrlManager()->createUrl("/elize-category/index");  ?>"><i class="fa fa-table text-aqua"></i>Элизэ</a></li>
+                        <li class="divider"></li>
+                        <!--li><a href="#">One more separated link</a></li-->
                     </ul>
                 </li>
                 <?php if (!Yii::$app->user->isGuest) : ?>

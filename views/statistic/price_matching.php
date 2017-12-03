@@ -14,140 +14,25 @@ use app\models\PodruzkaProduct;
 $this->title = 'Сравнение цен по сопоставленным артикулам';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
-    <div class="col-md-3">
-        <div class="box">
-            <div class="box-body table-responsive pad">
-                <table class="table table-bordered text-center">
-                    <tbody>
-                    <tr>
-                        <th></th>
-                        <th>Летуаль</th>
-                        <th>Элизе</th>
-                        <th>РивГош</th>
-                        <th>ИльДеБотте</th>
-                    </tr>
-                    <!-- Default -->
-                    <tr>
-                        <td>
-                            <div class="btn-group-vertical">
-                                Цена подружки
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
-                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
-                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
-                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-danger" type="button">выше <span
-                                        class="pull text-white"><i class="fa fa-angle-up"></i></span></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="btn-group-vertical">
-                                Цена подружки
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
-                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
-                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
-                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-success" type="button">ниже <span
-                                        class="pull text-white"><i class="fa fa-angle-down"></i></span></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="btn-group-vertical">
-                                Цены
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
-                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
-                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
-
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
-                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
-
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-block btn-xs btn-warning" type="button">равны <span
-                                        class="pull text-white"><i class="fa fa-angle-left"></i></span></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- /.success -->
-                    </tbody>
-                </table>
-            </div>
-            <!-- /.box-body -->
-        </div>
-    </div>
-</div>
 <div class="podruzka-product-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
     <?= GridView::widget(
         [
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'resizableColumns' => true,
             'bordered' => false,
+            'bootstrap' => true,
+            'striped' => false,
             'rowOptions' => function ($model, $key, $index, $grid) {
                 return [
                     'id' => $model['id'],
                     'onclick' => '
-        if ( !$(this).hasClass("success") ) {
-            $(this).addClass("success");
-        } else {
-            $(this).removeClass("success");
-        }',
+                        if ( !$(this).hasClass("success") ) {
+                            $(this).addClass("success");
+                        } else {
+                            $(this).removeClass("success");
+                        }',
                 ];
             },
             'columns' => [
@@ -158,6 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
                     ],
+                    'contentOptions' => ['style' => 'padding-left:10px; text-align: center;'],
                     'value' => function ($model, $key, $index, $widget) {
                         return $model->article;
                     },
@@ -184,6 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'arrival',
                         'arrival'
                     ),
+                    'contentOptions' => ['style' => 'padding-left:10px; text-align: center;'],
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true, 'width' => '90px'],
                     ],
@@ -199,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'category'
                     ),
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '190px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
                     'value' => 'category',
                 ],
@@ -213,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'brand'
                     ),
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '120px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
                     'value' => 'brand',
                 ],
@@ -332,6 +219,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'export'=>false,
             'toolbar' => false,
             'id' => 'price-matching',
+            'autoXlFormat'=>true,
             'pjaxSettings' => [
                 'neverTimeout' => true,
                 'options'=>[

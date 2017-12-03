@@ -3,6 +3,58 @@ use yii\widgets\Breadcrumbs;
 use dmstr\widgets\Alert;
 
 ?>
+<script>
+    function ping() {
+        $.ajax({
+            url: "/index.php?r=site/ping-status",
+            type: "POST",
+            cache: false,
+            dataType: "json",
+            success: function (data) {
+                $('#letual_persent .label-danger').text(data.let.persent);
+                $('#letual_persent p').text(data.let.count);
+                $('#letual_persent .progress-bar').width(data.let.persent);
+
+                $('#rive_persent .label-danger').text(data.rive.persent);
+                $('#rive_persent p').text(data.rive.count);
+                $('#rive_persent .progress-bar').width(data.rive.persent);
+
+                $('#ile_persent .label-danger').text(data.ile.persent);
+                $('#ile_persent p').text(data.ile.count);
+                $('#ile_persent .progress-bar').width(data.ile.persent);
+
+                $('#elize_persent .label-danger').text(data.eli.persent);
+                $('#elize_persent p').text(data.eli.count);
+                $('#elize_persent .progress-bar').width(data.eli.persent);
+            },
+            error: function () {
+                console.log("Ошибка выполнения");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        ping();
+        setInterval('ping()', 10000);
+
+        $('a.parse').on('click', function () {
+            $.ajax({
+                url: "/index.php?r=site/start-parse",
+                type: "POST",
+                data: 'partner=' + $(this).attr('data'),
+                cache: false,
+                dataType: "json",
+                success: function () {
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    console.log("Ошибка выполнения");
+                }
+            });
+        });
+    });
+</script>
+
 <div class="content-wrapper">
     <section class="content-header">
         <?php if (isset($this->blocks['content-header'])) { ?>
@@ -37,119 +89,111 @@ use dmstr\widgets\Alert;
 
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
-        <b>Version</b> 1.0
+        <b>Version</b> 2.0
     </div>
-    <strong>Copyright &copy; 2014-2015 Подружка</a>.</strong> All rights
-    reserved.
+    <strong>&copy; 2014-<?= date('Y'); ?> Подружка</a>.</strong>
 </footer>
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-        <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+        <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
         <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         <!-- Home tab content -->
-        <div class="tab-pane" id="control-sidebar-home-tab">
-            <h3 class="control-sidebar-heading">Recent Activity</h3>
+        <div class="tab-pane active" id="control-sidebar-home-tab">
+            <h3 class="control-sidebar-heading">Ручной запуск сбора</h3>
             <ul class='control-sidebar-menu'>
-                <li>
-                    <a href='javascript::;'>
-                        <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                <!--li>
+                    <a class="parse" data="iledebeaute" href='javascript:void(0);'>
+                        <i class="menu-icon fa fa-download bg-green"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                            <h4 class="control-sidebar-subheading">ИльДеБотЭ</h4>
+                        </div>
+                    </a>
+                </li-->
+                <li>
+                    <a class="parse" data="rivegauche" href='javascript:void(0);'>
+                        <i class="menu-icon fa fa-download bg-green"></i>
 
-                            <p>Will be 23 on April 24th</p>
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">Сбор РивГош</h4>
                         </div>
                     </a>
                 </li>
                 <li>
-                    <a href='javascript::;'>
-                        <i class="menu-icon fa fa-user bg-yellow"></i>
+                    <a class="parse" data="elize" href='javascript:void(0);'>
+                        <i class="menu-icon fa fa-download bg-green"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-
-                            <p>New phone +1(800)555-1234</p>
+                            <h4 class="control-sidebar-subheading">Сбор Элизе</h4>
                         </div>
                     </a>
                 </li>
                 <li>
-                    <a href='javascript::;'>
-                        <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+                    <a class="parse" data="letual" href='javascript:void(0);'>
+                        <i class="menu-icon fa fa-download bg-green"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-
-                            <p>nora@example.com</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href='javascript::;'>
-                        <i class="menu-icon fa fa-file-code-o bg-green"></i>
-
-                        <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-
-                            <p>Execution time 5 seconds</p>
+                            <h4 class="control-sidebar-subheading">Сбор Летуаль</h4>
                         </div>
                     </a>
                 </li>
             </ul>
             <!-- /.control-sidebar-menu -->
 
-            <h3 class="control-sidebar-heading">Tasks Progress</h3>
+            <h3 class="control-sidebar-heading">Прогресс сбора данных</h3>
+            <h5 class="control-sidebar-heading">Автоматический сбор каждый 1 и 3 день недели</h5>
             <ul class='control-sidebar-menu'>
-                <li>
-                    <a href='javascript::;'>
+                <li id="letual_persent">
+                    <a href='javascript:void(0);'>
                         <h4 class="control-sidebar-subheading">
-                            Custom Template Design
-                            <span class="label label-danger pull-right">70%</span>
+                            Сбор Летуаль
+                            <span class="label label-danger pull-right">0%</span>
                         </h4>
-
+                        <p>сбор не запущен</p>
                         <div class="progress progress-xxs">
                             <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
                         </div>
                     </a>
                 </li>
-                <li>
-                    <a href='javascript::;'>
+                <li id="rive_persent">
+                    <a href='javascript:void(0);'>
                         <h4 class="control-sidebar-subheading">
-                            Update Resume
-                            <span class="label label-success pull-right">95%</span>
+                            Сбор РивГош
+                            <span class="label label-danger pull-right">0%</span>
                         </h4>
-
+                        <p>сбор не запущен</p>
                         <div class="progress progress-xxs">
-                            <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                            <div class="progress-bar progress-bar-danger" style="width: 0%"></div>
                         </div>
                     </a>
                 </li>
-                <li>
-                    <a href='javascript::;'>
+                <!--li id="ile_persent">
+                    <a href='javascript:void(0);'>
                         <h4 class="control-sidebar-subheading">
-                            Laravel Integration
-                            <span class="label label-waring pull-right">50%</span>
+                            Сбор Ильдэботе
+                            <span class="label label-danger pull-right">0%</span>
                         </h4>
-
+                        <p>сбор не запущен</p>
                         <div class="progress progress-xxs">
-                            <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+                            <div class="progress-bar progress-bar-danger" style="width: 0%"></div>
                         </div>
                     </a>
-                </li>
-                <li>
-                    <a href='javascript::;'>
+                </li-->
+                <li id="elize_persent">
+                    <a href='javascript:void(0);'>
                         <h4 class="control-sidebar-subheading">
-                            Back End Framework
-                            <span class="label label-primary pull-right">68%</span>
+                            Сбор Элизэ
+                            <span class="label label-danger pull-right">0%</span>
                         </h4>
-
+                        <p>сбор не запущен</p>
                         <div class="progress progress-xxs">
-                            <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+                            <div class="progress-bar progress-bar-danger" style="width: 0%"></div>
                         </div>
                     </a>
                 </li>
@@ -221,7 +265,7 @@ use dmstr\widgets\Alert;
                 <div class="form-group">
                     <label class="control-sidebar-subheading">
                         Delete chat history
-                        <a href="javascript::;" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+                        <a href="javascript:void(0);" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
                     </label>
                 </div>
                 <!-- /.form-group -->
@@ -233,3 +277,25 @@ use dmstr\widgets\Alert;
 <!-- Add the sidebar's background. This div must be placed
      immediately after the control sidebar -->
 <div class='control-sidebar-bg'></div>
+<div class="example-modal">
+    <div id="myModal" class="modal modal-primary">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>Скрипт сбора успешно запущен</p>
+                    <p>Прогресс сбора отобразится в активностях</p>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-outline pull-right" type="button">OK</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>

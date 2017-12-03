@@ -4,9 +4,7 @@ use yii\helpers\Html;
 
 ?>
 <aside class="main-sidebar">
-
     <section class="sidebar">
-
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
@@ -14,7 +12,7 @@ use yii\helpers\Html;
             </div>
             <div class="pull-left info">
                 <p>Администратор</p>
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                <a href="#"><i class="circle text-success"></i> Online</a>
             </div>
         </div>
 
@@ -23,7 +21,7 @@ use yii\helpers\Html;
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search..."/>
               <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="search"></i>
                 </button>
               </span>
             </div>
@@ -36,63 +34,68 @@ use yii\helpers\Html;
                     ['label' => 'Управление', 'options' => ['class' => 'header']],
                         [
                                 'label' => 'Информационный продукт',
-                                'icon' => 'fa fa-dashboard text-aqua',
+                                'icon' => 'dashboard text-aqua',
                                 'url' => ['/podruzka-product/index']
                         ],
                         [
                                 'label' => 'Статистика сбора данных',
-                                'icon' => 'fa fa-book text-aqua',
+                                'icon' => 'calendar-check-o text-green',
                                 'url' => ['/statistic/index']
                         ],
                         [
                             'label' => 'Статистика удаленные',
-                            'icon' => 'fa fa-book text-aqua',
+                            'icon' => 'calendar-times-o text-red',
                             'url' => ['/statistic/index-deleted']
                         ],
                         [
                                 'label' => 'Сопоставление',
-                                'icon' => 'fa fa-files-o text-aqua',
+                                'icon' => 'files-o text-aqua',
                                 'url' => ['/podruzka-product/matching']
                         ],
                         [
                                 'label' => 'Сравнение цен',
-                                'icon' => 'fa fa-circle-o text-aqua',
+                                'icon' => 'rub text-white',
                                 'url' => ['/statistic/price-matching']
                         ],
                         ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
                         [
                             'label' => 'Среднее по сопоставл.:',
-                            'icon' => 'fa fa-share text-yellow',
+                            'icon' => 'caret-down text-yellow',
                             'url' => '#',
+                            'options' => ['class' => 'treeview'],
                             'items' => [
                                     [
-                                            'label' => 'по категориям',
-                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'label' => 'категория',
+                                            'icon' => 'table text-white',
                                             'url' => ['/statistic/avg-category'],
                                     ],
                                     [
-                                            'label' => 'по брендам',
-                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'label' => 'бренд',
+                                            'icon' => 'table text-white',
                                             'url' => ['/statistic/avg-brand'],
                                     ],
                                     [
-                                            'label' => 'по брендам + категориям',
-                                            'icon' => 'fa fa-circle-o text-aqua',
+                                            'label' => 'категория и бренд',
+                                            'icon' => 'table text-white',
                                             'url' => ['/statistic/avg-matching'],
                                     ],
                                 /*[
                                     'label' => 'Среднее по сопоставл.',
-                                    'icon' => 'fa fa-circle-o',
+                                    'icon' => 'circle-o',
                                     'url' => '#',
                                     'items' => [
-                                        ['label' => 'по категориям', 'icon' => 'fa fa-circle-o', 'url' => ['/statistic/avg-category'],],
+                                        [
+                                            'label' => 'по категориям',
+                                            'icon' => 'circle-o',
+                                            'url' => ['/statistic/avg-category'],
+                                        ],
                                         [
                                             'label' => 'по брендам',
-                                            'icon' => 'fa fa-circle-o',
+                                            'icon' => 'circle-o',
                                             'url' => ['/statistic/avg-brand'],
                                             'items' => [
-                                                ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
-                                                ['label' => 'Level Three', 'icon' => 'fa fa-circle-o', 'url' => '#',],
+                                                ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
+                                                ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
                                             ],
                                         ],
                                     ],
@@ -100,31 +103,32 @@ use yii\helpers\Html;
                             ],
                         ],
                         [
-                                'label' => 'Таблицы сбора: ',
-                                'icon' => 'fa fa-table text-yellow',
-                                'url' => '#',
-                                'items' => [
-                                        [
-                                                'label' => 'Летуаль',
-                                                'icon' => 'fa fa-circle-o text-aqua',
-                                                'url' => ['/letual-product/index'],
-                                        ],
-                                        [
-                                                'label' => 'РивГош',
-                                                'icon' => 'fa fa-circle-o text-aqua',
-                                                'url' => ['/rivegauche-product/index'],
-                                        ],
-                                        [
-                                            'label' => 'Элизэ',
-                                            'icon' => 'fa fa-circle-o text-aqua',
-                                            'url' => ['/elize-product/index'],
-                                        ],
-                                        [
-                                                'label' => 'ИльДеБоте',
-                                                'icon' => 'fa fa-circle-o text-aqua',
-                                                'url' => ['/iledebeaute-product/index'],
-                                        ],
+                            'label' => 'Таблицы сбора: ',
+                            'icon' => 'caret-down text-yellow',
+                            'url' => '#',
+                            'options' => ['class' => 'treeview'],
+                            'items' => [
+                                [
+                                    'label' => 'Летуаль',
+                                    'icon' => 'table text-white',
+                                    'url' => ['/letual-product/index'],
                                 ],
+                                [
+                                    'label' => 'РивГош',
+                                    'icon' => 'table text-white',
+                                    'url' => ['/rivegauche-product/index'],
+                                ],
+                                [
+                                    'label' => 'Элизэ',
+                                    'icon' => 'table text-white',
+                                    'url' => ['/elize-product/index'],
+                                ],
+                                [
+                                    'label' => 'ИльДеБоте',
+                                    'icon' => 'table text-white',
+                                    'url' => ['/iledebeaute-product/index'],
+                                ],
+                            ],
                         ],
                 ],
             ]
@@ -132,26 +136,26 @@ use yii\helpers\Html;
         <!--ul class="sidebar-menu">
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-share"></i> <span>Средние значения</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="share"></i> <span>Средние значения</span>
+                    <i class="angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?= \yii\helpers\Url::to(['/gii']) ?>"><span class="fa fa-file-code-o"></span>по бренду</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/gii']) ?>"><span class="file-code-o"></span>по бренду</a>
                     </li>
-                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="fa fa-dashboard"></span>по категориям</a>
-                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="fa fa-dashboard"></span>по сопоставленным</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="dashboard"></span>по категориям</a>
+                    <li><a href="<?= \yii\helpers\Url::to(['/debug']) ?>"><span class="dashboard"></span>по сопоставленным</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-circle-o"></i> Level One <i class="fa fa-angle-left pull-right"></i></a>
+                        <a href="#"><i class="circle-o"></i> Level One <i class="angle-left pull-right"></i></a>
                         <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                            <li><a href="#"><i class="circle-o"></i> Level Two</a></li>
                             <li>
                                 <a href="#">
-                                    <i class="fa fa-circle-o"></i> Level Two <i class="fa fa-angle-left pull-right"></i>
+                                    <i class="circle-o"></i> Level Two <i class="angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                    <li><a href="#"><i class="circle-o"></i> Level Three</a></li>
+                                    <li><a href="#"><i class="circle-o"></i> Level Three</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -24,24 +24,36 @@ use yii\db\ActiveRecord;
  */
 class LinkController extends Controller
 {
+    /**
+     * Метод запускается по крон собирает ссылки по Летуаль
+     */
     public function actionLetual()
     {
         $entity = new LetualCategory();
         $this->parseLinkData($entity);
     }
 
+    /**
+     * Метод запускается по крон собирает ссылки по Элизе
+     */
     public function actionElize()
     {
         $entity = new ElizeCategory();
         $this->parseLinkData($entity);
     }
 
+    /**
+     * Метод запускается по крон собирает ссылки по РивГош
+     */
     public function actionRivegauche()
     {
         $entity = new RivegaucheCategory();
         $this->parseLinkData($entity);
     }
 
+    /**
+     * Метод запускается по крон собирает ссылки по ИлДэБотте
+     */
     public function actionIledebeaute()
     {
         $entity = new IledebeauteCategory();
@@ -69,12 +81,13 @@ class LinkController extends Controller
         }
 
         do {
-            $links = $category->getLinks($offset, 5);
+            $links = $category->getLinks($offset, 1);
             if (!empty($links)) {
                 foreach ($links as $link) {
                     $service = new ParserService();
                     if ($linkEntity instanceof LetualLink) {
                         $urls = $service->collectLLinkData($link->link);
+                        //print_r($urls);die;
                     } elseif ($linkEntity instanceof RivegaucheLink) {
                         $urls = $service->collectRLinkData($link->link);
                     } elseif ($linkEntity instanceof IledebeauteLink) {
@@ -97,7 +110,7 @@ class LinkController extends Controller
                     }
                 }
                 $z = 1;
-                $offset += 5;
+                $offset += 1;
                 unset($links);
                 unset($client);
             } else {

@@ -12,6 +12,8 @@ class Response
     /** @var string */
     private $article;
     /** @var string */
+    private $article_new;
+    /** @var string */
     private $link;
     /** @var string */
     private $group;
@@ -46,6 +48,8 @@ class Response
     private $showcasesSale = false;
     /** @var bool */
     private $showcasesBest = false;
+    /** @var string */
+    private $showcasesPromotext;
 
     /** @var number */
     private $goldPrice;
@@ -72,6 +76,7 @@ class Response
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -91,6 +96,7 @@ class Response
     public function setArticle($article)
     {
         $this->article = $article;
+
         return $this;
     }
 
@@ -110,6 +116,7 @@ class Response
     public function setLink($link)
     {
         $this->link = $link;
+
         return $this;
     }
 
@@ -129,6 +136,7 @@ class Response
     public function setGroup($group)
     {
         $this->group = $group;
+
         return $this;
     }
 
@@ -148,6 +156,7 @@ class Response
     public function setCategory($category)
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -167,6 +176,7 @@ class Response
     public function setSubCategory($subCategory)
     {
         $this->subCategory = $subCategory;
+
         return $this;
     }
 
@@ -186,6 +196,7 @@ class Response
     public function setBrand($brand)
     {
         $this->brand = $brand;
+
         return $this;
     }
 
@@ -205,6 +216,7 @@ class Response
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -224,6 +236,7 @@ class Response
     public function setImageLink($imageLink)
     {
         $this->imageLink = $imageLink;
+
         return $this;
     }
 
@@ -243,6 +256,7 @@ class Response
     public function setUrls(array $urls)
     {
         $this->urls = $urls;
+
         return $this;
     }
 
@@ -262,6 +276,7 @@ class Response
     public function setShowcasesNew($showcasesNew)
     {
         $this->showcasesNew = $showcasesNew;
+
         return $this;
     }
 
@@ -281,6 +296,7 @@ class Response
     public function setShowcasesCompliment($showcasesCompliment)
     {
         $this->showcasesCompliment = $showcasesCompliment;
+
         return $this;
     }
 
@@ -300,6 +316,7 @@ class Response
     public function setShowcasesOffer($showcasesOffer)
     {
         $this->showcasesOffer = $showcasesOffer;
+
         return $this;
     }
 
@@ -319,6 +336,7 @@ class Response
     public function setShowcasesExclusive($showcasesExclusive)
     {
         $this->showcasesExclusive = $showcasesExclusive;
+
         return $this;
     }
 
@@ -338,6 +356,7 @@ class Response
     public function setShowcasesBestsellers($showcasesBestsellers)
     {
         $this->showcasesBestsellers = $showcasesBestsellers;
+
         return $this;
     }
 
@@ -357,6 +376,7 @@ class Response
     public function setShowcasesExpertiza($showcasesExpertiza)
     {
         $this->showcasesExpertiza = $showcasesExpertiza;
+
         return $this;
     }
 
@@ -376,6 +396,7 @@ class Response
     public function setShowcasesLimit($showcasesLimit)
     {
         $this->showcasesLimit = $showcasesLimit;
+
         return $this;
     }
 
@@ -395,6 +416,7 @@ class Response
     public function setShowcasesSale($showcasesSale)
     {
         $this->showcasesSale = $showcasesSale;
+
         return $this;
     }
 
@@ -407,6 +429,26 @@ class Response
     }
 
     /**
+     * @param string $showcasesPromotext
+     *
+     * @return $this
+     */
+    public function setShowcasesPromotext($showcasesPromotext)
+    {
+        $this->showcasesPromotext = $showcasesPromotext;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShowcasesPromotext()
+    {
+        return $this->showcasesPromotext;
+    }
+
+    /**
      * @param bool $showcasesBest
      *
      * @return $this
@@ -414,6 +456,7 @@ class Response
     public function setShowcasesBest($showcasesBest)
     {
         $this->showcasesBest = $showcasesBest;
+
         return $this;
     }
 
@@ -433,6 +476,7 @@ class Response
     public function setGoldPrice($goldPrice)
     {
         $this->goldPrice = $goldPrice;
+
         return $this;
     }
 
@@ -452,6 +496,7 @@ class Response
     public function setBluePrice($bluePrice)
     {
         $this->bluePrice = $bluePrice;
+
         return $this;
     }
 
@@ -471,6 +516,7 @@ class Response
     public function setNewPrice($newPrice)
     {
         $this->newPrice = $newPrice;
+
         return $this;
     }
 
@@ -490,6 +536,7 @@ class Response
     public function setPrice($price)
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -502,12 +549,12 @@ class Response
             'group' => $this->getGroup(),
             'category' => $this->getCategory(),
             'sub_category' => $this->getSubCategory(),
-            'showcases_new' => (int) $this->getShowcasesNew(),
-            'showcases_compliment' => (int) $this->getShowcasesCompliment(),
-            'showcases_offer' => (int) $this->getShowcasesOffer(),
-            'showcases_exclusive' => (int) $this->getShowcasesExclusive(),
-            'showcases_bestsellers' => (int) $this->getShowcasesBestsellers(),
-            'showcases_expertiza' => (int) $this->getShowcasesExpertiza(),
+            'showcases_new' => (int)$this->getShowcasesNew(),
+            'showcases_compliment' => (int)$this->getShowcasesCompliment(),
+            'showcases_offer' => (int)$this->getShowcasesOffer(),
+            'showcases_exclusive' => (int)$this->getShowcasesExclusive(),
+            'showcases_bestsellers' => (int)$this->getShowcasesBestsellers(),
+            'showcases_expertiza' => (int)$this->getShowcasesExpertiza(),
         ];
 
         if (!empty($this->getImageLink())) {

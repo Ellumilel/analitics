@@ -12,6 +12,7 @@ use Yii;
  * @property string $group
  * @property string $category
  * @property string $sub_category
+ * @property string $type
  */
 class RivegaucheCategory extends \yii\db\ActiveRecord
 {
@@ -31,7 +32,7 @@ class RivegaucheCategory extends \yii\db\ActiveRecord
         return [
             [['link'], 'required'],
             [['link'], 'string'],
-            [['group', 'category', 'sub_category'], 'string', 'max' => 255],
+            [['group', 'category', 'sub_category', 'type'], 'string', 'max' => 255],
         ];
     }
 
@@ -46,6 +47,7 @@ class RivegaucheCategory extends \yii\db\ActiveRecord
             'group' => 'Группа',
             'category' => 'Категория',
             'sub_category' => 'Подкатегория',
+            'type' => 'Тип сбора',
         ];
     }
 

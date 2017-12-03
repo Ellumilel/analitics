@@ -67,6 +67,7 @@ class ParserService implements ConfigInterface
      */
     public function productParse(Crawler $data, $partner, array $attributes)
     {
+
         $parser = null;
         switch ($partner) {
             case $this::LET:
@@ -97,7 +98,13 @@ class ParserService implements ConfigInterface
                 );
                 break;
             case $this::ILE:
-                $parser = new IledebeauteParser($data);
+                $parser = new IledebeauteParser(
+                    $data,
+                    $attributes['category'],
+                    $attributes['sub_category'],
+                    $attributes['group'],
+                    $attributes['link']
+                );
                 break;
         }
 
@@ -142,7 +149,7 @@ class ParserService implements ConfigInterface
 
         $request = $this->prepareRequest($request);
         $response = $this->request($request);
-
+        //print_R(123);die;
         return $this->linkParser->convertLLink($response);
     }
 

@@ -1,11 +1,12 @@
 html,
 body {
     height: 100%;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400 !important;
     font-size: 12px;
     line-height: 1.42857;
 }
+
 td, th {
     padding: 1px !important;
 }
@@ -96,27 +97,97 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
 #upload_inform {
     width: 500px;
     min-height: 212px;
     height: 212px;
 }
+
 .login-page, .register-page {
     background: #FFFFFF !important;
 }
-#pre_loader
-{
-    margin-left:37px;
-    width:24px;
-    height:24px;
+
+#pre_loader {
+    margin-left: 37px;
+    width: 24px;
+    height: 24px;
     background: url('../image/p_24.GIF') repeat-x scroll 0 0 transparent;
 }
 
-#price-matching-container
-{
+#price-matching-container, #price-pp-container {
     min-height: 600px;
 }
-#matching-container
-{
-    min-height: 800px;
+
+#matching-container, #deleted-container, #new-container {
+    min-height: 600px;
+}
+
+.match-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+#avg_category td, th {
+    padding: 4px !important;
+}
+
+.avg_category .col-md-6 {
+    min-width: 600px;
+}
+
+.avg_category .panel-heading {
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+    color: #fff;
+}
+
+.site-index td, .site-index th {
+    text-align: center;
+}
+.site-index-padding td, .site-index-padding th {
+    padding: 8px !important;
+    text-align: center;
+}
+.site-index .col-md-6 {
+    min-width: 640px;
+}
+
+.upload-inform td, .upload-inform th {
+    padding: 4px !important;
+    text-align: center;
+}
+
+.sidebar-menu li > a > .pull-right {
+    margin-top: -7px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.sidebar-menu > li > a > .fa, .sidebar-menu > li > a > .glyphicon, .sidebar-menu > li > a > .ion {
+    font-size: 16px;
+    margin-right: 5px;
+    width: 20px;
+}
+
+.nav {
+    font-size: 14px;
+}
+
+#price-pp tr > td, #matching-container tr > td, #price-matching-container tr > td, #rivegauche_product tr > td, #elize_product tr > td, #iledebeaute_product tr > td, #letual_product tr > td, #deleted_product  tr > td, #new_product  tr > td  {
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+    padding-right: 4px !important;
+    padding-left: 3px !important;
+}
+
+th {
+    text-align: center;
+}
+.kv-editable-link {
+    padding: 0;
+}
+.img-circle {
+    border-radius: 45%;
 }

@@ -68,22 +68,22 @@ class ElizeProduct extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'article' => 'Article',
-            'link' => 'Link',
-            'group' => 'Group',
-            'category' => 'Category',
-            'sub_category' => 'Sub Category',
-            'brand' => 'Brand',
-            'title' => 'Title',
-            'description' => 'Description',
-            'image_link' => 'Image Link',
-            'showcases_new' => 'Showcases New',
-            'showcases_exclusive' => 'Showcases Exclusive',
-            'showcases_limit' => 'Showcases Limit',
-            'showcases_sale' => 'Showcases Sale',
+            'article' => 'Артикул',
+            'link' => 'Ссылка',
+            'group' => 'Группа',
+            'category' => 'Категория',
+            'sub_category' => 'Подкатегория',
+            'brand' => 'Бренд',
+            'title' => 'Заголовок',
+            'description' => 'Описание',
+            'image_link' => 'Картинка',
+            'showcases_new' => 'Новинка',
+            'showcases_exclusive' => 'Эксклюзив',
+            'showcases_limit' => 'Ограниченная',
+            'showcases_sale' => 'Распродажа',
             'showcases_best' => 'Showcases Best',
-            'new_price' => 'New Price',
-            'old_price' => 'Old Price',
+            'old_price' => 'Старая цена',
+            'new_price' => 'Новая цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
@@ -260,9 +260,9 @@ class ElizeProduct extends \yii\db\ActiveRecord
     public function setDeleted()
     {
         $db = Yii::$app->getDb();
-        $sql = 'UPDATE elize_product, (SELECT DISTINCT DATE_FORMAT(updated_at,  "%Y-%m-%d") as date FROM elize_product ORDER BY updated_at desc limit 1) a
+        $sql = 'UPDATE elize_product, (SELECT MAX(DATE_FORMAT(updated_at,  "%Y-%m-%d")) as date FROM elize_product) a
                 SET deleted_at = NOW()
-                WHERE updated_at < a.date and DATE_FORMAT(updated_at,  "%Y-%m-%d") = "0000-00-00";';
+                WHERE updated_at < a.date and DATE_FORMAT(deleted_at,  "%Y-%m-%d") = "0000-00-00"';
         return $db->createCommand($sql)->execute();
     }
 }

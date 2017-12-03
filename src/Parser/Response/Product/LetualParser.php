@@ -66,6 +66,7 @@ class LetualParser implements ParserInterface
                 ->setShowcasesLimit($this->getShowcasesLimit())
                 ->setShowcasesOffer($this->getShowcasesOffer())
                 ->setShowcasesSale($this->getShowcasesSale())
+                ->setShowcasesPromotext($this->getShowcasesPromotext())
                 ->setUrls($this->getUrls())
                 ->setCategory($this->category)
                 ->setSubCategory($this->subCategory)
@@ -81,6 +82,7 @@ class LetualParser implements ParserInterface
             if (!empty($price['oldPrice'])) {
                 $result->setPrice($price['oldPrice']);
             }
+
             if (!empty($result->getArticle())) {
                 return $result;
             } else {
@@ -106,6 +108,12 @@ class LetualParser implements ParserInterface
             /** @var Crawler $node */
             return $node->text();
         });
+        if (empty($title)) {
+            $title = $this->subResponse->filter('tr td .h2-like')->each(function ($node) {
+                /** @var Crawler $node */
+                return $node->text();
+            });
+        }
 
         return reset($title);
     }
@@ -121,7 +129,14 @@ class LetualParser implements ParserInterface
             /** @var Crawler $node */
             $article = trim($node->text());
             $article = str_replace('Артикул ', '', $article);
-            $article = preg_replace("/[^a-zA-Z0-9]/", "", $article);
+            $article = str_replace('\r', '', $article);
+            $article = str_replace('\n', '', $article);
+            $article = str_replace('', '', $article);
+            $article = nl2br($article);
+            $article = str_replace('<br />', '', $article);
+            $article = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $article);
+            $article = trim($article);
+            //$article = preg_replace("/[^a-zA-Z0-9]/", "", $article);
 
             return $article;
         });
@@ -164,7 +179,7 @@ class LetualParser implements ParserInterface
     }
 
     /**
-     * Метод получения Описания
+     * Метод получения Ссылки на картинку
      *
      * @return string
      */
@@ -251,7 +266,7 @@ class LetualParser implements ParserInterface
         $showcasesExclusive = $this->subResponse->filter('td ul.markers li img')->each(
             function ($node) {
                 /** @var Crawler $node */
-                if ($node->attr('alt') == "Только в Л'Этуаль") {
+                if ($node->attr('alt') == "Только в Л'Этуаль" || $node->attr('alt') == "Эксклюзивно в Л'Этуаль") {
                     return $node->attr('alt');
                 }
                 return '';
@@ -318,6 +333,33 @@ class LetualParser implements ParserInterface
     }
 
     /**
+     * Метод получения Описания
+     *
+     * @return bool
+     */
+    public function getShowcasesPromotext()
+    {
+        $description = $this->subResponse->filter('div.promo p.promo_name')->each(
+            function ($node) {
+                /** @var Crawler $node */
+                /** @var Crawler $node */
+                $description = str_replace('-', '', $node->text());
+                $description = str_replace('*', '', $description);
+                $description = str_replace('\r', '', $description);
+                $description = str_replace('\n', '', $description);
+                $description = str_replace('', '', $description);
+                $description = nl2br($description);
+                $description = str_replace('<br />', '', $description);
+                $description = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $description);
+                $description = trim($description);
+                return $description;
+            }
+        );
+
+        return reset($description);
+    }
+
+    /**
      * Метод получения Цен
      *
      * @return number
@@ -328,47 +370,48 @@ class LetualParser implements ParserInterface
             /** @var Crawler $node */
             $oldPrice = $node->filter('p.old_price')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
-                return $subsNode->text();
+                return $this->clearPrice($subsNode->text());
             });
 
             $priceNoDiscount = $node->filter('p.price_no_discount')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
-                return $subsNode->text();
+                return $this->clearPrice($subsNode->text());
             });
             $newPrice = $node->filter('p.new_price')->each(function ($subsNode) {
                 /** @var Crawler $subsNode */
-                return $subsNode->text();
+                return $this->clearPrice($subsNode->text());
             });
-
-            $newPrice = trim(reset($newPrice));
-            $newPrice = str_replace(' ', '', $newPrice);
-            $newPrice = str_replace('*', '', $newPrice);
-            $newPrice = str_replace('\r', '', $newPrice);
-            $newPrice = str_replace('\n', '', $newPrice);
-
-            $oldPrice = trim(reset($oldPrice));
-            $oldPrice = str_replace(' ', '', $oldPrice);
-            $oldPrice = str_replace('*', '', $oldPrice);
-            $oldPrice = str_replace('\r', '', $oldPrice);
-            $oldPrice = str_replace('\n', '', $oldPrice);
 
             if (empty($oldPrice)) {
                 $oldPrice = $priceNoDiscount;
-
-                $oldPrice = trim(reset($oldPrice));
-                $oldPrice = str_replace(' ', '', $oldPrice);
-                $oldPrice = str_replace('*', '', $oldPrice);
-                $oldPrice = str_replace('\r', '', $oldPrice);
-                $oldPrice = str_replace('\n', '', $oldPrice);
             }
 
             return [
-                'oldPrice' => $oldPrice,
-                'newPrice' => $newPrice,
+                'oldPrice' => reset($oldPrice),
+                'newPrice' => reset($newPrice),
             ];
         });
 
         return reset($price);
+    }
+
+    /**
+     * Чистит цену для РивГош
+     *
+     * @param $price
+     *
+     * @return int
+     */
+    private function clearPrice($price = 0)
+    {
+        $result = 0;
+
+        $clearPrice = preg_replace("|[^0-9]|i", "", $price);
+        if (!empty($clearPrice)) {
+            $result = (int)$clearPrice;
+        }
+
+        return (int)$result;
     }
 
     /**

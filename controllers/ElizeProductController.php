@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use himiklab\jqgrid\actions\JqGridActiveAction;
 use Yii;
 use app\models\ElizeProduct;
 use app\models\ElizeProductSearch;
@@ -28,7 +29,7 @@ class ElizeProductController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','view','create','update','delete'],
+                        'actions' => ['index','view','create','update','delete','jqgrid',],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -39,6 +40,24 @@ class ElizeProductController extends Controller
                 'actions' => [
                     'delete' => ['post'],
                 ],
+            ],
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'jqgrid' => [
+                'class' => JqGridActiveAction::className(),
+                'model' => ElizeProductSearch::className(),
+                'scope' => function ($query) {
+                    /** @var \yii\db\ActiveQuery $query */
+                    $query->select(
+                        [
+                            '*'
+                        ]
+                    );
+                },
             ],
         ];
     }

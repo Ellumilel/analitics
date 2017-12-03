@@ -19,8 +19,27 @@ class ElizeProductSearch extends ElizeProduct
     public function rules()
     {
         return [
-            [['id', 'showcases_new', 'showcases_exclusive', 'showcases_limit', 'showcases_sale', 'showcases_best'], 'integer'],
-            [['article', 'link', 'group', 'category', 'sub_category', 'brand', 'title', 'description', 'image_link', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [
+                ['id', 'showcases_new', 'showcases_exclusive', 'showcases_limit', 'showcases_sale', 'showcases_best'],
+                'integer',
+            ],
+            [
+                [
+                    'article',
+                    'link',
+                    'group',
+                    'category',
+                    'sub_category',
+                    'brand',
+                    'title',
+                    'description',
+                    'image_link',
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+                'safe',
+            ],
             [['new_price', 'old_price'], 'number'],
         ];
     }
@@ -45,10 +64,12 @@ class ElizeProductSearch extends ElizeProduct
     {
         $query = ElizeProduct::find();
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ['pageSize' => 50],
-        ]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query,
+                'pagination' => ['pageSize' => 25],
+            ]
+        );
 
         $this->load($params);
 
@@ -58,19 +79,21 @@ class ElizeProductSearch extends ElizeProduct
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'showcases_new' => $this->showcases_new,
-            'showcases_exclusive' => $this->showcases_exclusive,
-            'showcases_limit' => $this->showcases_limit,
-            'showcases_sale' => $this->showcases_sale,
-            'showcases_best' => $this->showcases_best,
-            'new_price' => $this->new_price,
-            'old_price' => $this->old_price,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
-        ]);
+        $query->andFilterWhere(
+            [
+                'id' => $this->id,
+                'showcases_new' => $this->showcases_new,
+                'showcases_exclusive' => $this->showcases_exclusive,
+                'showcases_limit' => $this->showcases_limit,
+                'showcases_sale' => $this->showcases_sale,
+                'showcases_best' => $this->showcases_best,
+                'new_price' => $this->new_price,
+                'old_price' => $this->old_price,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+                'deleted_at' => $this->deleted_at,
+            ]
+        );
 
         $query->andFilterWhere(['like', 'article', $this->article])
             ->andFilterWhere(['like', 'link', $this->link])
@@ -94,18 +117,22 @@ class ElizeProductSearch extends ElizeProduct
     {
         $query = ElizeProduct::find();
         // print_r($params);die;
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ['pageSize' => 50],
-        ]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query,
+                'pagination' => ['pageSize' => 20],
+            ]
+        );
         $this->load($params);
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
-        ]);
+        $query->andFilterWhere(
+            [
+                'id' => $this->id,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+                'deleted_at' => $this->deleted_at,
+            ]
+        );
 
         if (!empty($params['date'])) {
             $query->where('DATE_FORMAT(deleted_at,  "%Y-%m-%d") = "'.$params['date'].'"');
@@ -130,18 +157,22 @@ class ElizeProductSearch extends ElizeProduct
     {
         $query = ElizeProduct::find();
         // print_r($params);die;
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ['pageSize' => 50],
-        ]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query,
+                'pagination' => ['pageSize' => 20],
+            ]
+        );
         $this->load($params);
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
-        ]);
+        $query->andFilterWhere(
+            [
+                'id' => $this->id,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+                'deleted_at' => $this->deleted_at,
+            ]
+        );
 
         if (!empty($params['date'])) {
             $query->where('DATE_FORMAT(created_at,  "%Y-%m-%d") = "'.$params['date'].'"');
@@ -172,10 +203,12 @@ class ElizeProductSearch extends ElizeProduct
         $query->select(['count(id) as counts', 'DATE_FORMAT(created_at,  "%Y-%m-%d") as dates']);
         $query->groupBy(['DATE_FORMAT(created_at,  "%Y-%m-%d")']);
         $query->orderBy('created_at');
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ['pageSize' => 50],
-        ]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query,
+                'pagination' => ['pageSize' => 50],
+            ]
+        );
 
         return $dataProvider;
     }
@@ -198,11 +231,14 @@ class ElizeProductSearch extends ElizeProduct
             $paging = false;
         }
 
-        $dataProvider = new SqlDataProvider([
-            'sql' => $sql . ' ORDER BY created_at desc',
-            'totalCount' => (int)$totalCount,
-            'pagination' => $paging,
-        ]);
+        $dataProvider = new SqlDataProvider(
+            [
+                'sql' => $sql.' ORDER BY created_at desc',
+                'totalCount' => (int)$totalCount,
+                'pagination' => $paging,
+            ]
+        );
+
         return $dataProvider;
     }
 
@@ -214,13 +250,16 @@ class ElizeProductSearch extends ElizeProduct
         $sql = "SELECT count(id) as counts, DATE_FORMAT(deleted_at,  \"%Y-%m-%d\") as dates from elize_product  WHERE deleted_at > 0  GROUP BY DATE_FORMAT(deleted_at,  \"%Y-%m-%d\") ";
         $totalCount = \Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) as a")->queryScalar();
 
-        $dataProvider = new SqlDataProvider([
-            'sql' => $sql . ' ORDER BY deleted_at desc',
-            'totalCount' => (int)$totalCount,
-            'pagination' => [
-                'pageSize' => 8,
-            ],
-        ]);
+        $dataProvider = new SqlDataProvider(
+            [
+                'sql' => $sql.' ORDER BY deleted_at desc',
+                'totalCount' => (int)$totalCount,
+                'pagination' => [
+                    'pageSize' => 8,
+                ],
+            ]
+        );
+
         return $dataProvider;
     }
 }

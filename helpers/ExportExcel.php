@@ -8,7 +8,7 @@ class ExportExcel
     private $file;
     private $baseFullFilename;
     private $zipFullFilename;
-    private $currentRow = array();
+    private $currentRow = [];
     public $exportDir = '/web/files';
     public $exportFile = 'export.xml';
 
@@ -35,32 +35,42 @@ class ExportExcel
             $this->file
         );
     }
+
     public function getColCount()
     {
         return $this->colCount;
     }
+
     public function getRowCount()
     {
         return $this->rowCount;
     }
+
     public function getBaseFullFileName()
     {
         return $this->baseFullFilename;
     }
+
     public function getZipFullFileName()
     {
         return $this->zipFullFilename;
     }
+
     public function openWriter()
     {
         $this->file = fopen($this->baseFullFilename, 'w+');
         fwrite($this->file, '<?xml version="1.0"?>');
         fwrite($this->file, '<?mso-application progid="Excel.Sheet"?>');
     }
+
     public function openWorkbook()
     {
-        fwrite($this->file, '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">');
+        fwrite(
+            $this->file,
+            '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">'
+        );
     }
+
     public function writeDocumentProperties()
     {
         fwrite($this->file, '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">');
@@ -74,6 +84,7 @@ class ExportExcel
         fwrite($this->file, '<Version>12.00</Version>');
         fwrite($this->file, '</DocumentProperties>');
     }
+
     public function writeStyles()
     {
         fwrite($this->file, '<Styles>');
@@ -84,41 +95,58 @@ class ExportExcel
         fwrite($this->file, '<Style ss:ID="Date"><NumberFormat ss:Format="Short Date"/></Style>');
         fwrite($this->file, '<Style ss:ID="Time"><NumberFormat ss:Format="h:mm:ss"/></Style>');
         //Hyperlink style
-        fwrite($this->file, '<Style ss:ID="Hyperlink" ss:Name="Hyperlink"><Font ss:Color="#0000FF" ss:Underline="Single"/></Style>');
+        fwrite(
+            $this->file,
+            '<Style ss:ID="Hyperlink" ss:Name="Hyperlink"><Font ss:Color="#0000FF" ss:Underline="Single"/></Style>'
+        );
         //Bold
         fwrite($this->file, '<Style ss:ID="Bold"><Font ss:Bold="1"/></Style>');
         fwrite($this->file, '</Styles>');
     }
+
     public function openWorksheet()
     {
         fwrite($this->file, '<Worksheet ss:Name="Export">');
-        fwrite($this->file, strtr('<Table ss:ExpandedColumnCount="{col_count}" ss:ExpandedRowCount="{row_count}" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="15">', array('{col_count}'=>$this->colCount, '{row_count}'=>$this->rowCount)));
+        fwrite(
+            $this->file,
+            strtr(
+                '<Table ss:ExpandedColumnCount="{col_count}" ss:ExpandedRowCount="{row_count}" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="15">',
+                ['{col_count}' => $this->colCount, '{row_count}' => $this->rowCount]
+            )
+        );
     }
+
     public function resetRow()
     {
-        $this->currentRow = array();
+        $this->currentRow = [];
     }
+
     public function openRow($isBold = false)
     {
         $this->currentRow[] = '<Row ss:AutoFitHeight="0"'.($isBold ? ' ss:StyleID="Bold"' : '').'>';
     }
+
     public function closeRow()
     {
         $this->currentRow[] = '</Row>';
     }
+
     public function flushRow()
     {
         fwrite($this->file, implode('', $this->currentRow));
         unset($this->currentRow);
     }
+
     public function appendCellNum($value)
     {
         $this->currentRow[] = '<Cell><Data ss:Type="Number">'.$value.'</Data></Cell>';
     }
+
     public function appendCellString($value)
     {
         $this->currentRow[] = '<Cell><Data ss:Type="String">'.htmlspecialchars($value).'</Data></Cell>';
     }
+
     public function appendCellReal($value)
     {
         return $this->appendCellNum($value);
@@ -160,20 +188,27 @@ class ExportExcel
                 '<Cell ss:StyleID="Hyperlink" ss:HRef="'.$link.'"><Data ss:Type="String">'.$value.'</Data></Cell>';
         }
     }
+
     public function closeWorksheet()
     {
         fwrite($this->file, '</Table>');
-        fwrite($this->file, '<AutoFilter x:Range="R1C1:R'.$this->rowCount.'C'.$this->colCount.'" xmlns="urn:schemas-microsoft-com:office:excel"></AutoFilter>');
+        fwrite(
+            $this->file,
+            '<AutoFilter x:Range="R1C1:R'.$this->rowCount.'C'.$this->colCount.'" xmlns="urn:schemas-microsoft-com:office:excel"></AutoFilter>'
+        );
         fwrite($this->file, '</Worksheet>');
     }
+
     public function closeWorkbook()
     {
         fwrite($this->file, '</Workbook>');
     }
+
     public function closeWriter()
     {
         fclose($this->file);
     }
+
     public function zip()
     {
         $zipfile = trim(pathinfo('"'.$this->exportFile.'"', PATHINFO_FILENAME).'.zip', '"');

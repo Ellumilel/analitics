@@ -60,12 +60,12 @@ class PodruzkaProductController extends Controller
 
     public function actions()
     {
-        return [
+       /* return [
             'jqgrid' => [
                 'class' => JqGridActiveAction::className(),
                 'model' => PodruzkaProductSearch::className(),
                 'scope' => function ($query) {
-                    /** @var \yii\db\ActiveQuery $query */
+                  
                     $query->select(
                         [
                             'podruzka_product.article as article',
@@ -98,7 +98,7 @@ class PodruzkaProductController extends Controller
                     ;
                 },
             ],
-        ];
+        ];*/
     }
 
     /**

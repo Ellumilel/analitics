@@ -84,9 +84,17 @@ class StatisticController extends Controller
      */
     public function actionAvgBrand()
     {
-        $brands = (new PodruzkaProduct())->getBrandAvgPrice();
+        $brandsLet = (new PodruzkaProduct())->getBrandAvgLetPrice();
+        $brandsRiv = (new PodruzkaProduct())->getBrandAvgRivPrice();
+        $brandsIle = (new PodruzkaProduct())->getBrandAvgIlePrice();
+        $brandsEli = (new PodruzkaProduct())->getBrandAvgEliPrice();
 
-        return $this->render('avg_brand', ['brands' => $brands]);
+        return $this->render('avg_brand', [
+            'brandsLet' => $brandsLet,
+            'brandsRiv' => $brandsRiv,
+            'brandsIle' => $brandsIle,
+            'brandsEli' => $brandsEli,
+        ]);
     }
 
     /**
@@ -96,9 +104,17 @@ class StatisticController extends Controller
      */
     public function actionAvgCategory()
     {
-        $category = (new PodruzkaProduct())->getCategoryAvgPrice();
+        $categoryLet = (new PodruzkaProduct())->getCategoryLetAvgPrice();
+        $categoryIle = (new PodruzkaProduct())->getCategoryIleAvgPrice();
+        $categoryRiv = (new PodruzkaProduct())->getCategoryRivAvgPrice();
+        $categoryEli = (new PodruzkaProduct())->getCategoryEliAvgPrice();
 
-        return $this->render('avg_category', ['category' => $category]);
+        return $this->render('avg_category', [
+            'categoryLet' => $categoryLet,
+            'categoryIle' => $categoryIle,
+            'categoryRiv' => $categoryRiv,
+            'categoryEli' => $categoryEli,
+        ]);
     }
 
     /**
@@ -108,9 +124,17 @@ class StatisticController extends Controller
      */
     public function actionAvgMatching()
     {
-        $brands = (new PodruzkaProduct())->getBrandCategoryAvgPrice();
+        $brandsLet = (new PodruzkaProduct())->getBrandCategoryLetAvgPrice();
+        $brandsRiv = (new PodruzkaProduct())->getBrandCategoryRivAvgPrice();
+        $brandsIle = (new PodruzkaProduct())->getBrandCategoryIleAvgPrice();
+        $brandsEli = (new PodruzkaProduct())->getBrandCategoryEliAvgPrice();
 
-        return $this->render('avg_matching', ['brands' => $brands]);
+        return $this->render('avg_matching', [
+            'brandsLet' => $brandsLet,
+            'brandsRiv' => $brandsRiv,
+            'brandsIle' => $brandsIle,
+            'brandsEli' => $brandsEli,
+        ]);
     }
 
     /**

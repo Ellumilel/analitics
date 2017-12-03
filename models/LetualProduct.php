@@ -22,6 +22,7 @@ use yii\db\Expression;
  * @property integer $showcases_exclusive
  * @property integer $showcases_bestsellers
  * @property integer $showcases_limit
+ * @property string $showcases_promotext
  * @property string $old_price
  * @property string $new_price
  * @property string $image_link
@@ -48,7 +49,7 @@ class LetualProduct extends \yii\db\ActiveRecord
     {
         return [
             [['article'], 'required'],
-            [['link', 'title', 'image_link'], 'string'],
+            [['link', 'title', 'image_link', 'showcases_promotext'], 'string'],
             [['showcases_new', 'showcases_exclusive', 'showcases_bestsellers', 'showcases_limit'], 'integer'],
             [['old_price', 'new_price'], 'number'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
@@ -76,6 +77,7 @@ class LetualProduct extends \yii\db\ActiveRecord
             'showcases_exclusive' => 'Showcases Exclusive',
             'showcases_bestsellers' => 'Showcases Bestsellers',
             'showcases_limit' => 'Showcases Limit',
+            'showcases_promotext' => 'showcases Promotext',
             'old_price' => 'Цена',
             'new_price' => 'Цена со скидкой',
             'image_link' => 'Картинка',
@@ -263,9 +265,9 @@ class LetualProduct extends \yii\db\ActiveRecord
     public function setDeleted()
     {
         $db = Yii::$app->getDb();
-        $sql = 'UPDATE letual_product, (SELECT DISTINCT DATE_FORMAT(updated_at,  "%Y-%m-%d") as date FROM letual_product ORDER BY updated_at desc limit 1) a
+        $sql = 'UPDATE letual_product, (SELECT MAX(DATE_FORMAT(updated_at,  "%Y-%m-%d")) as date FROM letual_product) a
                 SET deleted_at = NOW()
-                WHERE updated_at < a.date and DATE_FORMAT(updated_at,  "%Y-%m-%d") = "0000-00-00";';
+                WHERE updated_at < a.date and DATE_FORMAT(deleted_at,  "%Y-%m-%d") = "0000-00-00"';
         return $db->createCommand($sql)->execute();
     }
 }

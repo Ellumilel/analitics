@@ -12,22 +12,24 @@ use \app\models\ElizeProduct;
 $this->title = 'Список товаров Элизэ';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'eli']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Элизэ</a>
+<a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download', 'company' => 'eli']); ?>"
+   class="btn btn-primary"><i class="fa fa-download"></i> Выгрузка Элизэ</a><br><br>
 <div class="elize-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?= GridView::widget(
         [
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'striped' => false,
             'rowOptions' => function ($model, $key, $index, $grid) {
                 return [
                     'id' => $model['id'],
                     'onclick' => '
-            if ( !$(this).hasClass("success") ) {
-                $(this).addClass("success");
-            } else {
-                $(this).removeClass("success");
-            }',
+    if ( !$(this).hasClass("success") ) {
+        $(this).addClass("success");
+    } else {
+        $(this).removeClass("success");
+    }',
                 ];
             },
             'columns' => [
@@ -43,8 +45,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'format' => 'raw',
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '400px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
+                    'contentOptions' => ['style' => 'padding-left:10px; text-align: center; width: 250px;'],
                 ],
                 [
                     'filterInputOptions' => ['placeholder' => ''],
@@ -52,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterType' => GridView::FILTER_SELECT2,
                     'filter' => ArrayHelper::map((new ElizeProduct)->dropDownGroup($condition), 'group', 'group'),
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
                     'value' => 'group',
                 ],
@@ -66,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'category'
                     ),
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
                     'value' => 'category',
                 ],
@@ -80,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'sub_category'
                     ),
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
                     'value' => 'sub_category',
                 ],
@@ -92,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterType' => GridView::FILTER_SELECT2,
                     'filter' => ArrayHelper::map((new ElizeProduct)->dropDownBrand($condition), 'brand', 'brand'),
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
                     'value' => function ($model, $key, $index, $widget) {
                         return Html::a($model->brand, '#', ['title' => 'Редактировать']);
@@ -107,32 +110,42 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'title:ntext',
+                'description',
                 [
                     'attribute' => 'old_price',
                     'value' => 'old_price',
                     'format' => 'raw',
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
+                    'contentOptions' => ['style' => 'text-align: center;'],
                 ],
                 [
                     'attribute' => 'new_price',
                     'value' => 'new_price',
                     'format' => 'raw',
                     'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                        'pluginOptions' => ['allowClear' => true],
                     ],
+                    'contentOptions' => ['style' => 'text-align: center;'],
                 ],
             ],
             'responsive' => true,
             'hover' => true,
             'pjax' => true,
+            'export' => false,
+            'toggleData' => false,
+            'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => 'Список товаров Элизэ',
+            ],
             'pjaxSettings' => [
                 'neverTimeout' => true,
-                //'beforeGrid' => 'My fancy content before.',
-                //'afterGrid' => 'My fancy content after.',
+                'options'=>[
+                    'id'=>'elize_product',
+                ]
             ],
         ]
-    ); ?>
-
+    );
+    ?>
 </div>

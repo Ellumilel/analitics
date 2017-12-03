@@ -13,7 +13,7 @@ $this->title = 'Статистика удаленные';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <h3 class="box-title">РивГош всего: <?= (new \app\models\RivegaucheProduct)->find()->count() ?>
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <a title="Выгрузка таблицы сбора"
@@ -91,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <a title="Выгрузка таблицы сбора"
@@ -131,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="box box-solid box-primary">
             <div class="box-header">
                 <a title="Выгрузка таблицы сбора"

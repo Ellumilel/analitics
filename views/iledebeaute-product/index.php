@@ -12,12 +12,13 @@ use \yii\helpers\ArrayHelper;
 $this->title = 'Список товаров ИльДэБоте';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a>
+<a href="<?= \Yii::$app->getUrlManager()->createUrl(['download/download','company'=>'ile']); ?>" class="btn btn-primary" ><i class="fa fa-download"></i> Выгрузка Иль Де Боте</a><br><br>
 <div class="iledebeaute-product-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'striped' => false,
         'rowOptions' => function ($model, $key, $index, $grid) {
             return ['id' => $model['id'], 'onclick' => '
             if ( !$(this).hasClass("success") ) {
@@ -39,8 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'raw',
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '400px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
+                'contentOptions' => ['style' => 'padding-left:10px; text-align: center; width: 150px;'],
             ],
             [
                 'filterInputOptions' => ['placeholder' => ''],
@@ -48,9 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map((new IledebeauteProduct)->dropDownGroup($condition), 'group', 'group'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
                 'value' => 'group',
+                'contentOptions' => ['style' => 'min-width:120px;'],
             ],
             [
                 'filterInputOptions' => ['placeholder' => ''],
@@ -59,9 +62,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ArrayHelper::map((new IledebeauteProduct)->dropDownCategory($condition), 'category',
                     'category'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
                 'value' => 'category',
+                'contentOptions' => ['style' => 'min-width:180px;'],
             ],
             [
                 'filterInputOptions' => ['placeholder' => ''],
@@ -70,9 +74,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ArrayHelper::map((new IledebeauteProduct)->dropDownSubCategory($condition), 'sub_category',
                     'sub_category'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
                 'value' => 'sub_category',
+                'contentOptions' => ['style' => 'min-width:180px;'],
             ],
             [
                 'format' => 'raw',
@@ -82,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map((new IledebeauteProduct)->dropDownBrand($condition), 'brand', 'brand'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '200px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
                 'value' => function ($model, $key, $index, $widget) {
                     return Html::a($model->brand, '#', ['title' => 'Редактировать']);
@@ -103,25 +108,34 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => 'old_price',
                 'format' => 'raw',
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
+                'contentOptions' => ['style' => 'text-align: center;'],
             ],
             [
                 'attribute' => 'new_price',
                 'value' => 'new_price',
                 'format' => 'raw',
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true, 'width' => '50px'],
+                    'pluginOptions' => ['allowClear' => true],
                 ],
+                'contentOptions' => ['style' => 'text-align: center;'],
             ],
         ],
         'responsive' => true,
         'hover' => true,
         'pjax' => true,
+        'export' => false,
+        'toggleData' => false,
+        'panel'=>[
+            'type'=>GridView::TYPE_PRIMARY,
+            'heading'=> 'Список товаров ИльДэБоте',
+        ],
         'pjaxSettings' => [
             'neverTimeout' => true,
-            //'beforeGrid' => 'My fancy content before.',
-            //'afterGrid' => 'My fancy content after.',
+            'options'=>[
+                'id'=>'iledebeaute_product',
+            ]
         ]
     ]); ?>
 

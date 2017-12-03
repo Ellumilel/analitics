@@ -406,6 +406,7 @@ echo JqGridWidget::widget(
                     'index' => 'brand',
                     'editable' => false,
                     'width' => 150,
+                    'align' => "center",
                     'stype' => 'select',
                     'searchoptions' => [
                         'sopt' => ["eq", "ne"],
